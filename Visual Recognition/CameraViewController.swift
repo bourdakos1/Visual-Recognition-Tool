@@ -1,0 +1,382 @@
+//
+//  CameraView.swift
+//  Visual Recognition
+//
+//  Created by Nicholas Bourdakos on 3/17/17.
+//  Copyright © 2017 Nicholas Bourdakos. All rights reserved.
+//
+
+import UIKit
+import AVFoundation
+
+class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
+    
+    var captureSession : AVCaptureSession?
+    //    var photoOutput : AVCapturePhotoOutput?
+    var stillImageOutput : AVCaptureStillImageOutput?
+    var previewLayer : AVCaptureVideoPreviewLayer?
+    @IBOutlet var cameraView: UIView!
+    @IBOutlet var tempImageView: UIImageView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        apiKey.layer.shadowOffset = CGSize(width: 0, height: 1)
+        apiKey.layer.shadowOpacity = 0.2
+        apiKey.layer.shadowRadius = 10
+        apiKey.layer.masksToBounds = false
+        apiKey.setAttributedTitle(NSAttributedString(string: "API Key", attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0, green: 0, blue: 0, alpha: 0.5), NSStrokeWidthAttributeName : -1.0]), for: .normal)
+        apiKeyTextField.attributedPlaceholder = NSAttributedString(string: "API Key", attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 1, blue: 1, alpha: 0.5)])
+        
+        apiKeyTextField.setLeftPaddingPoints(20)
+        apiKeyTextField.setRightPaddingPoints(50)
+
+        captureSession = AVCaptureSession()
+        captureSession?.sessionPreset = AVCaptureSessionPreset1920x1080
+        
+        let backCamera = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+        
+        do {
+            let input = try AVCaptureDeviceInput(device: backCamera)
+            captureSession?.addInput(input)
+            
+            //            photoOutput = AVCapturePhotoOutput()
+            stillImageOutput = AVCaptureStillImageOutput()
+            
+            if (captureSession?.canAddOutput(stillImageOutput) != nil){
+                captureSession?.addOutput(stillImageOutput)
+                
+                previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+                previewLayer?.videoGravity = AVLayerVideoGravityResizeAspect
+                previewLayer?.connection.videoOrientation = AVCaptureVideoOrientation.portrait
+                cameraView.layer.addSublayer(previewLayer!)
+                captureSession?.startRunning()
+            }
+        } catch {
+            print("error")
+        }
+        previewLayer?.frame = view.bounds
+        
+        captureButton.isHidden = false
+        hideRetake()
+        view.bringSubview(toFront: captureButton)
+        
+        let empty = UIImage()
+        
+        // Do any additional setup after loading the view.
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    func didPressTakePhoto() {
+        if let videoConnection = stillImageOutput?.connection(withMediaType: AVMediaTypeVideo){
+            videoConnection.videoOrientation = AVCaptureVideoOrientation.portrait
+            //photoOutput?.capturePhoto(with: AVCapturePhotoSettings, delegate: )
+            
+            stillImageOutput?.captureStillImageAsynchronously(from: videoConnection, completionHandler: {
+                (sampleBuffer, error) in
+                
+                if sampleBuffer != nil {
+                    let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer)
+                    let dataProvider  = CGDataProvider(data: imageData as! CFData)
+                    let cgImageRef = CGImage(jpegDataProviderSource: dataProvider!, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+                    
+                    let image = UIImage(cgImage: cgImageRef!, scale: 1.0, orientation: UIImageOrientation.right)
+                    
+                    let image2 = image.resized(toWidth: 300)!
+                    
+                    print("dimensions : \(image2.size)")
+                    print("size : \(UIImageJPEGRepresentation(image2, 0.4)!.count)")
+                    
+                    var apiKey = UserDefaults.standard.string(forKey: "api_key")
+                    
+                    if apiKey == nil || apiKey == "" {
+                        apiKey = "XXXXXXXXXX"
+                    }
+                    
+                    let escapedApiKey = apiKey?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+                    
+                    
+                    /// UPLOAD
+                    var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=\(escapedApiKey!)&version=2016-05-20")!)
+                    r.httpMethod = "POST"
+                    let boundary = "Boundary-\(UUID().uuidString)"
+                    r.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+                    
+                    r.httpBody = self.createBody(parameters: [:],
+                                            boundary: boundary,
+                                            data: UIImageJPEGRepresentation(image2, 0.4)!,
+                                            mimeType: "image/jpg",
+                                            filename: "hello.jpg")
+                    
+                    let task = URLSession.shared.dataTask(with: r) { data, response, error in
+                        guard let data = data, error == nil else {               // check for fundamental networking error
+                            return
+                        }
+                        do {
+                            let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? AnyObject
+                            
+                            if let parseJSON = json {
+                                print("resp :\(parseJSON)")
+                                if let drawer = self.parent as? PulleyViewController {
+                                    if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
+                                        DispatchQueue.main.async{
+                                            var myNewData : [[String: AnyObject]] = []
+                                            var data = ((((parseJSON["images"] as! NSArray)[0] as! AnyObject)["classifiers"] as! NSArray)[0] as! AnyObject)["classes"] as! NSArray
+                                            for myClass in data {
+                                                print ((myClass as! AnyObject)["class"] as! String)
+                                                myNewData.append(["class_name":(myClass as! AnyObject)["class"] as! AnyObject, "score":(myClass as! AnyObject)["score"] as! AnyObject])
+                                            }
+                                            myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
+                                            tablesdsa.myarray = myNewData
+                                            tablesdsa.tableView.reloadData()
+                                        }
+                                    }
+                                }
+                            }
+                        } catch let error as NSError {
+                            print("error : \(error)")
+                        }
+                    }
+                    task.resume()
+                    
+                    self.tempImageView.image = image
+                    self.tempImageView.isHidden = false
+                }
+            })
+        }
+    }
+    
+    func createBody(parameters: [String: String],
+                    boundary: String,
+                    data: Data,
+                    mimeType: String,
+                    filename: String) -> Data {
+        let body = NSMutableData()
+        
+        let boundaryPrefix = "--\(boundary)\r\n"
+        
+        for (key, value) in parameters {
+            body.appendString(boundaryPrefix)
+            body.appendString("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n")
+            body.appendString("\(value)\r\n")
+        }
+        
+        body.appendString(boundaryPrefix)
+        body.appendString("Content-Disposition: form-data; name=\"file\"; filename=\"\(filename)\"\r\n")
+        body.appendString("Content-Type: \(mimeType)\r\n\r\n")
+        body.append(data)
+        body.appendString("\r\n")
+        body.appendString("--".appending(boundary.appending("--")))
+        
+        return body as Data
+    }
+    
+    var didTakePhoto = Bool()
+    
+    func didPressTakeAnother() {
+        if didTakePhoto {
+            tempImageView.isHidden = true
+            didTakePhoto = false
+            captureButton.isHidden = false
+            hideRetake()
+            showAPI()
+            if let drawer = self.parent as? PulleyViewController
+            {
+                if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
+                    tablesdsa.cameraHidden = false
+                    tablesdsa.myarray = []
+                    tablesdsa.tableView.reloadData()
+                }
+            }
+        } else {
+            captureSession?.startRunning()
+            didTakePhoto = true
+            didPressTakePhoto()
+            captureButton.isHidden = true
+            showRetake()
+            hideAPI()
+            if let drawer = self.parent as? PulleyViewController
+            {
+                if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
+                    tablesdsa.cameraHidden = true
+                    tablesdsa.tableView.reloadData()
+                }
+            }
+        }
+    }
+    
+    func hideRetake() {
+        retakeButton.isEnabled = false
+        retakeButton.isHidden = true
+    }
+    
+    func showRetake() {
+        retakeButton.isEnabled = true
+        retakeButton.isHidden = false
+    }
+    
+    func hideAPI() {
+        apiKey.isEnabled = false
+        apiKey.isHidden = true
+    }
+    
+    func showAPI() {
+        apiKey.isEnabled = true
+        apiKey.isHidden = false
+    }
+    
+    @IBOutlet var captureButton: UIButton!
+    @IBOutlet var retakeButton: UIButton!
+    @IBOutlet var apiKeyDoneButton: UIButton!
+    @IBOutlet var apiKey: UIButton!
+    @IBOutlet var apiKeySubmit: UIButton!
+    @IBOutlet var apiKeyTextField: UITextField!
+    
+    let blurredEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+    
+    @IBAction func unwindToVC(segue: UIStoryboardSegue) {
+//        if segue.identifier == "cancel" {
+//            if let sourceViewController = segue.source as? FormTableViewController {
+//                myEventTitle = sourceViewController.titleField.text!
+//                myEventLocation = sourceViewController.locationField.text!
+//                //let address = sourceViewController.locationAddress.title(for: .normal)!
+//                
+//                // format date to match Go and Mongo
+//                let dateFormatterPrint = DateFormatter()
+//                dateFormatterPrint.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+//                let start = dateFormatterPrint.string(from: sourceViewController.startDate)
+//                let end = dateFormatterPrint.string(from:sourceViewController.endDate)
+//                
+//                post(title: myEventTitle, address: "address", place: myEventLocation, start: start, end: end)
+//                eventIsLive = true
+//            }
+//        }
+    }
+    
+    @IBAction func addApiKey() {
+        blurredEffectView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
+        view.addSubview(blurredEffectView)
+        apiKeyTextField.isHidden = false
+        apiKeyTextField.becomeFirstResponder()
+        view.addSubview(apiKeyTextField)
+        apiKeyDoneButton.isHidden = false
+        view.addSubview(apiKeyDoneButton)
+        apiKeySubmit.isHidden = false
+        view.addSubview(apiKeySubmit)
+        print("add view")
+    }
+    
+    @IBAction func apiKeyDone() {
+        apiKeyTextField.isHidden = true
+        apiKeyDoneButton.isHidden = true
+        apiKeySubmit.isHidden = true
+        blurredEffectView.removeFromSuperview()
+        view.endEditing(true)
+        apiKeyTextField.text = ""
+        print("remove view")
+    }
+    
+    @IBAction func submitApiKey() {
+        var key = apiKeyTextField.text
+        key = key?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api?api_key=\(key!)&version=2016-05-20")!)
+        r.httpMethod = "POST"
+        
+        let task = URLSession.shared.dataTask(with: r) { data, response, error in
+            guard let data = data, error == nil else {               // check for fundamental networking error
+                return
+            }
+            do {
+                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? AnyObject
+                
+                if let parseJSON = json {
+                    print("resp :\(parseJSON)")
+                    if parseJSON["statusInfo"] as! String == "invalid-api-key" {
+                        print("Ivalid api key!")
+                    } else {
+                        UserDefaults.standard.set(key, forKey: "api_key")
+                    }
+                    DispatchQueue.main.async {
+                        self.apiKeyTextField.isHidden = true
+                        self.apiKeyDoneButton.isHidden = true
+                        self.apiKeySubmit.isHidden = true
+                        self.blurredEffectView.removeFromSuperview()
+                        self.view.endEditing(true)
+                        self.apiKeyTextField.text = ""
+                        print("remove view")
+                    }
+                }
+            } catch let error as NSError {
+                print("error : \(error)")
+                DispatchQueue.main.async {
+                    UserDefaults.standard.set(key, forKey: "api_key")
+                    self.apiKeyTextField.isHidden = true
+                    self.apiKeyDoneButton.isHidden = true
+                    self.apiKeySubmit.isHidden = true
+                    self.blurredEffectView.removeFromSuperview()
+                    self.view.endEditing(true)
+                    self.apiKeyTextField.text = ""
+                    print("remove view")
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    @IBAction func takePic() {
+        didPressTakeAnother()
+    }
+    
+    @IBAction func retake() {
+        didPressTakeAnother()
+    }
+    
+}
+
+extension NSMutableData {
+    func appendString(_ string: String) {
+        let data = string.data(using: String.Encoding.utf8, allowLossyConversion: false)
+        append(data!)
+    }
+}
+
+extension UIImage {
+    func resized(withPercentage percentage: CGFloat) -> UIImage? {
+        let canvasSize = CGSize(width: size.width * percentage, height: size.height * percentage)
+        UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        draw(in: CGRect(origin: .zero, size: canvasSize))
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
+    func resized(toWidth width: CGFloat) -> UIImage? {
+        let canvasSize = CGSize(width: width, height: CGFloat(ceil(width/size.width * size.height)))
+        UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        draw(in: CGRect(origin: .zero, size: canvasSize))
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
+}
+
+extension UITextField {
+    func setLeftPaddingPoints(_ amount:CGFloat){
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
+        self.leftView = paddingView
+        self.leftViewMode = .always
+    }
+    func setRightPaddingPoints(_ amount:CGFloat) {
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
+        self.rightView = paddingView
+        self.rightViewMode = .always
+    }
+}
