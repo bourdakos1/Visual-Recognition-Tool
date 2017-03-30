@@ -10,7 +10,21 @@ import UIKit
 
 class ClassifiersTableViewController: UITableViewController {
     
-    var array : [[String: AnyObject]] = []
+    let VISION_API_KEY: String
+    
+    var array: [[String: AnyObject]] = []
+    
+    required init?(coder aDecoder: NSCoder) {
+        var keys: NSDictionary?
+        
+        if let path = Bundle.main.path(forResource: "Keys", ofType: "plist") {
+            keys = NSDictionary(contentsOfFile: path)
+        }
+        
+        VISION_API_KEY = (keys?["VISION_API_KEY"] as? String)!
+        
+        super.init(coder: aDecoder)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,7 +32,7 @@ class ClassifiersTableViewController: UITableViewController {
         var apiKey = UserDefaults.standard.string(forKey: "api_key")
         
         if apiKey == nil || apiKey == "" {
-            apiKey = "XXXXXXXXXX"
+            apiKey = self.VISION_API_KEY
         }
         
         let escapedApiKey = apiKey?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)

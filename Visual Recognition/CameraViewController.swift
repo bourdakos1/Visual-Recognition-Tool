@@ -11,12 +11,26 @@ import AVFoundation
 
 class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     
-    var captureSession : AVCaptureSession?
-    //    var photoOutput : AVCapturePhotoOutput?
-    var stillImageOutput : AVCaptureStillImageOutput?
-    var previewLayer : AVCaptureVideoPreviewLayer?
+    let VISION_API_KEY: String
+    
+    var captureSession: AVCaptureSession?
+    //    var photoOutput: AVCapturePhotoOutput?
+    var stillImageOutput: AVCaptureStillImageOutput?
+    var previewLayer: AVCaptureVideoPreviewLayer?
     @IBOutlet var cameraView: UIView!
     @IBOutlet var tempImageView: UIImageView!
+    
+    required init?(coder aDecoder: NSCoder) {
+        var keys: NSDictionary?
+        
+        if let path = Bundle.main.path(forResource: "Keys", ofType: "plist") {
+            keys = NSDictionary(contentsOfFile: path)
+        }
+        
+        VISION_API_KEY = (keys?["VISION_API_KEY"] as? String)!
+        
+        super.init(coder: aDecoder)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,10 +73,6 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         captureButton.isHidden = false
         hideRetake()
         view.bringSubview(toFront: captureButton)
-        
-        let empty = UIImage()
-        
-        // Do any additional setup after loading the view.
     }
     
     override func didReceiveMemoryWarning() {
@@ -101,14 +111,19 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                     var apiKey = UserDefaults.standard.string(forKey: "api_key")
                     
                     if apiKey == nil || apiKey == "" {
-                        apiKey = "XXXXXXXXXX"
+                        apiKey = self.VISION_API_KEY
                     }
                     
                     let escapedApiKey = apiKey?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
                     
                     
                     /// UPLOAD
-                    var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=\(escapedApiKey!)&version=2016-05-20")!)
+                    
+                    let id = "food_1807094202"
+                    
+                    print(escapedApiKey!)
+                    
+                    var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=\(escapedApiKey!)&version=2016-05-20&threshold=0&classifier_ids\(id)")!)
                     r.httpMethod = "POST"
                     let boundary = "Boundary-\(UUID().uuidString)"
                     r.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
