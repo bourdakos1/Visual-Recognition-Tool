@@ -25,14 +25,52 @@ class ClassifiersTableViewController: UITableViewController {
         
         super.init(coder: aDecoder)
     }
+    
+
+    weak var AddAlertSaveAction: UIAlertAction?
+    
+    @IBAction func createClassifier() {
+        let alertController = UIAlertController(title: "New Classifier", message: "Enter a name for this classifier.", preferredStyle: .alert)
+        
+        alertController.addTextField(configurationHandler: {(textField: UITextField) in
+            textField.placeholder = "Title"
+            textField.addTarget(self, action: #selector(self.handleTextDidChange(_:)), for: .editingChanged)
+        })
+        
+        // Create the actions.
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { action in
+            print("cancel")
+        }
+        
+        let saveAction = UIAlertAction(title: "Save", style: .default) { action in
+            print("save")
+        }
+        
+        // disable the 'save' button initially
+        saveAction.isEnabled = false
+        
+        // save the save action to toggle the enabled/disabled state when the text changed.
+        AddAlertSaveAction = saveAction
+        
+        // Add the actions.
+        alertController.addAction(cancelAction)
+        alertController.addAction(saveAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    func handleTextDidChange(_ sender:UITextField) {
+        // Enforce a minimum length of >= 1 for secure text alerts.
+        AddAlertSaveAction!.isEnabled = (sender.text?.utf16.count)! >= 1
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        var apiKey = UserDefaults.standard.string(forKey: "api_key")
+        let apiKey = UserDefaults.standard.string(forKey: "api_key")
         
         if apiKey == nil || apiKey == "" {
-            apiKey = self.VISION_API_KEY
+            return
         }
         
         let escapedApiKey = apiKey?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
