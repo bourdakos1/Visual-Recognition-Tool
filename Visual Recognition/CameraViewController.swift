@@ -9,12 +9,11 @@
 import UIKit
 import AVFoundation
 
-class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
+class CameraViewController: UIViewController, UIImagePickerControllerDelegate, AVCaptureMetadataOutputObjectsDelegate {
     
     let VISION_API_KEY: String
     
     var captureSession: AVCaptureSession?
-    //    var photoOutput: AVCapturePhotoOutput?
     var stillImageOutput: AVCaptureStillImageOutput?
     var previewLayer: AVCaptureVideoPreviewLayer?
     @IBOutlet var cameraView: UIView!
@@ -34,11 +33,25 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        var apiKeyText = UserDefaults.standard.string(forKey: "api_key")
+        
+        if apiKeyText == nil || apiKeyText == "" {
+            apiKeyText = "API Key"
+        } else {
+            let a = apiKeyText![apiKeyText!.index(apiKeyText!.startIndex, offsetBy: 0)]
+            
+            let start = apiKeyText!.index(apiKeyText!.endIndex, offsetBy: -3)
+            let end = apiKeyText!.index(apiKeyText!.endIndex, offsetBy: 0)
+            let b = apiKeyText![Range(start ..< end)]
+            
+            apiKeyText = "\(a)•••••••••••••••••••••••••••••••••••••\(b)"
+        }
+        
         apiKey.layer.shadowOffset = CGSize(width: 0, height: 1)
         apiKey.layer.shadowOpacity = 0.2
-        apiKey.layer.shadowRadius = 10
+        apiKey.layer.shadowRadius = 5
         apiKey.layer.masksToBounds = false
-        apiKey.setAttributedTitle(NSAttributedString(string: "API Key", attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0, green: 0, blue: 0, alpha: 0.5), NSStrokeWidthAttributeName : -1.0]), for: .normal)
+        apiKey.setAttributedTitle(NSAttributedString(string: apiKeyText!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
         apiKeyTextField.attributedPlaceholder = NSAttributedString(string: "API Key", attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 1, blue: 1, alpha: 0.5)])
         
         apiKeyTextField.setLeftPaddingPoints(20)
@@ -53,7 +66,6 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             let input = try AVCaptureDeviceInput(device: backCamera)
             captureSession?.addInput(input)
             
-            //            photoOutput = AVCapturePhotoOutput()
             stillImageOutput = AVCaptureStillImageOutput()
             
             if (captureSession?.canAddOutput(stillImageOutput) != nil){
@@ -64,6 +76,12 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 previewLayer?.connection.videoOrientation = AVCaptureVideoOrientation.portrait
                 cameraView.layer.addSublayer(previewLayer!)
                 captureSession?.startRunning()
+                
+                // Initialize a AVCaptureMetadataOutput object and set it as the output device to the capture session.
+                let captureMetadataOutput = AVCaptureMetadataOutput()
+                captureSession?.addOutput(captureMetadataOutput)
+                captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+                captureMetadataOutput.metadataObjectTypes = [AVMetadataObjectTypeQRCode]
             }
         } catch {
             print("error")
@@ -73,6 +91,23 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         captureButton.isHidden = false
         hideRetake()
         view.bringSubview(toFront: captureButton)
+    }
+    
+    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
+        // Check if the metadataObjects array is not nil and it contains at least one object.
+        if metadataObjects == nil || metadataObjects.count == 0 {
+            print("No QR code is detected")
+            return
+        }
+        
+        // Get the metadata object.
+        let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
+        
+        guard let qrCode = metadataObj.stringValue else {
+            return
+        }
+        print(qrCode)
+        testKey(key: qrCode)
     }
     
     override func didReceiveMemoryWarning() {
@@ -119,11 +154,11 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                     
                     /// UPLOAD
                     
-                    let id = "food_1807094202"
+                    let classifierId = UserDefaults.standard.string(forKey: "classifier_id")
                     
                     print(escapedApiKey!)
                     
-                    var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=\(escapedApiKey!)&version=2016-05-20&threshold=0&classifier_ids\(id)")!)
+                    var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=\(escapedApiKey!)&version=2016-05-20&threshold=0&classifier_ids=\(classifierId ?? "default")")!)
                     r.httpMethod = "POST"
                     let boundary = "Boundary-\(UUID().uuidString)"
                     r.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
@@ -206,6 +241,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             captureButton.isHidden = false
             hideRetake()
             showAPI()
+            showButton()
             if let drawer = self.parent as? PulleyViewController
             {
                 if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
@@ -221,6 +257,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             captureButton.isHidden = true
             showRetake()
             hideAPI()
+            hideButton()
             if let drawer = self.parent as? PulleyViewController
             {
                 if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
@@ -229,6 +266,16 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 }
             }
         }
+    }
+    
+    func hideButton() {
+        classifiersButton.isEnabled = false
+        classifiersButton.isHidden = true
+    }
+    
+    func showButton() {
+        classifiersButton.isEnabled = true
+        classifiersButton.isHidden = false
     }
     
     func hideRetake() {
@@ -251,6 +298,8 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         apiKey.isHidden = false
     }
     
+    
+    @IBOutlet var classifiersButton: UIButton!
     @IBOutlet var captureButton: UIButton!
     @IBOutlet var retakeButton: UIButton!
     @IBOutlet var apiKeyDoneButton: UIButton!
@@ -303,8 +352,12 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     }
     
     @IBAction func submitApiKey() {
-        var key = apiKeyTextField.text
-        key = key?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        let key = apiKeyTextField.text
+        testKey(key: key!)
+    }
+    
+    func testKey(key: String) {
+        var key = key.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
         var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api?api_key=\(key!)&version=2016-05-20")!)
         r.httpMethod = "POST"
         
@@ -321,6 +374,14 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                         print("Ivalid api key!")
                     } else {
                         UserDefaults.standard.set(key, forKey: "api_key")
+                        let a = key![key!.index(key!.startIndex, offsetBy: 0)]
+                        
+                        let start = key!.index(key!.endIndex, offsetBy: -3)
+                        let end = key!.index(key!.endIndex, offsetBy: 0)
+                        let b = key![Range(start ..< end)]
+                        
+                        key = "\(a)•••••••••••••••••••••••••••••••••••••\(b)"
+                        self.apiKey.setAttributedTitle(NSAttributedString(string: key!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
                     }
                     DispatchQueue.main.async {
                         self.apiKeyTextField.isHidden = true
@@ -336,6 +397,15 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 print("error : \(error)")
                 DispatchQueue.main.async {
                     UserDefaults.standard.set(key, forKey: "api_key")
+                    let a = key![key!.index(key!.startIndex, offsetBy: 0)]
+                    
+                    let start = key!.index(key!.endIndex, offsetBy: -3)
+                    let end = key!.index(key!.endIndex, offsetBy: 0)
+                    let b = key![Range(start ..< end)]
+                    
+                    key = "\(a)•••••••••••••••••••••••••••••••••••••\(b)"
+
+                    self.apiKey.setAttributedTitle(NSAttributedString(string: key!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
                     self.apiKeyTextField.isHidden = true
                     self.apiKeyDoneButton.isHidden = true
                     self.apiKeySubmit.isHidden = true

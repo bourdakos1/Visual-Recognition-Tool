@@ -58,6 +58,7 @@ class ClassifiersTableViewController: UITableViewController {
                         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
                         data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! })
                         self.array = data
+                        self.array.append(["name": "Default" as AnyObject])
                         self.tableView.reloadData()
                     }
                 }
@@ -91,11 +92,32 @@ class ClassifiersTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 
-        cell.textLabel?.text = array[indexPath.item]["name"] as! String
+        cell.textLabel?.text = array[indexPath.item]["name"] as? String
+        
+        let classifierId = UserDefaults.standard.string(forKey: "classifier_id")
+        
+        if classifierId != nil {
+            if array[indexPath.item]["classifier_id"] as? String == classifierId {
+                cell.accessoryType = .checkmark
+            } else {
+                cell.accessoryType = .none
+            }
+        } else {
+            if array[indexPath.item]["name"] as? String == "Default" {
+                cell.accessoryType = .checkmark
+            } else {
+                cell.accessoryType = .none
+            }
+        }
 
         return cell
     }
-
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        UserDefaults.standard.set(array[indexPath.item]["classifier_id"], forKey: "classifier_id")
+        self.tableView.reloadData()
+    }
+    
     /*
     // MARK: - Navigation
 

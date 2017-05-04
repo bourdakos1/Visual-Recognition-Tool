@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="UXp-9A-p5K">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="UXp-9A-p5K">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -147,13 +147,24 @@
                                     <action selector="submitApiKey" destination="BYZ-38-t0r" eventType="touchUpInside" id="uyC-Lo-QPg"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3n4-v9-abV">
-                                <rect key="frame" x="16" y="110" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3n4-v9-abV">
+                                <rect key="frame" x="299" y="210" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="Bx1-cL-hGz"/>
+                                    <constraint firstAttribute="width" constant="60" id="ias-Gm-9GR"/>
+                                </constraints>
+                                <state key="normal" image="classifiers.png"/>
                                 <connections>
                                     <segue destination="EBb-wX-Lte" kind="presentation" id="grA-fz-GPz"/>
                                 </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rJY-jN-pfZ">
+                                <rect key="frame" x="16" y="210" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="Xf6-8r-XKM"/>
+                                    <constraint firstAttribute="width" constant="60" id="ZCH-iV-Rya"/>
+                                </constraints>
+                                <state key="normal" image="library.png"/>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -161,6 +172,7 @@
                             <constraint firstItem="hbX-2x-72A" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="1FF-Zd-XB0"/>
                             <constraint firstAttribute="trailing" secondItem="iHJ-Ta-u2A" secondAttribute="trailing" id="5bo-HH-Nku"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="beL-ak-Suw" secondAttribute="bottom" constant="40" id="5hd-lB-t45"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="3n4-v9-abV" secondAttribute="trailing" id="5il-vD-nEX"/>
                             <constraint firstItem="KQS-fI-xsI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6Op-bq-ic7"/>
                             <constraint firstItem="KQQ-I6-IMA" firstAttribute="centerY" secondItem="iHJ-Ta-u2A" secondAttribute="centerY" id="8wS-pM-hrR"/>
                             <constraint firstItem="beL-ak-Suw" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="9BU-LJ-PaA"/>
@@ -168,6 +180,7 @@
                             <constraint firstAttribute="trailing" secondItem="KQS-fI-xsI" secondAttribute="trailing" id="BUu-HX-RNL"/>
                             <constraint firstItem="iHJ-Ta-u2A" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="GsO-9T-V8G"/>
                             <constraint firstItem="KQS-fI-xsI" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="HWh-hL-tPp"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="3n4-v9-abV" secondAttribute="bottom" constant="20" id="J7Y-mY-wJL"/>
                             <constraint firstItem="usO-SO-NRr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Jaz-UD-2zg"/>
                             <constraint firstItem="hbX-2x-72A" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="NfI-Fq-cac"/>
                             <constraint firstItem="LMj-gK-YYp" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Oya-16-T0E"/>
@@ -179,6 +192,7 @@
                             <constraint firstItem="aaW-Uw-VLV" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Wvk-Gw-R7v"/>
                             <constraint firstItem="KQS-fI-xsI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="X25-4a-USP"/>
                             <constraint firstItem="LMj-gK-YYp" firstAttribute="top" secondItem="aaW-Uw-VLV" secondAttribute="bottom" constant="20" id="dhT-rD-sfB"/>
+                            <constraint firstItem="rJY-jN-pfZ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="fgh-T7-72D"/>
                             <constraint firstItem="KQS-fI-xsI" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="glt-JJ-x7O"/>
                             <constraint firstItem="UjN-QC-Tx6" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="k16-fO-Yiu"/>
                             <constraint firstItem="UjN-QC-Tx6" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="kGU-2H-5S8"/>
@@ -186,8 +200,14 @@
                             <constraint firstItem="KQQ-I6-IMA" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="n9a-qV-sUM"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="usO-SO-NRr" secondAttribute="bottom" id="qyj-PS-QE6"/>
                             <constraint firstItem="aaW-Uw-VLV" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="sTP-M9-kDJ"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="rJY-jN-pfZ" secondAttribute="bottom" constant="20" id="twx-Pe-RWu"/>
                             <constraint firstItem="usO-SO-NRr" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xT7-n0-yQu"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="rJY-jN-pfZ"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="apiKey" destination="iHJ-Ta-u2A" id="cVS-RZ-U2p"/>
@@ -196,6 +216,7 @@
                         <outlet property="apiKeyTextField" destination="aaW-Uw-VLV" id="xzG-g1-mRq"/>
                         <outlet property="cameraView" destination="KQS-fI-xsI" id="mlN-nW-oFP"/>
                         <outlet property="captureButton" destination="beL-ak-Suw" id="feO-4D-SvN"/>
+                        <outlet property="classifiersButton" destination="3n4-v9-abV" id="Obg-sh-CIM"/>
                         <outlet property="retakeButton" destination="hbX-2x-72A" id="65k-eg-5be"/>
                         <outlet property="tempImageView" destination="usO-SO-NRr" id="TsN-d7-azE"/>
                     </connections>
@@ -339,7 +360,7 @@
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="uM0-ho-Yii">
                                             <rect key="frame" x="15" y="0.0" width="345" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -389,6 +410,8 @@
         <image name="api.png" width="41" height="133"/>
         <image name="cancel.png" width="100" height="100"/>
         <image name="capture.png" width="232" height="232"/>
+        <image name="classifiers.png" width="165" height="165"/>
+        <image name="library.png" width="165" height="165"/>
         <image name="scrim.png" width="41" height="133"/>
     </resources>
 </document>
