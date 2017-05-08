@@ -102,7 +102,11 @@ class ClassifiersTableViewController: UITableViewController {
                         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
                         data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! })
                         self.array = data
-                        self.array.append(["name": "Default" as AnyObject])
+                        self.array.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+                        
+                        // Test classifier
+                        self.array.insert(["name": "Test Training" as AnyObject, "classifier_id": "test_training_2146114590" as AnyObject, "status": "training" as AnyObject], at: 0)
+                        
                         self.tableView.reloadData()
                     }
                 }
@@ -161,7 +165,27 @@ class ClassifiersTableViewController: UITableViewController {
             cell.classifierNameLabel?.text = classifierData["name"] as? String
             cell.classifierIdLabel?.text = classifierData["classifier_id"] as? String
             cell.classifierStatusLabel?.text = classifierData["status"] as? String
-            cell.activityIndicator?.startAnimating()
+            cell.statusIndicator?.layer.cornerRadius = 6
+            
+            if classifierData["status"] as? String == "ready"{
+                cell.statusIndicator?.backgroundColor = UIColor(red: 105/255, green: 219/255, blue: 48/255, alpha: 1)
+                cell.activityIndicator?.stopAnimating()
+                cell.activityIndicator?.isHidden = true
+            } else if classifierData["status"] as? String == "training" || classifierData["status"] as? String == "retraining" {
+                cell.classifierNameLabel?.alpha = 0.4
+                cell.classifierIdLabel?.alpha = 0.4
+                cell.classifierStatusLabel?.alpha = 0.4
+                cell.statusIndicator?.backgroundColor = UIColor(red: 255/255, green: 171/255, blue: 0/255, alpha: 0.4)
+                cell.activityIndicator?.startAnimating()
+                cell.activityIndicator?.isHidden = false
+            } else {
+                cell.classifierNameLabel?.alpha = 0.4
+                cell.classifierIdLabel?.alpha = 0.4
+                cell.classifierStatusLabel?.alpha = 0.4
+                cell.statusIndicator?.backgroundColor = UIColor(red: 244/255, green: 67/255, blue: 54/255, alpha: 0.4)
+                cell.activityIndicator?.stopAnimating()
+                cell.activityIndicator?.isHidden = true
+            }
             
             cell.tapAction = { (cell) in
                 print(self.array[tableView.indexPath(for: cell)!.item]["classifier_id"] ?? "default")
@@ -202,18 +226,14 @@ class ClassifiersTableViewController: UITableViewController {
             if classifierId != nil {
                 if classifierData["classifier_id"] as? String == classifierId {
                     cell.checkmark?.isHidden = false
-                    cell.activityIndicator?.isHidden = true
                 } else {
                     cell.checkmark?.isHidden = true
-                    cell.activityIndicator?.isHidden = false
                 }
             } else {
                 if classifierData["name"] as? String == "Default" {
                     cell.checkmark?.isHidden = false
-                    cell.activityIndicator?.isHidden = true
                 } else {
                     cell.checkmark?.isHidden = true
-                    cell.activityIndicator?.isHidden = false
                 }
             }
             
@@ -222,7 +242,12 @@ class ClassifiersTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        UserDefaults.standard.set(array[indexPath.item]["classifier_id"], forKey: "classifier_id")
+        if indexPath.section == 1 {
+            let classifierData = array[indexPath.item]
+            if classifierData["status"] as? String == "ready"{
+                UserDefaults.standard.set(array[indexPath.item]["classifier_id"], forKey: "classifier_id")
+            }
+        }
         self.tableView.reloadData()
     }
     
