@@ -9,8 +9,13 @@
 import UIKit
 
 class ClassifiersTableViewController: UITableViewController {
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .default
+    }
     
     let VISION_API_KEY: String
+    
+    var progress = ["Test Classifier"]
     
     var array: [[String: AnyObject]] = []
     
@@ -30,9 +35,9 @@ class ClassifiersTableViewController: UITableViewController {
     weak var AddAlertSaveAction: UIAlertAction?
     
     @IBAction func createClassifier() {
-        let alertController = UIAlertController(title: "New Classifier", message: "Enter a name for this classifier.", preferredStyle: .alert)
+        let alert = UIAlertController(title: "New Classifier", message: "Enter a name for this classifier.", preferredStyle: .alert)
         
-        alertController.addTextField(configurationHandler: {(textField: UITextField) in
+        alert.addTextField(configurationHandler: {(textField: UITextField) in
             textField.placeholder = "Title"
             textField.addTarget(self, action: #selector(self.handleTextDidChange(_:)), for: .editingChanged)
         })
@@ -43,7 +48,8 @@ class ClassifiersTableViewController: UITableViewController {
         }
         
         let saveAction = UIAlertAction(title: "Save", style: .default) { action in
-            print("save")
+            let textfield = alert.textFields!.first!
+            print("saving: \(textfield.text!)")
         }
         
         // disable the 'save' button initially
@@ -53,10 +59,10 @@ class ClassifiersTableViewController: UITableViewController {
         AddAlertSaveAction = saveAction
         
         // Add the actions.
-        alertController.addAction(cancelAction)
-        alertController.addAction(saveAction)
+        alert.addAction(cancelAction)
+        alert.addAction(saveAction)
         
-        present(alertController, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
     
     func handleTextDidChange(_ sender:UITextField) {
@@ -109,6 +115,8 @@ class ClassifiersTableViewController: UITableViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.estimatedRowHeight = 85.0
+        tableView.rowHeight = UITableViewAutomaticDimension
     }
 
     override func didReceiveMemoryWarning() {
@@ -119,36 +127,98 @@ class ClassifiersTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return array.count
+        if section == 0 {
+            return progress.count
+        } else {
+            return array.count
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            return "in progress"
+        } else {
+            return "my classifiers"
+        }
     }
 
-
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-
-        cell.textLabel?.text = array[indexPath.item]["name"] as? String
-        
-        let classifierId = UserDefaults.standard.string(forKey: "classifier_id")
-        
-        if classifierId != nil {
-            if array[indexPath.item]["classifier_id"] as? String == classifierId {
-                cell.accessoryType = .checkmark
-            } else {
-                cell.accessoryType = .none
-            }
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            
+            cell.textLabel?.text = progress[indexPath.item]
+            
+            return cell
         } else {
-            if array[indexPath.item]["name"] as? String == "Default" {
-                cell.accessoryType = .checkmark
-            } else {
-                cell.accessoryType = .none
-            }
-        }
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath) as! ClassiferTableViewCell
+            
+            let classifierData = array[indexPath.item]
+            
+            cell.classifierNameLabel?.text = classifierData["name"] as? String
+            cell.classifierIdLabel?.text = classifierData["classifier_id"] as? String
+            cell.classifierStatusLabel?.text = classifierData["status"] as? String
+            cell.activityIndicator?.startAnimating()
+            
+            cell.tapAction = { (cell) in
+                print(self.array[tableView.indexPath(for: cell)!.item]["classifier_id"] ?? "default")
 
-        return cell
+                let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                
+                
+                let apiAction = UIAlertAction(title: "API Reference", style: .default, handler: {
+                    (alert: UIAlertAction!) -> Void in
+                    print("API Reference")
+                })
+                
+                let updateAction = UIAlertAction(title: "Update", style: .default, handler: {
+                    (alert: UIAlertAction!) -> Void in
+                    print("Update")
+                })
+                
+                let deleteAction = UIAlertAction(title: "Delete", style: .destructive, handler: {
+                    (alert: UIAlertAction!) -> Void in
+                    print("Delete")
+                })
+                
+                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {
+                    (alert: UIAlertAction!) -> Void in
+                    print("Cancel")
+                })
+                
+                optionMenu.addAction(apiAction)
+                optionMenu.addAction(updateAction)
+                optionMenu.addAction(deleteAction)
+                optionMenu.addAction(cancelAction)
+                
+                self.present(optionMenu, animated: true, completion: nil)
+            }
+            
+            let classifierId = UserDefaults.standard.string(forKey: "classifier_id")
+            
+            if classifierId != nil {
+                if classifierData["classifier_id"] as? String == classifierId {
+                    cell.checkmark?.isHidden = false
+                    cell.activityIndicator?.isHidden = true
+                } else {
+                    cell.checkmark?.isHidden = true
+                    cell.activityIndicator?.isHidden = false
+                }
+            } else {
+                if classifierData["name"] as? String == "Default" {
+                    cell.checkmark?.isHidden = false
+                    cell.activityIndicator?.isHidden = true
+                } else {
+                    cell.checkmark?.isHidden = true
+                    cell.activityIndicator?.isHidden = false
+                }
+            }
+            
+            return cell
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

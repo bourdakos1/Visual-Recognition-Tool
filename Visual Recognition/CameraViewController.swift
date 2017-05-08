@@ -10,6 +10,9 @@ import UIKit
 import AVFoundation
 
 class CameraViewController: UIViewController, UIImagePickerControllerDelegate, AVCaptureMetadataOutputObjectsDelegate {
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     
     let VISION_API_KEY: String
     
