@@ -39,7 +39,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, A
         var apiKeyText = UserDefaults.standard.string(forKey: "api_key")
         
         if apiKeyText == nil || apiKeyText == "" {
-            apiKeyText = "API Key"
+            apiKeyText = "🔑 API Key"
         } else {
             let a = apiKeyText![apiKeyText!.index(apiKeyText!.startIndex, offsetBy: 0)]
             
@@ -47,7 +47,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, A
             let end = apiKeyText!.index(apiKeyText!.endIndex, offsetBy: 0)
             let b = apiKeyText![Range(start ..< end)]
             
-            apiKeyText = "\(a)•••••••••••••••••••••••••••••••••••••\(b)"
+            apiKeyText = "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
         }
         
         apiKey.layer.shadowOffset = CGSize(width: 0, height: 1)
@@ -309,6 +309,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, A
     @IBOutlet var apiKey: UIButton!
     @IBOutlet var apiKeySubmit: UIButton!
     @IBOutlet var apiKeyTextField: UITextField!
+    @IBOutlet var hintTextView: UITextView!
     
     let blurredEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     
@@ -334,13 +335,20 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, A
     @IBAction func addApiKey() {
         blurredEffectView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
         view.addSubview(blurredEffectView)
+        
         apiKeyTextField.isHidden = false
         apiKeyTextField.becomeFirstResponder()
         view.addSubview(apiKeyTextField)
+        
         apiKeyDoneButton.isHidden = false
         view.addSubview(apiKeyDoneButton)
+        
         apiKeySubmit.isHidden = false
         view.addSubview(apiKeySubmit)
+        
+        
+        hintTextView.isHidden = false
+        view.addSubview(hintTextView)
         print("add view")
     }
     
@@ -348,6 +356,8 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, A
         apiKeyTextField.isHidden = true
         apiKeyDoneButton.isHidden = true
         apiKeySubmit.isHidden = true
+        hintTextView.isHidden = true
+        
         blurredEffectView.removeFromSuperview()
         view.endEditing(true)
         apiKeyTextField.text = ""
@@ -383,13 +393,14 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, A
                         let end = key!.index(key!.endIndex, offsetBy: 0)
                         let b = key![Range(start ..< end)]
                         
-                        key = "\(a)•••••••••••••••••••••••••••••••••••••\(b)"
+                        key = "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
                         self.apiKey.setAttributedTitle(NSAttributedString(string: key!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
                     }
                     DispatchQueue.main.async {
                         self.apiKeyTextField.isHidden = true
                         self.apiKeyDoneButton.isHidden = true
                         self.apiKeySubmit.isHidden = true
+                        self.hintTextView.isHidden = true
                         self.blurredEffectView.removeFromSuperview()
                         self.view.endEditing(true)
                         self.apiKeyTextField.text = ""
@@ -406,12 +417,13 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, A
                     let end = key!.index(key!.endIndex, offsetBy: 0)
                     let b = key![Range(start ..< end)]
                     
-                    key = "\(a)•••••••••••••••••••••••••••••••••••••\(b)"
+                    key = "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
 
                     self.apiKey.setAttributedTitle(NSAttributedString(string: key!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
                     self.apiKeyTextField.isHidden = true
                     self.apiKeyDoneButton.isHidden = true
                     self.apiKeySubmit.isHidden = true
+                    self.hintTextView.isHidden = true
                     self.blurredEffectView.removeFromSuperview()
                     self.view.endEditing(true)
                     self.apiKeyTextField.text = ""

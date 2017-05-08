@@ -107,7 +107,7 @@
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <state key="normal" title="API Key" backgroundImage="api.png">
+                                <state key="normal" title="🔑API Key" backgroundImage="api.png">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -134,15 +134,15 @@
                                     <action selector="apiKeyDone" destination="BYZ-38-t0r" eventType="touchUpInside" id="yaq-ls-K0S"/>
                                 </connections>
                             </button>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LMj-gK-YYp" customClass="RoundedButton" customModule="Visual_Recognition" customModuleProvider="target">
-                                <rect key="frame" x="150" y="69" width="74" height="22"/>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LMj-gK-YYp" customClass="RoundedButton" customModule="Visual_Recognition" customModuleProvider="target">
+                                <rect key="frame" x="87" y="64" width="200" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="LHs-SE-67H"/>
                                     <constraint firstAttribute="height" constant="48" id="mzp-vw-xSb"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <state key="normal" title="OK">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleColor" red="0.25098039215686274" green="0.25098039215686274" blue="0.25098039215686274" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="submitApiKey" destination="BYZ-38-t0r" eventType="touchUpInside" id="uyC-Lo-QPg"/>
@@ -159,6 +159,12 @@
                                     <segue destination="EBb-wX-Lte" kind="presentation" id="grA-fz-GPz"/>
                                 </connections>
                             </button>
+                            <textView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Don't want to type out your key? Click 🔑 in the desktop tool and scan the code!" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9WH-Si-Dao">
+                                <rect key="frame" x="16" y="132" width="343" height="41"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rJY-jN-pfZ">
                                 <rect key="frame" x="16" y="210" width="60" height="60"/>
                                 <constraints>
@@ -192,13 +198,17 @@
                             <constraint firstAttribute="trailing" secondItem="UjN-QC-Tx6" secondAttribute="trailing" id="WWt-mO-N9E"/>
                             <constraint firstItem="aaW-Uw-VLV" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Wvk-Gw-R7v"/>
                             <constraint firstItem="KQS-fI-xsI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="X25-4a-USP"/>
+                            <constraint firstItem="9WH-Si-Dao" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="YsL-Xa-WQn"/>
                             <constraint firstItem="LMj-gK-YYp" firstAttribute="top" secondItem="aaW-Uw-VLV" secondAttribute="bottom" constant="20" id="dhT-rD-sfB"/>
                             <constraint firstItem="rJY-jN-pfZ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="fgh-T7-72D"/>
                             <constraint firstItem="KQS-fI-xsI" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="glt-JJ-x7O"/>
                             <constraint firstItem="UjN-QC-Tx6" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="k16-fO-Yiu"/>
                             <constraint firstItem="UjN-QC-Tx6" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="kGU-2H-5S8"/>
+                            <constraint firstItem="9WH-Si-Dao" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="lFM-Pp-elE"/>
                             <constraint firstAttribute="trailing" secondItem="usO-SO-NRr" secondAttribute="trailing" id="mby-rG-lt1"/>
                             <constraint firstItem="KQQ-I6-IMA" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="n9a-qV-sUM"/>
+                            <constraint firstItem="9WH-Si-Dao" firstAttribute="top" secondItem="LMj-gK-YYp" secondAttribute="bottom" constant="20" id="nIY-Ih-Hbu"/>
+                            <constraint firstItem="beL-ak-Suw" firstAttribute="top" secondItem="9WH-Si-Dao" secondAttribute="bottom" id="pvT-xC-O4h"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="usO-SO-NRr" secondAttribute="bottom" id="qyj-PS-QE6"/>
                             <constraint firstItem="aaW-Uw-VLV" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="sTP-M9-kDJ"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="rJY-jN-pfZ" secondAttribute="bottom" constant="20" id="twx-Pe-RWu"/>
@@ -218,6 +228,7 @@
                         <outlet property="cameraView" destination="KQS-fI-xsI" id="mlN-nW-oFP"/>
                         <outlet property="captureButton" destination="beL-ak-Suw" id="feO-4D-SvN"/>
                         <outlet property="classifiersButton" destination="3n4-v9-abV" id="Obg-sh-CIM"/>
+                        <outlet property="hintTextView" destination="9WH-Si-Dao" id="Zdo-Gx-lQ8"/>
                         <outlet property="retakeButton" destination="hbX-2x-72A" id="65k-eg-5be"/>
                         <outlet property="tempImageView" destination="usO-SO-NRr" id="TsN-d7-azE"/>
                     </connections>

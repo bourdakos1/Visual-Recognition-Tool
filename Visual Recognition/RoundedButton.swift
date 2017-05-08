@@ -9,7 +9,8 @@
 import UIKit
 
 class RoundedButton: UIButton {
-    let color = UIColor(red: 143/255, green: 51/255, blue: 255/255, alpha: 1)
+//    let color = UIColor(red: 143/255, green: 51/255, blue: 255/255, alpha: 1)
+    let color = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
     
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
