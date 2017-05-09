@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class ClassifiersTableViewController: UITableViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -50,6 +51,16 @@ class ClassifiersTableViewController: UITableViewController {
         let saveAction = UIAlertAction(title: "Save", style: .default) { action in
             let textfield = alert.textFields!.first!
             print("saving: \(textfield.text!)")
+            let pendingClassifierClassName:String  = String(describing: PendingClassifier.self)
+    
+            let pendingClassifier:PendingClassifier = NSEntityDescription.insertNewObject(forEntityName: pendingClassifierClassName, into: DatabaseController.getContext()) as! PendingClassifier
+            pendingClassifier.id = "g3eq80eun09132ue13e9012u9e01" // make this an actual id, this will be the directory
+            pendingClassifier.name = textfield.text!
+            
+            self.progress.append(textfield.text!)
+            self.tableView.reloadData()
+            
+            DatabaseController.saveContext()
         }
         
         // disable the 'save' button initially
@@ -73,6 +84,46 @@ class ClassifiersTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // -------------------
+        // -----Core Data-----
+        // -------------------
+//        let pendingClassClassName:String = String(describing: PendingClass.self)
+//        let pendingClassifierClassName:String  = String(describing: PendingClassifier.self)
+//        
+//        let pendingClass:PendingClass = NSEntityDescription.insertNewObject(forEntityName: pendingClassClassName, into: DatabaseController.getContext()) as! PendingClass
+//        
+//        pendingClass.name = "Test Class"
+//        
+//        let pendingClassifier:PendingClassifier = NSEntityDescription.insertNewObject(forEntityName: pendingClassifierClassName, into: DatabaseController.getContext()) as! PendingClassifier
+//        pendingClassifier.id = "g3eq80eun09132ue13e9012u9e01"
+//        pendingClassifier.name = "Test Classifier"
+//        
+//        pendingClassifier.addToRelationship(pendingClass)
+//        
+//        DatabaseController.saveContext()
+        
+        let fetchRequest:NSFetchRequest<PendingClassifier> = PendingClassifier.fetchRequest()
+        
+        do {
+            let searchResults = try DatabaseController.getContext().fetch(fetchRequest)
+            progress = []
+            for result in searchResults as [PendingClassifier] {
+                progress.append(result.name!)
+                print("\(result.name!)_\(result.id!):")
+                for result in result.relationship?.allObjects as! [PendingClass] {
+                    print("\t\(result.name!)")
+                }
+            }
+        }
+        catch {
+            print("Error: \(error)")
+        }
+        
+        // -----------------------
+        // -----END Core Data-----
+        // -----------------------
+        
+        // Load from Watson
         let apiKey = UserDefaults.standard.string(forKey: "api_key")
         
         if apiKey == nil || apiKey == "" {
