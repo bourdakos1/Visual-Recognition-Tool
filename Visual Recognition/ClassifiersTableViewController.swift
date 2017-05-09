@@ -16,7 +16,7 @@ class ClassifiersTableViewController: UITableViewController {
     
     let VISION_API_KEY: String
     
-    var progress = ["Test Classifier"]
+    var progress = [PendingClassifier]()
     
     var array: [[String: AnyObject]] = []
     
@@ -31,7 +31,6 @@ class ClassifiersTableViewController: UITableViewController {
         
         super.init(coder: aDecoder)
     }
-    
 
     weak var AddAlertSaveAction: UIAlertAction?
     
@@ -57,7 +56,7 @@ class ClassifiersTableViewController: UITableViewController {
             pendingClassifier.id = "g3eq80eun09132ue13e9012u9e01" // make this an actual id, this will be the directory
             pendingClassifier.name = textfield.text!
             
-            self.progress.append(textfield.text!)
+            self.progress.append(pendingClassifier)
             self.tableView.reloadData()
             
             DatabaseController.saveContext()
@@ -83,32 +82,14 @@ class ClassifiersTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // -------------------
-        // -----Core Data-----
-        // -------------------
-//        let pendingClassClassName:String = String(describing: PendingClass.self)
-//        let pendingClassifierClassName:String  = String(describing: PendingClassifier.self)
-//        
-//        let pendingClass:PendingClass = NSEntityDescription.insertNewObject(forEntityName: pendingClassClassName, into: DatabaseController.getContext()) as! PendingClass
-//        
-//        pendingClass.name = "Test Class"
-//        
-//        let pendingClassifier:PendingClassifier = NSEntityDescription.insertNewObject(forEntityName: pendingClassifierClassName, into: DatabaseController.getContext()) as! PendingClassifier
-//        pendingClassifier.id = "g3eq80eun09132ue13e9012u9e01"
-//        pendingClassifier.name = "Test Classifier"
-//        
-//        pendingClassifier.addToRelationship(pendingClass)
-//        
-//        DatabaseController.saveContext()
-        
+    
         let fetchRequest:NSFetchRequest<PendingClassifier> = PendingClassifier.fetchRequest()
         
         do {
             let searchResults = try DatabaseController.getContext().fetch(fetchRequest)
             progress = []
             for result in searchResults as [PendingClassifier] {
-                progress.append(result.name!)
+                progress.append(result)
                 print("\(result.name!)_\(result.id!):")
                 for result in result.relationship?.allObjects as! [PendingClass] {
                     print("\t\(result.name!)")
@@ -118,10 +99,6 @@ class ClassifiersTableViewController: UITableViewController {
         catch {
             print("Error: \(error)")
         }
-        
-        // -----------------------
-        // -----END Core Data-----
-        // -----------------------
         
         // Load from Watson
         let apiKey = UserDefaults.standard.string(forKey: "api_key")
@@ -205,7 +182,7 @@ class ClassifiersTableViewController: UITableViewController {
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
             
-            cell.textLabel?.text = progress[indexPath.item]
+            cell.textLabel?.text = progress[indexPath.item].name!
             
             return cell
         } else {
@@ -302,14 +279,22 @@ class ClassifiersTableViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    // Override to support conditional editing of the table view.
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        // Return false if you do not want the specified item to be editable.
+        if indexPath.section == 1 {
+            return false
+        }
+        return true
     }
-    */
+    
+    // Override to support editing the table view.
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            DatabaseController.getContext().delete(progress[indexPath.item])
+            progress.remove(at: indexPath.item)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
 
 }
