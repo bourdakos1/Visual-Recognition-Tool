@@ -15,34 +15,6 @@ class TableViewController: UITableViewController {
     
     var myarray : [[String: AnyObject]] = []
     var cameraHidden = false
-    
-//    var lastKnowContentOfsset: CGFloat = 0.0
-//    
-//    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        if scrollView == tableView {
-//            let contentOffset = scrollView.contentOffset.y
-//            print("contentOffset: ", contentOffset)
-//            
-//            if (contentOffset <= 0) {
-//                scrollView.isScrollEnabled = false
-//            }
-//            
-//            if (contentOffset > self.lastKnowContentOfsset) {
-//                print("scrolling Down")
-//                print("dragging Up")
-//            } else {
-//                print("scrolling Up")
-//                print("dragging Down")
-//            }
-//        }
-//    }
-//    
-//    override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-//        if scrollView == tableView {
-//            self.lastKnowContentOfsset = scrollView.contentOffset.y
-//            print("lastKnowContentOfsset: ", scrollView.contentOffset.y)
-//        }
-//    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

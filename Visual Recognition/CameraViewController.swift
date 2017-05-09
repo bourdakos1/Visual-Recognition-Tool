@@ -145,7 +145,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, A
                     
                     print("dimensions : \(image2.size)")
                     print("size : \(UIImageJPEGRepresentation(image2, 0.4)!.count)")
-                    
+
                     var apiKey = UserDefaults.standard.string(forKey: "api_key")
                     
                     if apiKey == nil || apiKey == "" {
@@ -245,6 +245,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, A
             hideRetake()
             showAPI()
             showButton()
+
             if let drawer = self.parent as? PulleyViewController
             {
                 if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
@@ -261,6 +262,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, A
             showRetake()
             hideAPI()
             hideButton()
+
             if let drawer = self.parent as? PulleyViewController
             {
                 if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
