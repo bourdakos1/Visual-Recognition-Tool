@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-class CameraViewController: UIViewController, UIImagePickerControllerDelegate, AVCaptureMetadataOutputObjectsDelegate {
+class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, AVCapturePhotoCaptureDelegate {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -17,7 +17,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, A
     let VISION_API_KEY: String
     
     var captureSession: AVCaptureSession?
-    var stillImageOutput: AVCaptureStillImageOutput?
+    var photoOutput: AVCapturePhotoOutput?
     var previewLayer: AVCaptureVideoPreviewLayer?
     @IBOutlet var cameraView: UIView!
     @IBOutlet var tempImageView: UIImageView!
@@ -69,10 +69,10 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, A
             let input = try AVCaptureDeviceInput(device: backCamera)
             captureSession?.addInput(input)
             
-            stillImageOutput = AVCaptureStillImageOutput()
+            photoOutput = AVCapturePhotoOutput()
             
-            if (captureSession?.canAddOutput(stillImageOutput) != nil){
-                captureSession?.addOutput(stillImageOutput)
+            if (captureSession?.canAddOutput(photoOutput) != nil){
+                captureSession?.addOutput(photoOutput)
                 
                 previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
                 previewLayer?.videoGravity = AVLayerVideoGravityResizeAspect
@@ -127,86 +127,78 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, A
     }
     
     func didPressTakePhoto() {
-        if let videoConnection = stillImageOutput?.connection(withMediaType: AVMediaTypeVideo){
-            videoConnection.videoOrientation = AVCaptureVideoOrientation.portrait
-            //photoOutput?.capturePhoto(with: AVCapturePhotoSettings, delegate: )
-            
-            stillImageOutput?.captureStillImageAsynchronously(from: videoConnection, completionHandler: {
-                (sampleBuffer, error) in
-                
-                if sampleBuffer != nil {
-                    let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer)
-                    let dataProvider  = CGDataProvider(data: imageData as! CFData)
-                    let cgImageRef = CGImage(jpegDataProviderSource: dataProvider!, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
-                    
-                    let image = UIImage(cgImage: cgImageRef!, scale: 1.0, orientation: UIImageOrientation.right)
-                    
-                    let image2 = image.resized(toWidth: 300)!
-                    
-                    print("dimensions : \(image2.size)")
-                    print("size : \(UIImageJPEGRepresentation(image2, 0.4)!.count)")
+        photoOutput?.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
+    }
+    
+    func capture(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhotoSampleBuffer photoSampleBuffer: CMSampleBuffer?, previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
+        
+        if photoSampleBuffer != nil {
+            let imageData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer!, previewPhotoSampleBuffer: previewPhotoSampleBuffer)
+            let dataProvider  = CGDataProvider(data: imageData! as CFData)
+            let cgImageRef = CGImage(jpegDataProviderSource: dataProvider!, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
 
-                    var apiKey = UserDefaults.standard.string(forKey: "api_key")
-                    
-                    if apiKey == nil || apiKey == "" {
-                        apiKey = self.VISION_API_KEY
-                    }
-                    
-                    let escapedApiKey = apiKey?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-                    
-                    
-                    /// UPLOAD
-                    
-                    let classifierId = UserDefaults.standard.string(forKey: "classifier_id")
-                    
-                    print(escapedApiKey!)
-                    
-                    var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=\(escapedApiKey!)&version=2016-05-20&threshold=0&classifier_ids=\(classifierId ?? "default")")!)
-                    r.httpMethod = "POST"
-                    let boundary = "Boundary-\(UUID().uuidString)"
-                    r.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-                    
-                    r.httpBody = self.createBody(parameters: [:],
-                                            boundary: boundary,
-                                            data: UIImageJPEGRepresentation(image2, 0.4)!,
-                                            mimeType: "image/jpg",
-                                            filename: "hello.jpg")
-                    
-                    let task = URLSession.shared.dataTask(with: r) { data, response, error in
-                        guard let data = data, error == nil else {               // check for fundamental networking error
-                            return
-                        }
-                        do {
-                            let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? AnyObject
-                            
-                            if let parseJSON = json {
-                                print("resp :\(parseJSON)")
-                                if let drawer = self.parent as? PulleyViewController {
-                                    if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
-                                        DispatchQueue.main.async{
-                                            var myNewData : [[String: AnyObject]] = []
-                                            var data = ((((parseJSON["images"] as! NSArray)[0] as! AnyObject)["classifiers"] as! NSArray)[0] as! AnyObject)["classes"] as! NSArray
-                                            for myClass in data {
-                                                print ((myClass as! AnyObject)["class"] as! String)
-                                                myNewData.append(["class_name":(myClass as! AnyObject)["class"] as! AnyObject, "score":(myClass as! AnyObject)["score"] as! AnyObject])
-                                            }
-                                            myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
-                                            tablesdsa.myarray = myNewData
-                                            tablesdsa.tableView.reloadData()
-                                        }
-                                    }
-                                }
-                            }
-                        } catch let error as NSError {
-                            print("error : \(error)")
-                        }
-                    }
-                    task.resume()
-                    
-                    self.tempImageView.image = image
-                    self.tempImageView.isHidden = false
+            let image = UIImage(cgImage: cgImageRef!, scale: 1.0, orientation: UIImageOrientation.right)
+
+            let image2 = image.resized(toWidth: 300)!
+
+            print("dimensions : \(image2.size)")
+            print("size : \(UIImageJPEGRepresentation(image2, 0.4)!.count)")
+
+            var apiKey = UserDefaults.standard.string(forKey: "api_key")
+
+            if apiKey == nil || apiKey == "" {
+                apiKey = self.VISION_API_KEY
+            }
+
+            let escapedApiKey = apiKey?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+
+
+            /// UPLOAD
+
+            let classifierId = UserDefaults.standard.string(forKey: "classifier_id")
+
+            print(escapedApiKey!)
+
+            var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=\(escapedApiKey!)&version=2016-05-20&threshold=0&classifier_ids=\(classifierId ?? "default")")!)
+            r.httpMethod = "POST"
+            let boundary = "Boundary-\(UUID().uuidString)"
+            r.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+            r.httpBody = self.createBody(parameters: [:],
+                                    boundary: boundary,
+                                    data: UIImageJPEGRepresentation(image2, 0.4)!,
+                                    mimeType: "image/jpg",
+                                    filename: "hello.jpg")
+
+            let task = URLSession.shared.dataTask(with: r) { data, response, error in
+                guard let data = data, error == nil else {               // check for fundamental networking error
+                    return
                 }
-            })
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
+                    if let drawer = self.parent as? PulleyViewController {
+                        if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
+                            DispatchQueue.main.async{
+                                var myNewData : [[String: AnyObject]] = []
+                                let data = ((((json["images"] as! NSArray)[0] as AnyObject)["classifiers"] as! NSArray)[0] as AnyObject)["classes"] as! NSArray
+                                for myClass in data {
+                                    print ((myClass as AnyObject)["class"] as! String)
+                                    myNewData.append(["class_name":(myClass as AnyObject)["class"] as AnyObject, "score":(myClass as AnyObject)["score"] as AnyObject])
+                                }
+                                myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
+                                tablesdsa.myarray = myNewData
+                                tablesdsa.tableView.reloadData()
+                            }
+                        }
+                    }
+                } catch let error as NSError {
+                    print("error : \(error)")
+                }
+            }
+            task.resume()
+            
+            self.tempImageView.image = image
+            self.tempImageView.isHidden = false
         }
     }
     
@@ -316,22 +308,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, A
     let blurredEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     
     @IBAction func unwindToVC(segue: UIStoryboardSegue) {
-//        if segue.identifier == "cancel" {
-//            if let sourceViewController = segue.source as? FormTableViewController {
-//                myEventTitle = sourceViewController.titleField.text!
-//                myEventLocation = sourceViewController.locationField.text!
-//                //let address = sourceViewController.locationAddress.title(for: .normal)!
-//                
-//                // format date to match Go and Mongo
-//                let dateFormatterPrint = DateFormatter()
-//                dateFormatterPrint.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-//                let start = dateFormatterPrint.string(from: sourceViewController.startDate)
-//                let end = dateFormatterPrint.string(from:sourceViewController.endDate)
-//                
-//                post(title: myEventTitle, address: "address", place: myEventLocation, start: start, end: end)
-//                eventIsLive = true
-//            }
-//        }
+
     }
     
     @IBAction func addApiKey() {
@@ -381,33 +358,30 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, A
                 return
             }
             do {
-                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? AnyObject
+                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
                 
-                if let parseJSON = json {
-                    print("resp :\(parseJSON)")
-                    if parseJSON["statusInfo"] as! String == "invalid-api-key" {
-                        print("Ivalid api key!")
-                    } else {
-                        UserDefaults.standard.set(key, forKey: "api_key")
-                        let a = key![key!.index(key!.startIndex, offsetBy: 0)]
-                        
-                        let start = key!.index(key!.endIndex, offsetBy: -3)
-                        let end = key!.index(key!.endIndex, offsetBy: 0)
-                        let b = key![Range(start ..< end)]
-                        
-                        key = "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
-                        self.apiKey.setAttributedTitle(NSAttributedString(string: key!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
-                    }
-                    DispatchQueue.main.async {
-                        self.apiKeyTextField.isHidden = true
-                        self.apiKeyDoneButton.isHidden = true
-                        self.apiKeySubmit.isHidden = true
-                        self.hintTextView.isHidden = true
-                        self.blurredEffectView.removeFromSuperview()
-                        self.view.endEditing(true)
-                        self.apiKeyTextField.text = ""
-                        print("remove view")
-                    }
+                if json["statusInfo"] as! String == "invalid-api-key" {
+                    print("Ivalid api key!")
+                } else {
+                    UserDefaults.standard.set(key, forKey: "api_key")
+                    let a = key![key!.index(key!.startIndex, offsetBy: 0)]
+                    
+                    let start = key!.index(key!.endIndex, offsetBy: -3)
+                    let end = key!.index(key!.endIndex, offsetBy: 0)
+                    let b = key![Range(start ..< end)]
+                    
+                    key = "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
+                    self.apiKey.setAttributedTitle(NSAttributedString(string: key!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+                }
+                DispatchQueue.main.async {
+                    self.apiKeyTextField.isHidden = true
+                    self.apiKeyDoneButton.isHidden = true
+                    self.apiKeySubmit.isHidden = true
+                    self.hintTextView.isHidden = true
+                    self.blurredEffectView.removeFromSuperview()
+                    self.view.endEditing(true)
+                    self.apiKeyTextField.text = ""
+                    print("remove view")
                 }
             } catch let error as NSError {
                 print("error : \(error)")

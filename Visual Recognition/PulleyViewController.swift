@@ -743,10 +743,10 @@ extension PulleyViewController: UIScrollViewDelegate {
                 }
             }
             
-            if abs(Float(currentClosestStop - (self.view.bounds.size.height - topInset))) <= FLT_EPSILON && supportedDrawerPositions.contains(.open)
+            if abs(Float(currentClosestStop - (self.view.bounds.size.height - topInset))) <= .ulpOfOne && supportedDrawerPositions.contains(.open)
             {
                 setDrawerPosition(position: .open, animated: true)
-            } else if abs(Float(currentClosestStop - collapsedHeight)) <= FLT_EPSILON && supportedDrawerPositions.contains(.collapsed)
+            } else if abs(Float(currentClosestStop - collapsedHeight)) <= .ulpOfOne && supportedDrawerPositions.contains(.collapsed)
             {
                 setDrawerPosition(position: .collapsed, animated: true)
             } else if supportedDrawerPositions.contains(.partiallyRevealed){

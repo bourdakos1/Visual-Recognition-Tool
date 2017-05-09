@@ -119,24 +119,20 @@ class ClassifiersTableViewController: UITableViewController {
                 return
             }
             do {
-                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? AnyObject
-                
-                if let parseJSON = json {
-                    print("resp :\(parseJSON)")
-                    DispatchQueue.main.async{
-                        var data = parseJSON["classifiers"] as! [[String: AnyObject]]
-                        
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-                        data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! })
-                        self.array = data
-                        self.array.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-                        
-                        // Test classifier
-                        self.array.insert(["name": "Test Training" as AnyObject, "classifier_id": "test_training_2146114590" as AnyObject, "status": "training" as AnyObject], at: 0)
-                        
-                        self.tableView.reloadData()
-                    }
+                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
+                DispatchQueue.main.async{
+                    var data = json["classifiers"] as! [[String: AnyObject]]
+                    
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+                    data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! })
+                    self.array = data
+                    self.array.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+                    
+                    // Test classifier
+                    self.array.insert(["name": "Test Training" as AnyObject, "classifier_id": "test_training_2146114590" as AnyObject, "status": "training" as AnyObject], at: 0)
+                    
+                    self.tableView.reloadData()
                 }
             } catch let error as NSError {
                 print("error : \(error)")

@@ -2,14 +2,15 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16E195" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="PendingClass" representedClassName=".PendingClass" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="relationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PendingClassifier" inverseName="relationship" inverseEntity="PendingClassifier" syncable="YES"/>
     </entity>
     <entity name="PendingClassifier" representedClassName=".PendingClassifier" syncable="YES">
         <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="relationship" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PendingClass" syncable="YES"/>
+        <relationship name="relationship" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PendingClass" inverseName="relationship" inverseEntity="PendingClass" syncable="YES"/>
     </entity>
     <elements>
-        <element name="PendingClassifier" positionX="-252" positionY="198" width="126" height="88"/>
-        <element name="PendingClass" positionX="-146" positionY="336" width="128" height="58"/>
+        <element name="PendingClass" positionX="-36" positionY="213" width="128" height="73"/>
+        <element name="PendingClassifier" positionX="-252" positionY="198" width="126" height="90"/>
     </elements>
 </model>
