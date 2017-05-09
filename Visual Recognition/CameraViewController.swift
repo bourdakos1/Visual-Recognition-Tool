@@ -9,19 +9,57 @@
 import UIKit
 import AVFoundation
 
-class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
+class CameraViewController: UIViewController, UIImagePickerControllerDelegate, AVCaptureMetadataOutputObjectsDelegate {
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     
-    let API_KEY = "<MY_API_KEY>"
+    let VISION_API_KEY: String
     
-    var captureSession : AVCaptureSession?
-    var stillImageOutput : AVCaptureStillImageOutput?
-    var previewLayer : AVCaptureVideoPreviewLayer?
+    var captureSession: AVCaptureSession?
+    var stillImageOutput: AVCaptureStillImageOutput?
+    var previewLayer: AVCaptureVideoPreviewLayer?
     @IBOutlet var cameraView: UIView!
     @IBOutlet var tempImageView: UIImageView!
     
+    required init?(coder aDecoder: NSCoder) {
+        var keys: NSDictionary?
+        
+        if let path = Bundle.main.path(forResource: "Keys", ofType: "plist") {
+            keys = NSDictionary(contentsOfFile: path)
+        }
+        
+        VISION_API_KEY = (keys?["VISION_API_KEY"] as? String)!
+        
+        super.init(coder: aDecoder)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        var apiKeyText = UserDefaults.standard.string(forKey: "api_key")
+        
+        if apiKeyText == nil || apiKeyText == "" {
+            apiKeyText = "🔑 API Key"
+        } else {
+            let a = apiKeyText![apiKeyText!.index(apiKeyText!.startIndex, offsetBy: 0)]
+            
+            let start = apiKeyText!.index(apiKeyText!.endIndex, offsetBy: -3)
+            let end = apiKeyText!.index(apiKeyText!.endIndex, offsetBy: 0)
+            let b = apiKeyText![Range(start ..< end)]
+            
+            apiKeyText = "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
+        }
+        
+        apiKey.layer.shadowOffset = CGSize(width: 0, height: 1)
+        apiKey.layer.shadowOpacity = 0.2
+        apiKey.layer.shadowRadius = 5
+        apiKey.layer.masksToBounds = false
+        apiKey.setAttributedTitle(NSAttributedString(string: apiKeyText!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+        apiKeyTextField.attributedPlaceholder = NSAttributedString(string: "API Key", attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 1, blue: 1, alpha: 0.5)])
+        
+        apiKeyTextField.setLeftPaddingPoints(20)
+        apiKeyTextField.setRightPaddingPoints(50)
+
         captureSession = AVCaptureSession()
         captureSession?.sessionPreset = AVCaptureSessionPreset1920x1080
         
@@ -31,7 +69,6 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             let input = try AVCaptureDeviceInput(device: backCamera)
             captureSession?.addInput(input)
             
-            //            photoOutput = AVCapturePhotoOutput()
             stillImageOutput = AVCaptureStillImageOutput()
             
             if (captureSession?.canAddOutput(stillImageOutput) != nil){
@@ -42,6 +79,12 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 previewLayer?.connection.videoOrientation = AVCaptureVideoOrientation.portrait
                 cameraView.layer.addSublayer(previewLayer!)
                 captureSession?.startRunning()
+                
+                // Initialize a AVCaptureMetadataOutput object and set it as the output device to the capture session.
+                let captureMetadataOutput = AVCaptureMetadataOutput()
+                captureSession?.addOutput(captureMetadataOutput)
+                captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+                captureMetadataOutput.metadataObjectTypes = [AVMetadataObjectTypeQRCode]
             }
         } catch {
             print("error")
@@ -51,6 +94,23 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         captureButton.isHidden = false
         hideRetake()
         view.bringSubview(toFront: captureButton)
+    }
+    
+    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
+        // Check if the metadataObjects array is not nil and it contains at least one object.
+        if metadataObjects == nil || metadataObjects.count == 0 {
+            print("No QR code is detected")
+            return
+        }
+        
+        // Get the metadata object.
+        let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
+        
+        guard let qrCode = metadataObj.stringValue else {
+            return
+        }
+        print(qrCode)
+        testKey(key: qrCode)
     }
     
     override func didReceiveMemoryWarning() {
@@ -85,9 +145,23 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                     
                     print("dimensions : \(image2.size)")
                     print("size : \(UIImageJPEGRepresentation(image2, 0.4)!.count)")
+
+                    var apiKey = UserDefaults.standard.string(forKey: "api_key")
+                    
+                    if apiKey == nil || apiKey == "" {
+                        apiKey = self.VISION_API_KEY
+                    }
+                    
+                    let escapedApiKey = apiKey?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+                    
                     
                     /// UPLOAD
-                    var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=\(self.API_KEY)&version=2016-05-20")!)
+                    
+                    let classifierId = UserDefaults.standard.string(forKey: "classifier_id")
+                    
+                    print(escapedApiKey!)
+                    
+                    var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=\(escapedApiKey!)&version=2016-05-20&threshold=0&classifier_ids=\(classifierId ?? "default")")!)
                     r.httpMethod = "POST"
                     let boundary = "Boundary-\(UUID().uuidString)"
                     r.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
@@ -169,6 +243,9 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             didTakePhoto = false
             captureButton.isHidden = false
             hideRetake()
+            showAPI()
+            showButton()
+
             if let drawer = self.parent as? PulleyViewController
             {
                 if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
@@ -183,6 +260,9 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             didPressTakePhoto()
             captureButton.isHidden = true
             showRetake()
+            hideAPI()
+            hideButton()
+
             if let drawer = self.parent as? PulleyViewController
             {
                 if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
@@ -191,6 +271,16 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 }
             }
         }
+    }
+    
+    func hideButton() {
+        classifiersButton.isEnabled = false
+        classifiersButton.isHidden = true
+    }
+    
+    func showButton() {
+        classifiersButton.isEnabled = true
+        classifiersButton.isHidden = false
     }
     
     func hideRetake() {
@@ -203,8 +293,148 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         retakeButton.isHidden = false
     }
     
+    func hideAPI() {
+        apiKey.isEnabled = false
+        apiKey.isHidden = true
+    }
+    
+    func showAPI() {
+        apiKey.isEnabled = true
+        apiKey.isHidden = false
+    }
+    
+    
+    @IBOutlet var classifiersButton: UIButton!
     @IBOutlet var captureButton: UIButton!
     @IBOutlet var retakeButton: UIButton!
+    @IBOutlet var apiKeyDoneButton: UIButton!
+    @IBOutlet var apiKey: UIButton!
+    @IBOutlet var apiKeySubmit: UIButton!
+    @IBOutlet var apiKeyTextField: UITextField!
+    @IBOutlet var hintTextView: UITextView!
+    
+    let blurredEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+    
+    @IBAction func unwindToVC(segue: UIStoryboardSegue) {
+//        if segue.identifier == "cancel" {
+//            if let sourceViewController = segue.source as? FormTableViewController {
+//                myEventTitle = sourceViewController.titleField.text!
+//                myEventLocation = sourceViewController.locationField.text!
+//                //let address = sourceViewController.locationAddress.title(for: .normal)!
+//                
+//                // format date to match Go and Mongo
+//                let dateFormatterPrint = DateFormatter()
+//                dateFormatterPrint.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+//                let start = dateFormatterPrint.string(from: sourceViewController.startDate)
+//                let end = dateFormatterPrint.string(from:sourceViewController.endDate)
+//                
+//                post(title: myEventTitle, address: "address", place: myEventLocation, start: start, end: end)
+//                eventIsLive = true
+//            }
+//        }
+    }
+    
+    @IBAction func addApiKey() {
+        blurredEffectView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
+        view.addSubview(blurredEffectView)
+        
+        apiKeyTextField.isHidden = false
+        apiKeyTextField.becomeFirstResponder()
+        view.addSubview(apiKeyTextField)
+        
+        apiKeyDoneButton.isHidden = false
+        view.addSubview(apiKeyDoneButton)
+        
+        apiKeySubmit.isHidden = false
+        view.addSubview(apiKeySubmit)
+        
+        
+        hintTextView.isHidden = false
+        view.addSubview(hintTextView)
+        print("add view")
+    }
+    
+    @IBAction func apiKeyDone() {
+        apiKeyTextField.isHidden = true
+        apiKeyDoneButton.isHidden = true
+        apiKeySubmit.isHidden = true
+        hintTextView.isHidden = true
+        
+        blurredEffectView.removeFromSuperview()
+        view.endEditing(true)
+        apiKeyTextField.text = ""
+        print("remove view")
+    }
+    
+    @IBAction func submitApiKey() {
+        let key = apiKeyTextField.text
+        testKey(key: key!)
+    }
+    
+    func testKey(key: String) {
+        var key = key.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api?api_key=\(key!)&version=2016-05-20")!)
+        r.httpMethod = "POST"
+        
+        let task = URLSession.shared.dataTask(with: r) { data, response, error in
+            guard let data = data, error == nil else {               // check for fundamental networking error
+                return
+            }
+            do {
+                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? AnyObject
+                
+                if let parseJSON = json {
+                    print("resp :\(parseJSON)")
+                    if parseJSON["statusInfo"] as! String == "invalid-api-key" {
+                        print("Ivalid api key!")
+                    } else {
+                        UserDefaults.standard.set(key, forKey: "api_key")
+                        let a = key![key!.index(key!.startIndex, offsetBy: 0)]
+                        
+                        let start = key!.index(key!.endIndex, offsetBy: -3)
+                        let end = key!.index(key!.endIndex, offsetBy: 0)
+                        let b = key![Range(start ..< end)]
+                        
+                        key = "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
+                        self.apiKey.setAttributedTitle(NSAttributedString(string: key!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+                    }
+                    DispatchQueue.main.async {
+                        self.apiKeyTextField.isHidden = true
+                        self.apiKeyDoneButton.isHidden = true
+                        self.apiKeySubmit.isHidden = true
+                        self.hintTextView.isHidden = true
+                        self.blurredEffectView.removeFromSuperview()
+                        self.view.endEditing(true)
+                        self.apiKeyTextField.text = ""
+                        print("remove view")
+                    }
+                }
+            } catch let error as NSError {
+                print("error : \(error)")
+                DispatchQueue.main.async {
+                    UserDefaults.standard.set(key, forKey: "api_key")
+                    let a = key![key!.index(key!.startIndex, offsetBy: 0)]
+                    
+                    let start = key!.index(key!.endIndex, offsetBy: -3)
+                    let end = key!.index(key!.endIndex, offsetBy: 0)
+                    let b = key![Range(start ..< end)]
+                    
+                    key = "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
+
+                    self.apiKey.setAttributedTitle(NSAttributedString(string: key!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+                    self.apiKeyTextField.isHidden = true
+                    self.apiKeyDoneButton.isHidden = true
+                    self.apiKeySubmit.isHidden = true
+                    self.hintTextView.isHidden = true
+                    self.blurredEffectView.removeFromSuperview()
+                    self.view.endEditing(true)
+                    self.apiKeyTextField.text = ""
+                    print("remove view")
+                }
+            }
+        }
+        task.resume()
+    }
     
     @IBAction func takePic() {
         didPressTakeAnother()

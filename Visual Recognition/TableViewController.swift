@@ -9,6 +9,9 @@
 import UIKit
 
 class TableViewController: UITableViewController {
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     
     var myarray : [[String: AnyObject]] = []
     var cameraHidden = false
@@ -45,7 +48,7 @@ class TableViewController: UITableViewController {
                 let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50)) as UIActivityIndicatorView
                 loadingIndicator.hidesWhenStopped = true
                 loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-                loadingIndicator.startAnimating();
+                loadingIndicator.startAnimating()
                 
                 alert.view.addSubview(loadingIndicator)
                 present(alert, animated: true, completion: nil)
