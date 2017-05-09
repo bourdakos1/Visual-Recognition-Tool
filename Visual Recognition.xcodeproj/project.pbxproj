@@ -9,9 +9,6 @@
 /* Begin PBXBuildFile section */
 		231D6FE21EBAA8E0003DDE56 /* classifiers.png in Resources */ = {isa = PBXBuildFile; fileRef = 231D6FE11EBAA8E0003DDE56 /* classifiers.png */; };
 		231D6FE41EBADAA1003DDE56 /* library.png in Resources */ = {isa = PBXBuildFile; fileRef = 231D6FE31EBADAA1003DDE56 /* library.png */; };
-		231D6FE81EBB8973003DDE56 /* icon_120x120.png in Resources */ = {isa = PBXBuildFile; fileRef = 231D6FE51EBB8973003DDE56 /* icon_120x120.png */; };
-		231D6FE91EBB8973003DDE56 /* icon_152x152.png in Resources */ = {isa = PBXBuildFile; fileRef = 231D6FE61EBB8973003DDE56 /* icon_152x152.png */; };
-		231D6FEA1EBB8973003DDE56 /* icon_167x167.png in Resources */ = {isa = PBXBuildFile; fileRef = 231D6FE71EBB8973003DDE56 /* icon_167x167.png */; };
 		232B9F8A1E80842D00407BB8 /* api.png in Resources */ = {isa = PBXBuildFile; fileRef = 232B9F891E80842D00407BB8 /* api.png */; };
 		232B9F8C1E80885900407BB8 /* scrim.png in Resources */ = {isa = PBXBuildFile; fileRef = 232B9F8B1E80885900407BB8 /* scrim.png */; };
 		232B9F8E1E808EA500407BB8 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B9F8D1E808EA500407BB8 /* RoundedButton.swift */; };
@@ -62,9 +59,6 @@
 /* Begin PBXFileReference section */
 		231D6FE11EBAA8E0003DDE56 /* classifiers.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = classifiers.png; sourceTree = "<group>"; };
 		231D6FE31EBADAA1003DDE56 /* library.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = library.png; sourceTree = "<group>"; };
-		231D6FE51EBB8973003DDE56 /* icon_120x120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_120x120.png; sourceTree = "<group>"; };
-		231D6FE61EBB8973003DDE56 /* icon_152x152.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_152x152.png; sourceTree = "<group>"; };
-		231D6FE71EBB8973003DDE56 /* icon_167x167.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_167x167.png; sourceTree = "<group>"; };
 		232B9F891E80842D00407BB8 /* api.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = api.png; sourceTree = "<group>"; };
 		232B9F8B1E80885900407BB8 /* scrim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scrim.png; sourceTree = "<group>"; };
 		232B9F8D1E808EA500407BB8 /* RoundedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
@@ -161,30 +155,18 @@
 			isa = PBXGroup;
 			children = (
 				233D0BBA1EC22EC5005E5594 /* Models */,
+				2395A02B1EC2708D00C29325 /* PulleyLibrary */,
+				2395A02A1EC2705D00C29325 /* Views */,
 				2389A6FD1E7C65A100D7C973 /* AppDelegate.swift */,
+				233D0B9F1EC17C53005E5594 /* DatabaseController.swift */,
+				2389A7011E7C65A100D7C973 /* Main.storyboard */,
 				2389A7311E7C7D4F00D7C973 /* TableViewController.swift */,
 				2389A7371E7CAA7500D7C973 /* TableViewCell.swift */,
-				2389A7341E7CA9E700D7C973 /* ProgressBar.swift */,
-				236DCB6A1E7DAA54009AE6D6 /* capture.png */,
-				2389A72D1E7C79C100D7C973 /* PulleyPassthroughScrollView.swift */,
-				236DCB6C1E7DAE04009AE6D6 /* cancel.png */,
-				231D6FE11EBAA8E0003DDE56 /* classifiers.png */,
-				2389A72F1E7C79CA00D7C973 /* PulleyViewController.swift */,
-				23609DBA1EBA727800FD03FC /* Keys.plist */,
-				232B9F8D1E808EA500407BB8 /* RoundedButton.swift */,
-				232B9F8B1E80885900407BB8 /* scrim.png */,
-				231D6FE31EBADAA1003DDE56 /* library.png */,
 				2389A72B1E7C668100D7C973 /* CameraViewController.swift */,
-				23AA52331EC0E7CD0073D4DC /* checkmark.png */,
 				232B9F8F1E80A5AD00407BB8 /* ClassifiersTableViewController.swift */,
-				23AA52311EC0E6240073D4DC /* btn_dropdown.png */,
-				2389A7011E7C65A100D7C973 /* Main.storyboard */,
 				23AA522F1EC0DC550073D4DC /* ClassiferTableViewCell.swift */,
-				233D0B9F1EC17C53005E5594 /* DatabaseController.swift */,
-				232B9F891E80842D00407BB8 /* api.png */,
-				231D6FE51EBB8973003DDE56 /* icon_120x120.png */,
-				231D6FE61EBB8973003DDE56 /* icon_152x152.png */,
-				231D6FE71EBB8973003DDE56 /* icon_167x167.png */,
+				2395A02C1EC270BC00C29325 /* res */,
+				23609DBA1EBA727800FD03FC /* Keys.plist */,
 				233D0B9C1EC13101005E5594 /* Classifiers.xcdatamodeld */,
 				2389A7041E7C65A100D7C973 /* Assets.xcassets */,
 				2389A7061E7C65A100D7C973 /* LaunchScreen.storyboard */,
@@ -209,6 +191,39 @@
 				2389A71F1E7C65A200D7C973 /* Info.plist */,
 			);
 			path = "Visual RecognitionUITests";
+			sourceTree = "<group>";
+		};
+		2395A02A1EC2705D00C29325 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2389A7341E7CA9E700D7C973 /* ProgressBar.swift */,
+				232B9F8D1E808EA500407BB8 /* RoundedButton.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		2395A02B1EC2708D00C29325 /* PulleyLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				2389A72D1E7C79C100D7C973 /* PulleyPassthroughScrollView.swift */,
+				2389A72F1E7C79CA00D7C973 /* PulleyViewController.swift */,
+			);
+			name = PulleyLibrary;
+			sourceTree = "<group>";
+		};
+		2395A02C1EC270BC00C29325 /* res */ = {
+			isa = PBXGroup;
+			children = (
+				236DCB6A1E7DAA54009AE6D6 /* capture.png */,
+				236DCB6C1E7DAE04009AE6D6 /* cancel.png */,
+				231D6FE11EBAA8E0003DDE56 /* classifiers.png */,
+				232B9F8B1E80885900407BB8 /* scrim.png */,
+				231D6FE31EBADAA1003DDE56 /* library.png */,
+				23AA52331EC0E7CD0073D4DC /* checkmark.png */,
+				23AA52311EC0E6240073D4DC /* btn_dropdown.png */,
+				232B9F891E80842D00407BB8 /* api.png */,
+			);
+			name = res;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -324,10 +339,7 @@
 				232B9F8A1E80842D00407BB8 /* api.png in Resources */,
 				2389A7081E7C65A100D7C973 /* LaunchScreen.storyboard in Resources */,
 				2389A7051E7C65A100D7C973 /* Assets.xcassets in Resources */,
-				231D6FE81EBB8973003DDE56 /* icon_120x120.png in Resources */,
 				231D6FE41EBADAA1003DDE56 /* library.png in Resources */,
-				231D6FE91EBB8973003DDE56 /* icon_152x152.png in Resources */,
-				231D6FEA1EBB8973003DDE56 /* icon_167x167.png in Resources */,
 				236DCB6B1E7DAA54009AE6D6 /* capture.png in Resources */,
 				236DCB6D1E7DAE04009AE6D6 /* cancel.png in Resources */,
 				23AA52341EC0E7CD0073D4DC /* checkmark.png in Resources */,

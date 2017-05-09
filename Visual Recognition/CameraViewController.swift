@@ -417,7 +417,6 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     @IBAction func retake() {
         didPressTakeAnother()
     }
-    
 }
 
 extension NSMutableData {
