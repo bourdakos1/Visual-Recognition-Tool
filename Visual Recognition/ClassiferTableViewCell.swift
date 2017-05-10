@@ -7,7 +7,6 @@
 //
 
 import UIKit
-
 class ClassiferTableViewCell: UITableViewCell {
     
     @IBOutlet weak var classifierNameLabel: UILabel!

@@ -191,7 +191,7 @@ class ClassifiersTableViewController: UITableViewController {
             cell.classifierStatusLabel?.text = classifierData["status"] as? String
             cell.statusIndicator?.layer.cornerRadius = 6
             
-            if classifierData["status"] as? String == "ready"{
+            if classifierData["status"] as? String == "ready" {
                 cell.statusIndicator?.backgroundColor = UIColor(red: 105/255, green: 219/255, blue: 48/255, alpha: 1)
                 cell.activityIndicator?.stopAnimating()
                 cell.activityIndicator?.isHidden = true
@@ -292,5 +292,4 @@ class ClassifiersTableViewController: UITableViewController {
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
-
 }
