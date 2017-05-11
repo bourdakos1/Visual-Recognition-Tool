@@ -768,8 +768,6 @@ extension PulleyViewController: UIScrollViewDelegate {
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
-        print("scroll \(scrollView.contentOffset)")
-        
         if scrollView == drawerScrollView
         {
             var partialRevealHeight:CGFloat = kPulleyDefaultPartialRevealHeight

@@ -15,8 +15,6 @@ class RoundedButton: UIButton {
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
     override func draw(_ rect: CGRect) {
-        
-        print("RECT: \(rect)")
         // Ok button default
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
         color.setFill()
