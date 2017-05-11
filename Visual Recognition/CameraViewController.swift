@@ -189,32 +189,49 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             )
             
             let task = URLSession.shared.dataTask(with: r) { data, response, error in
-                guard let data = data, error == nil else {               // check for fundamental networking error
+                // Check for fundamental networking error.
+                guard let data = data, error == nil else {
                     return
                 }
+                
+                var json: AnyObject?
+                
                 do {
-                    let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
-                    if let drawer = self.parent as? PulleyViewController {
-                        if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
-                            DispatchQueue.main.async{
-                                var myNewData : [[String: AnyObject]] = []
-                                let data = ((((json["images"] as! NSArray)[0] as AnyObject)["classifiers"] as! NSArray)[0] as AnyObject)["classes"] as! NSArray
-                                for myClass in data {
-                                    print ((myClass as AnyObject)["class"] as! String)
-                                    myNewData.append(["class_name":(myClass as AnyObject)["class"] as AnyObject, "score":(myClass as AnyObject)["score"] as AnyObject])
-                                }
-                                myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
-                                tablesdsa.myarray = myNewData
-                                tablesdsa.tableView.reloadData()
+                    json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
+                } catch {
+                    print("Error: \(error)")
+                }
+                
+                guard let image = (json?["images"] as! [Any])[0] as? [String: Any],
+                    let classifiers = (image["classifiers"] as! [Any])[0] as? [String: Any],
+                    let classes = classifiers["classes"] as? [Any] else {
+                        return
+                }
+                
+                if let drawer = self.parent as? PulleyViewController {
+                    if let tableController = drawer.drawerContentViewController as? TableViewController {
+                        DispatchQueue.main.async{
+                            var myNewData = [[String: Any]]()
+                            
+                            for case let classObj as [String: Any] in classes {
+                                myNewData.append([
+                                    "class_name": classObj["class"] as Any,
+                                    "score": classObj["score"] as Any
+                                ])
                             }
+                            
+                            // Sort data by score and reload table.
+                            myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
+                            tableController.myarray = myNewData
+                            tableController.tableView.reloadData()
                         }
                     }
-                } catch let error as NSError {
-                    print("error : \(error)")
                 }
+
             }
             task.resume()
             
+            // Set the screen to our captured photo.
             tempImageView.image = image
             tempImageView.isHidden = false
         }

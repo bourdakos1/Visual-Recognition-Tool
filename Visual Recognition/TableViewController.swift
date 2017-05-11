@@ -13,7 +13,7 @@ class TableViewController: UITableViewController {
         return .lightContent
     }
     
-    var myarray : [[String: AnyObject]] = []
+    var myarray : [[String: Any]] = []
     var cameraHidden = false
 
     override func viewDidLoad() {
