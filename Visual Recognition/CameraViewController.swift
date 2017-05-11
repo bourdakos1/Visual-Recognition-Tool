@@ -252,9 +252,9 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     }
     
     // Convenience method for reloading the TableView.
-    func getTableController(run: @escaping (_ tableController: TableViewController) -> Void) {
+    func getTableController(run: @escaping (_ tableController: ResultsTableViewController) -> Void) {
         if let drawer = self.parent as? PulleyViewController {
-            if let tableController = drawer.drawerContentViewController as? TableViewController {
+            if let tableController = drawer.drawerContentViewController as? ResultsTableViewController {
                 DispatchQueue.main.async {
                     run(tableController)
                     tableController.tableView.reloadData()

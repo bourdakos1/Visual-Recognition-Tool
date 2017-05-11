@@ -234,16 +234,16 @@
             </objects>
             <point key="canvasLocation" x="-487.19999999999999" y="-325.63718140929535"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Results Table View Controller-->
         <scene sceneID="enS-CM-b60">
             <objects>
-                <tableViewController id="HdM-am-By7" customClass="TableViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="HdM-am-By7" customClass="ResultsTableViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="LNt-X7-xrR">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="322"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellLarge" rowHeight="90" id="R2C-Cp-Ouv" customClass="TableViewCell" customModule="Visual_Recognition" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellLarge" rowHeight="90" id="R2C-Cp-Ouv" customClass="ResultTableViewCell" customModule="Visual_Recognition" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="90"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="R2C-Cp-Ouv" id="AXx-N9-qNM">
@@ -291,7 +291,7 @@
                                     <outlet property="score" destination="d09-zp-RBd" id="iuK-4R-WYL"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellDefault" rowHeight="90" id="qnG-22-mMb" customClass="TableViewCell" customModule="Visual_Recognition" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellDefault" rowHeight="90" id="qnG-22-mMb" customClass="ResultTableViewCell" customModule="Visual_Recognition" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="118" width="375" height="90"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qnG-22-mMb" id="cJV-jl-FtK">

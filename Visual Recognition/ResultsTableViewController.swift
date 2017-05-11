@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TableViewController: UITableViewController {
+class ResultsTableViewController: UITableViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -64,12 +64,12 @@ class TableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell : TableViewCell
+        let cell : ResultTableViewCell
         
         if indexPath.item == 0 {
-            cell = tableView.dequeueReusableCell(withIdentifier: "cellLarge", for: indexPath) as! TableViewCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "cellLarge", for: indexPath) as! ResultTableViewCell
         } else {
-            cell = tableView.dequeueReusableCell(withIdentifier: "cellDefault", for: indexPath) as! TableViewCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "cellDefault", for: indexPath) as! ResultTableViewCell
         }
         
         let score = myarray[indexPath.item]["score"] as! CGFloat
@@ -82,7 +82,7 @@ class TableViewController: UITableViewController {
     }
 }
 
-extension TableViewController: PulleyDrawerViewControllerDelegate {
+extension ResultsTableViewController: PulleyDrawerViewControllerDelegate {
     
     func collapsedDrawerHeight() -> CGFloat
     {

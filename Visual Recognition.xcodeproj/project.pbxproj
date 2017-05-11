@@ -31,9 +31,9 @@
 		2389A72C1E7C668100D7C973 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A72B1E7C668100D7C973 /* CameraViewController.swift */; };
 		2389A72E1E7C79C100D7C973 /* PulleyPassthroughScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A72D1E7C79C100D7C973 /* PulleyPassthroughScrollView.swift */; };
 		2389A7301E7C79CA00D7C973 /* PulleyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A72F1E7C79CA00D7C973 /* PulleyViewController.swift */; };
-		2389A7321E7C7D4F00D7C973 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A7311E7C7D4F00D7C973 /* TableViewController.swift */; };
+		2389A7321E7C7D4F00D7C973 /* ResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A7311E7C7D4F00D7C973 /* ResultsTableViewController.swift */; };
 		2389A7361E7CA9E700D7C973 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A7341E7CA9E700D7C973 /* ProgressBar.swift */; };
-		2389A7381E7CAA7500D7C973 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A7371E7CAA7500D7C973 /* TableViewCell.swift */; };
+		2389A7381E7CAA7500D7C973 /* ResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A7371E7CAA7500D7C973 /* ResultTableViewCell.swift */; };
 		23AA52301EC0DC550073D4DC /* ClassiferTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AA522F1EC0DC550073D4DC /* ClassiferTableViewCell.swift */; };
 		23AA52321EC0E6240073D4DC /* btn_dropdown.png in Resources */ = {isa = PBXBuildFile; fileRef = 23AA52311EC0E6240073D4DC /* btn_dropdown.png */; };
 		23AA52341EC0E7CD0073D4DC /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 23AA52331EC0E7CD0073D4DC /* checkmark.png */; };
@@ -87,9 +87,9 @@
 		2389A72B1E7C668100D7C973 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		2389A72D1E7C79C100D7C973 /* PulleyPassthroughScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PulleyPassthroughScrollView.swift; sourceTree = "<group>"; };
 		2389A72F1E7C79CA00D7C973 /* PulleyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PulleyViewController.swift; sourceTree = "<group>"; };
-		2389A7311E7C7D4F00D7C973 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
+		2389A7311E7C7D4F00D7C973 /* ResultsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultsTableViewController.swift; sourceTree = "<group>"; };
 		2389A7341E7CA9E700D7C973 /* ProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
-		2389A7371E7CAA7500D7C973 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		2389A7371E7CAA7500D7C973 /* ResultTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultTableViewCell.swift; sourceTree = "<group>"; };
 		23AA522F1EC0DC550073D4DC /* ClassiferTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassiferTableViewCell.swift; sourceTree = "<group>"; };
 		23AA52311EC0E6240073D4DC /* btn_dropdown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_dropdown.png; sourceTree = "<group>"; };
 		23AA52331EC0E7CD0073D4DC /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
@@ -160,8 +160,8 @@
 				2389A6FD1E7C65A100D7C973 /* AppDelegate.swift */,
 				233D0B9F1EC17C53005E5594 /* DatabaseController.swift */,
 				2389A7011E7C65A100D7C973 /* Main.storyboard */,
-				2389A7311E7C7D4F00D7C973 /* TableViewController.swift */,
-				2389A7371E7CAA7500D7C973 /* TableViewCell.swift */,
+				2389A7311E7C7D4F00D7C973 /* ResultsTableViewController.swift */,
+				2389A7371E7CAA7500D7C973 /* ResultTableViewCell.swift */,
 				2389A72B1E7C668100D7C973 /* CameraViewController.swift */,
 				232B9F8F1E80A5AD00407BB8 /* ClassifiersTableViewController.swift */,
 				23AA522F1EC0DC550073D4DC /* ClassiferTableViewCell.swift */,
@@ -377,13 +377,13 @@
 				23AA52301EC0DC550073D4DC /* ClassiferTableViewCell.swift in Sources */,
 				232B9F8E1E808EA500407BB8 /* RoundedButton.swift in Sources */,
 				233D0BB91EC22EB6005E5594 /* PendingClass+CoreDataProperties.swift in Sources */,
-				2389A7321E7C7D4F00D7C973 /* TableViewController.swift in Sources */,
+				2389A7321E7C7D4F00D7C973 /* ResultsTableViewController.swift in Sources */,
 				233D0BB81EC22EB6005E5594 /* PendingClass+CoreDataClass.swift in Sources */,
 				2389A72E1E7C79C100D7C973 /* PulleyPassthroughScrollView.swift in Sources */,
 				233D0BA01EC17C53005E5594 /* DatabaseController.swift in Sources */,
 				233D0B9E1EC13101005E5594 /* Classifiers.xcdatamodeld in Sources */,
 				233D0BB71EC22EB6005E5594 /* PendingClassifier+CoreDataProperties.swift in Sources */,
-				2389A7381E7CAA7500D7C973 /* TableViewCell.swift in Sources */,
+				2389A7381E7CAA7500D7C973 /* ResultTableViewCell.swift in Sources */,
 				2389A7361E7CA9E700D7C973 /* ProgressBar.swift in Sources */,
 				233D0BB61EC22EB6005E5594 /* PendingClassifier+CoreDataClass.swift in Sources */,
 			);
