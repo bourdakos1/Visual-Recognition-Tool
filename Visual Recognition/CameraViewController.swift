@@ -204,9 +204,27 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                     print("Error: \(error)")
                 }
                 
-                guard let image = (json?["images"] as! [Any])[0] as? [String: Any],
-                    let classifiers = (image["classifiers"] as! [Any])[0] as? [String: Any],
-                    let classes = classifiers["classes"] as? [Any] else {
+                guard let images = json?["images"] as? [Any],
+                    let image = images.first as? [String: Any],
+                    let classifiers = image["classifiers"] as? [Any],
+                    let classifier = classifiers.first as? [String: Any],
+                    let classes = classifier["classes"] as? [Any] else {
+                        print("Error: No classes returned.")
+                        if let drawer = self.parent as? PulleyViewController {
+                            if let tableController = drawer.drawerContentViewController as? TableViewController {
+                                DispatchQueue.main.async{
+                                    var myNewData = [[String: Any]]()
+                                    
+                                    myNewData.append([
+                                        "class_name": "No classes found" as Any,
+                                        "score": CGFloat(0.0) as Any
+                                    ])
+                                    
+                                    tableController.myarray = myNewData
+                                    tableController.tableView.reloadData()
+                                }
+                            }
+                        }
                         return
                 }
                 
@@ -351,9 +369,9 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         
         if let drawer = self.parent as? PulleyViewController
         {
-            if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
-                tablesdsa.cameraHidden = true
-                tablesdsa.tableView.reloadData()
+            if let tableController = drawer.drawerContentViewController as? TableViewController {
+                tableController.cameraHidden = true
+                tableController.tableView.reloadData()
             }
         }
     }
@@ -367,10 +385,10 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         
         if let drawer = self.parent as? PulleyViewController
         {
-            if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
-                tablesdsa.cameraHidden = false
-                tablesdsa.myarray = []
-                tablesdsa.tableView.reloadData()
+            if let tableController = drawer.drawerContentViewController as? TableViewController {
+                tableController.cameraHidden = false
+                tableController.myarray = []
+                tableController.tableView.reloadData()
             }
         }
     }
