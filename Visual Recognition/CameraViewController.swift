@@ -210,44 +210,33 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                     let classifier = classifiers.first as? [String: Any],
                     let classes = classifier["classes"] as? [Any] else {
                         print("Error: No classes returned.")
-                        if let drawer = self.parent as? PulleyViewController {
-                            if let tableController = drawer.drawerContentViewController as? TableViewController {
-                                DispatchQueue.main.async{
-                                    var myNewData = [[String: Any]]()
-                                    
-                                    myNewData.append([
-                                        "class_name": "No classes found" as Any,
-                                        "score": CGFloat(0.0) as Any
-                                    ])
-                                    
-                                    tableController.myarray = myNewData
-                                    tableController.tableView.reloadData()
-                                }
-                            }
+                        self.getTableController { tableController in
+                            var myNewData = [[String: Any]]()
+                            
+                            myNewData.append([
+                                "class_name": "No classes found" as Any,
+                                "score": CGFloat(0.0) as Any
+                                ])
+                            
+                            tableController.myarray = myNewData
                         }
                         return
                 }
                 
-                if let drawer = self.parent as? PulleyViewController {
-                    if let tableController = drawer.drawerContentViewController as? TableViewController {
-                        DispatchQueue.main.async{
-                            var myNewData = [[String: Any]]()
-                            
-                            for case let classObj as [String: Any] in classes {
-                                myNewData.append([
-                                    "class_name": classObj["class"] as Any,
-                                    "score": classObj["score"] as Any
-                                ])
-                            }
-                            
-                            // Sort data by score and reload table.
-                            myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
-                            tableController.myarray = myNewData
-                            tableController.tableView.reloadData()
-                        }
+                self.getTableController { tableController in
+                    var myNewData = [[String: Any]]()
+                    
+                    for case let classObj as [String: Any] in classes {
+                        myNewData.append([
+                            "class_name": classObj["class"] as Any,
+                            "score": classObj["score"] as Any
+                            ])
                     }
+                    
+                    // Sort data by score and reload table.
+                    myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
+                    tableController.myarray = myNewData
                 }
-
             }
             task.resume()
             
@@ -257,54 +246,71 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         }
     }
     
+    // Convenience method for reloading the TableView.
+    func getTableController(run: @escaping (_ tableController: TableViewController) -> Void) {
+        if let drawer = self.parent as? PulleyViewController {
+            if let tableController = drawer.drawerContentViewController as? TableViewController {
+                DispatchQueue.main.async {
+                    run(tableController)
+                    tableController.tableView.reloadData()
+                }
+            }
+        }
+    }
+    
     func testKey(key: String) {
-        var key = key.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api?api_key=\(key!)&version=2016-05-20")!)
-        r.httpMethod = "POST"
+        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api")!)
+        r.query(params: [
+            "api_key": key,
+            "version": "2016-05-20"
+        ])
         
         let task = URLSession.shared.dataTask(with: r) { data, response, error in
-            guard let data = data, error == nil else {               // check for fundamental networking error
+            // Check for fundamental networking error.
+            guard let data = data, error == nil else {
                 return
             }
+            
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
                 
                 if json["statusInfo"] as! String == "invalid-api-key" {
                     print("Ivalid api key!")
                 } else {
-                    UserDefaults.standard.set(key, forKey: "api_key")
-                    let a = key![key!.index(key!.startIndex, offsetBy: 0)]
-                    
-                    let start = key!.index(key!.endIndex, offsetBy: -3)
-                    let end = key!.index(key!.endIndex, offsetBy: 0)
-                    let b = key![Range(start ..< end)]
-                    
-                    key = "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
-                    self.apiKey.setAttributedTitle(NSAttributedString(string: key!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+                    DispatchQueue.main.async {
+                        UserDefaults.standard.set(key, forKey: "api_key")
+                        let a = key[key.index(key.startIndex, offsetBy: 0)]
+                        
+                        let start = key.index(key.endIndex, offsetBy: -3)
+                        let end = key.index(key.endIndex, offsetBy: 0)
+                        let b = key[Range(start ..< end)]
+                        
+                        let key = "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
+                        
+                        self.apiKey.setAttributedTitle(NSAttributedString(string: key, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+                        self.apiKeyTextField.isHidden = true
+                        self.apiKeyDoneButton.isHidden = true
+                        self.apiKeySubmit.isHidden = true
+                        self.hintTextView.isHidden = true
+                        self.blurredEffectView.removeFromSuperview()
+                        self.view.endEditing(true)
+                        self.apiKeyTextField.text = ""
+                        print("remove view")
+                    }
                 }
-                DispatchQueue.main.async {
-                    self.apiKeyTextField.isHidden = true
-                    self.apiKeyDoneButton.isHidden = true
-                    self.apiKeySubmit.isHidden = true
-                    self.hintTextView.isHidden = true
-                    self.blurredEffectView.removeFromSuperview()
-                    self.view.endEditing(true)
-                    self.apiKeyTextField.text = ""
-                    print("remove view")
-                }
-            } catch let error as NSError {
-                print("error : \(error)")
+            } catch {
+                print("Error: \(error)")
                 DispatchQueue.main.async {
                     UserDefaults.standard.set(key, forKey: "api_key")
-                    let a = key![key!.index(key!.startIndex, offsetBy: 0)]
+                    let a = key[key.index(key.startIndex, offsetBy: 0)]
                     
-                    let start = key!.index(key!.endIndex, offsetBy: -3)
-                    let end = key!.index(key!.endIndex, offsetBy: 0)
-                    let b = key![Range(start ..< end)]
+                    let start = key.index(key.endIndex, offsetBy: -3)
+                    let end = key.index(key.endIndex, offsetBy: 0)
+                    let b = key[Range(start ..< end)]
                     
-                    key = "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
+                    let key = "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
 
-                    self.apiKey.setAttributedTitle(NSAttributedString(string: key!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+                    self.apiKey.setAttributedTitle(NSAttributedString(string: key, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
                     self.apiKeyTextField.isHidden = true
                     self.apiKeyDoneButton.isHidden = true
                     self.apiKeySubmit.isHidden = true
@@ -367,12 +373,9 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         apiKey.isHidden = true
         classifiersButton.isHidden = true
         
-        if let drawer = self.parent as? PulleyViewController
-        {
-            if let tableController = drawer.drawerContentViewController as? TableViewController {
-                tableController.cameraHidden = true
-                tableController.tableView.reloadData()
-            }
+        
+        self.getTableController { tableController in
+            tableController.cameraHidden = true
         }
     }
     
@@ -383,13 +386,9 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         apiKey.isHidden = false
         classifiersButton.isHidden = false
         
-        if let drawer = self.parent as? PulleyViewController
-        {
-            if let tableController = drawer.drawerContentViewController as? TableViewController {
-                tableController.cameraHidden = false
-                tableController.myarray = []
-                tableController.tableView.reloadData()
-            }
+        self.getTableController { tableController in
+            tableController.cameraHidden = false
+            tableController.myarray = []
         }
     }
 }
