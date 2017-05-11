@@ -61,14 +61,8 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             // If we don't have a key set the text of the bar to "API Key".
             apiKeyText = "🔑 API Key"
         } else {
-            // If we do have a key chop it up and hide the center.
-            let a = apiKeyText![apiKeyText!.index(apiKeyText!.startIndex, offsetBy: 0)]
-            
-            let start = apiKeyText!.index(apiKeyText!.endIndex, offsetBy: -3)
-            let end = apiKeyText!.index(apiKeyText!.endIndex, offsetBy: 0)
-            let b = apiKeyText![Range(start ..< end)]
-            
-            apiKeyText = "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
+            // If we do have a key, obscure it.
+            apiKeyText = obscureKey(key: apiKeyText!)
         }
         
         // Style the API text.
@@ -88,6 +82,17 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         // Retake just resets the UI.
         retake()
         view.bringSubview(toFront: captureButton)
+        
+        // Create and hide the blur effect.
+        blurredEffectView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
+        view.addSubview(blurredEffectView)
+        blurredEffectView.isHidden = true
+        
+        // Bring all the API key views to the front
+        view.bringSubview(toFront: apiKeyTextField)
+        view.bringSubview(toFront: apiKeyDoneButton)
+        view.bringSubview(toFront: apiKeySubmit)
+        view.bringSubview(toFront: hintTextView)
     }
     
     // Initialize camera.
@@ -258,6 +263,18 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         }
     }
     
+    // Convenience method for obscuring the API key.
+    func obscureKey(key: String) -> String {
+        let a = key[key.index(key.startIndex, offsetBy: 0)]
+        
+        let start = key.index(key.endIndex, offsetBy: -3)
+        let end = key.index(key.endIndex, offsetBy: 0)
+        let b = key[Range(start ..< end)]
+        
+        return "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
+    }
+    
+    // Verify the API entered or scanned.
     func testKey(key: String) {
         var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api")!)
         r.query(params: [
@@ -271,55 +288,29 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 return
             }
             
+            DispatchQueue.main.async {
+                self.apiKeyDone()
+            }
+            
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
                 
                 if json["statusInfo"] as! String == "invalid-api-key" {
                     print("Ivalid api key!")
-                } else {
-                    DispatchQueue.main.async {
-                        UserDefaults.standard.set(key, forKey: "api_key")
-                        let a = key[key.index(key.startIndex, offsetBy: 0)]
-                        
-                        let start = key.index(key.endIndex, offsetBy: -3)
-                        let end = key.index(key.endIndex, offsetBy: 0)
-                        let b = key[Range(start ..< end)]
-                        
-                        let key = "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
-                        
-                        self.apiKey.setAttributedTitle(NSAttributedString(string: key, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
-                        self.apiKeyTextField.isHidden = true
-                        self.apiKeyDoneButton.isHidden = true
-                        self.apiKeySubmit.isHidden = true
-                        self.hintTextView.isHidden = true
-                        self.blurredEffectView.removeFromSuperview()
-                        self.view.endEditing(true)
-                        self.apiKeyTextField.text = ""
-                        print("remove view")
-                    }
+                    return
                 }
+                
             } catch {
                 print("Error: \(error)")
-                DispatchQueue.main.async {
-                    UserDefaults.standard.set(key, forKey: "api_key")
-                    let a = key[key.index(key.startIndex, offsetBy: 0)]
-                    
-                    let start = key.index(key.endIndex, offsetBy: -3)
-                    let end = key.index(key.endIndex, offsetBy: 0)
-                    let b = key[Range(start ..< end)]
-                    
-                    let key = "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
-
-                    self.apiKey.setAttributedTitle(NSAttributedString(string: key, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
-                    self.apiKeyTextField.isHidden = true
-                    self.apiKeyDoneButton.isHidden = true
-                    self.apiKeySubmit.isHidden = true
-                    self.hintTextView.isHidden = true
-                    self.blurredEffectView.removeFromSuperview()
-                    self.view.endEditing(true)
-                    self.apiKeyTextField.text = ""
-                    print("remove view")
-                }
+            }
+            
+            DispatchQueue.main.async {
+                print("Key set!")
+                UserDefaults.standard.set(key, forKey: "api_key")
+                
+                let key = self.obscureKey(key: key)
+                
+                self.apiKey.setAttributedTitle(NSAttributedString(string: key, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
             }
         }
         task.resume()
@@ -330,23 +321,13 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     }
     
     @IBAction func addApiKey() {
-        blurredEffectView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
-        view.addSubview(blurredEffectView)
-        
+        blurredEffectView.isHidden = false
         apiKeyTextField.isHidden = false
-        apiKeyTextField.becomeFirstResponder()
-        view.addSubview(apiKeyTextField)
-        
         apiKeyDoneButton.isHidden = false
-        view.addSubview(apiKeyDoneButton)
-        
         apiKeySubmit.isHidden = false
-        view.addSubview(apiKeySubmit)
-        
-        
         hintTextView.isHidden = false
-        view.addSubview(hintTextView)
-        print("add view")
+        
+        apiKeyTextField.becomeFirstResponder()
     }
     
     @IBAction func apiKeyDone() {
@@ -354,11 +335,10 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         apiKeyDoneButton.isHidden = true
         apiKeySubmit.isHidden = true
         hintTextView.isHidden = true
+        blurredEffectView.isHidden = true
         
-        blurredEffectView.removeFromSuperview()
         view.endEditing(true)
         apiKeyTextField.text = ""
-        print("remove view")
     }
     
     @IBAction func submitApiKey() {
