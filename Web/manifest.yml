@@ -1,0 +1,7 @@
+---
+applications:
+- name: vr-tool-test
+  buildpack: sdk-for-nodejs
+  path: .
+  memory: 512M
+  instances: 1

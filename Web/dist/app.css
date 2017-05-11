@@ -1,0 +1,21 @@
+html {
+   background: #fafafa;
+   font-size: 14px;
+}
+
+body {
+    background: #fafafa;
+    padding-top: 66px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizelegibility;
+}
+
+#key:before {
+    content: "•••••••••••••••••••••••••••••••••••••";
+    font-size: 16px;
+}
+
+
+*:focus {
+    outline: none !important
+}
