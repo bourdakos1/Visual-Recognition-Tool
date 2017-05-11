@@ -16,6 +16,9 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         return .lightContent
     }
     
+    // Blurred effect for the API key form.
+    let blurredEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+    
     // Demo API key constant.
     let VISION_API_KEY: String
     
@@ -82,9 +85,8 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         
         initializeCamera()
 
-        // Start out with capture button shown
-        captureButton.isHidden = false
-        hideRetake()
+        // Retake just resets the UI.
+        retake()
         view.bringSubview(toFront: captureButton)
     }
     
@@ -237,80 +239,6 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         }
     }
     
-    func didPressTakePhoto() {
-        photoOutput?.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
-    }
-    
-    var didTakePhoto = Bool()
-    
-    func didPressTakeAnother() {
-        if didTakePhoto {
-            tempImageView.isHidden = true
-            didTakePhoto = false
-            captureButton.isHidden = false
-            hideRetake()
-            showAPI()
-            showButton()
-
-            if let drawer = self.parent as? PulleyViewController
-            {
-                if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
-                    tablesdsa.cameraHidden = false
-                    tablesdsa.myarray = []
-                    tablesdsa.tableView.reloadData()
-                }
-            }
-        } else {
-            captureSession?.startRunning()
-            didTakePhoto = true
-            didPressTakePhoto()
-            captureButton.isHidden = true
-            showRetake()
-            hideAPI()
-            hideButton()
-
-            if let drawer = self.parent as? PulleyViewController
-            {
-                if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
-                    tablesdsa.cameraHidden = true
-                    tablesdsa.tableView.reloadData()
-                }
-            }
-        }
-    }
-    
-    func hideButton() {
-        classifiersButton.isEnabled = false
-        classifiersButton.isHidden = true
-    }
-    
-    func showButton() {
-        classifiersButton.isEnabled = true
-        classifiersButton.isHidden = false
-    }
-    
-    func hideRetake() {
-        retakeButton.isEnabled = false
-        retakeButton.isHidden = true
-    }
-    
-    func showRetake() {
-        retakeButton.isEnabled = true
-        retakeButton.isHidden = false
-    }
-    
-    func hideAPI() {
-        apiKey.isEnabled = false
-        apiKey.isHidden = true
-    }
-    
-    func showAPI() {
-        apiKey.isEnabled = true
-        apiKey.isHidden = false
-    }
-    
-    let blurredEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-    
     func testKey(key: String) {
         var key = key.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
         var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api?api_key=\(key!)&version=2016-05-20")!)
@@ -414,12 +342,37 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         testKey(key: key!)
     }
     
-    @IBAction func takePic() {
-        didPressTakeAnother()
+    @IBAction func takePhoto() {
+        photoOutput?.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
+        captureButton.isHidden = true
+        retakeButton.isHidden = false
+        apiKey.isHidden = true
+        classifiersButton.isHidden = true
+        
+        if let drawer = self.parent as? PulleyViewController
+        {
+            if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
+                tablesdsa.cameraHidden = true
+                tablesdsa.tableView.reloadData()
+            }
+        }
     }
     
     @IBAction func retake() {
-        didPressTakeAnother()
+        tempImageView.isHidden = true
+        captureButton.isHidden = false
+        retakeButton.isHidden = true
+        apiKey.isHidden = false
+        classifiersButton.isHidden = false
+        
+        if let drawer = self.parent as? PulleyViewController
+        {
+            if let tablesdsa = drawer.drawerContentViewController as? TableViewController {
+                tablesdsa.cameraHidden = false
+                tablesdsa.myarray = []
+                tablesdsa.tableView.reloadData()
+            }
+        }
     }
 }
 
