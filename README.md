@@ -19,3 +19,29 @@ With your API-key you gain access to the [Visual Recognition Tool](http://visual
 
 ## iOS
 ![](screenshots/ios.png)
+
+## Using the Endpoint
+```
+curl -X POST \
+-F "images_file=@{IMAGE.jpg}" \
+"https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?version=2016-05-20&threshold=0.0&api_key={API_KEY}&classifier_ids={CLASSIFIER_ID}"
+```
+
+
+```
+{
+   "custom_classes": 2,
+   "images": [{
+      "classifiers": [{
+         "classes": [
+            {"class": "Darth Maul", "score": 0.559958},
+            {"class": "Darth Vader", "score": 0.047293}
+         ],
+         "classifier_id": "StarWars_1680254220",
+         "name": "Star Wars"
+      }],
+      "image": "my_test_photo.jpg"
+   }],
+   "images_processed": 1
+}
+```
