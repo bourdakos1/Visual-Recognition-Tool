@@ -4,5 +4,5 @@ A tool that enables users to create and manage their custom classifiers.
 ## Web
 ![](screenshots/web.png)
 
-## iOS
+## iOS 
 ![](screenshots/ios.png)
