@@ -8,14 +8,15 @@ A tool that enables users to create and manage their custom classifiers.
 ![](screenshots/ios.png)
 
 ## Using the Endpoint
-Use Curl or one of the [Watson SDKS](https://github.com/watson-developer-cloud) to access you trained classifier.
+Use Curl or one of the [Watson SDKS](https://github.com/watson-developer-cloud) to access you trained classifier:
 ```
 curl -X POST \
 -F "images_file=@{IMAGE.jpg}" \
 "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?version=2016-05-20&threshold=0.0&api_key={API_KEY}&classifier_ids={CLASSIFIER_ID}"
 ```
 
-You will get a response similar to this.
+
+You should get a response similar to this:
 ```
 {
    "custom_classes": 2,
