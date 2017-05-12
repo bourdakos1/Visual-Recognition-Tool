@@ -2,7 +2,7 @@
 A tool that enables users to create and manage their custom classifiers.
 
 ## Signing up for Bluemix
-In order to use Watson, you need to create the service and generate credentials on IBM Bluemix. Bluemix is IBM’s PaaS offering that lets you deploy and manage your cloud applications.
+In order to use Watson, you need to create the service and generate credentials on ![IBM](https://console.ng.bluemix.net/catalog/services/visual-recognition/) IBM Bluemix. Bluemix is IBM’s PaaS offering that lets you deploy and manage your cloud applications.
 
 Once you sign-up you should see the Visual Recognition service, if not, go to the Catalog and you should find the Visual Recognition service under Watson.
 
