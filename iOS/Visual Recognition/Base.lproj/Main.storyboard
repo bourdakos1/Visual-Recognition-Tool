@@ -556,6 +556,9 @@
                                     <constraint firstItem="KoM-Kb-6G0" firstAttribute="width" secondItem="w5N-zV-583" secondAttribute="width" id="heC-rW-cRe"/>
                                 </constraints>
                                 <size key="customSize" width="150" height="269"/>
+                                <connections>
+                                    <segue destination="4qN-YW-6M6" kind="show" identifier="showImages" id="47K-ib-1XO"/>
+                                </connections>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="newClassCell" id="Xd9-BC-1cQ">
                                 <rect key="frame" x="160" y="59.5" width="150" height="150"/>
@@ -589,6 +592,54 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hjN-QF-3d9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1925.5999999999999" y="-156.07196401799101"/>
+        </scene>
+        <!--Title-->
+        <scene sceneID="xNn-c8-QgK">
+            <objects>
+                <collectionViewController id="4qN-YW-6M6" customClass="ImagesCollectionViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="4t5-sP-aGU">
+                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ezK-GP-tfU">
+                            <size key="itemSize" width="150" height="150"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="imageCell" id="Psp-ow-E1w">
+                                <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qfa-nf-AoM">
+                                            <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                                        </imageView>
+                                    </subviews>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="Qfa-nf-AoM" firstAttribute="top" secondItem="Psp-ow-E1w" secondAttribute="top" id="3Z2-21-K6m"/>
+                                    <constraint firstAttribute="bottom" secondItem="Qfa-nf-AoM" secondAttribute="bottom" id="Czk-0q-AmL"/>
+                                    <constraint firstItem="Qfa-nf-AoM" firstAttribute="centerY" secondItem="Psp-ow-E1w" secondAttribute="centerY" id="DfK-NL-cgS"/>
+                                    <constraint firstItem="Qfa-nf-AoM" firstAttribute="centerX" secondItem="Psp-ow-E1w" secondAttribute="centerX" id="Yrf-0c-IdO"/>
+                                    <constraint firstAttribute="trailing" secondItem="Qfa-nf-AoM" secondAttribute="trailing" id="pPZ-4y-lJI"/>
+                                    <constraint firstItem="Qfa-nf-AoM" firstAttribute="leading" secondItem="Psp-ow-E1w" secondAttribute="leading" id="xay-xx-rKk"/>
+                                </constraints>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="4qN-YW-6M6" id="h4N-a2-N8y"/>
+                            <outlet property="delegate" destination="4qN-YW-6M6" id="7bG-qW-Ofw"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" title="Title" id="c5Z-Qz-SN9"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ibe-sp-1Od" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2748" y="-156.07196401799101"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="u9a-eW-auY">

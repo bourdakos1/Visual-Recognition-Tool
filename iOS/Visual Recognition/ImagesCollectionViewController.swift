@@ -1,5 +1,5 @@
 //
-//  ClassesCollectionViewController.swift
+//  ImagesCollectionViewController.swift
 //  Visual Recognition
 //
 //  Created by Nicholas Bourdakos on 5/12/17.
@@ -9,56 +9,44 @@
 import UIKit
 import Photos
 
-class ClassesCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class ImagesCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
-    var classifier = PendingClassifier()
-    var classes = [UIImage]()
-
+    var images = [UIImage]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = classifier.name!
         grabPhotos()
     }
-
+    
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
-
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return classes.count + 1
+        return images.count
     }
-
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell: UICollectionViewCell
-        if indexPath.item < classes.count {
-            cell = collectionView.dequeueReusableCell(withReuseIdentifier: "classCell", for: indexPath)
-            (cell.viewWithTag(1) as! UIImageView).image = classes[indexPath.item]
-            cell.viewWithTag(1)?.layer.cornerRadius = 5
-            cell.viewWithTag(1)?.clipsToBounds = true
-        } else {
-            cell = collectionView.dequeueReusableCell(withReuseIdentifier: "newClassCell", for: indexPath)
-        }
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath)
+        (cell.viewWithTag(1) as! UIImageView).image = images[indexPath.item]
+
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (collectionView.frame.width - 40) / 2 - 10
-
-        return CGSize(width: width, height: width + 50)
+        let width = collectionView.frame.width / 4 - CGFloat(2/UIScreen.main.scale)
+        
+        return CGSize(width: width, height: width)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return CGFloat(10.0)
+        return CGFloat(2/UIScreen.main.scale)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return CGFloat(10.0)
+        return CGFloat(2/UIScreen.main.scale)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsetsMake(CGFloat(20.0), CGFloat(20.0), CGFloat(20.0), CGFloat(20.0))
-    }
-
     func grabPhotos() {
         let imgManager = PHImageManager.default()
         
@@ -68,7 +56,7 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
         
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        fetchOptions.fetchLimit = 6
+        fetchOptions.fetchLimit = 50
         
         let width = (collectionView?.frame.width)! / 2 - 10
         
@@ -76,13 +64,9 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
         if fetchResult.count > 0 {
             for i in 0..<fetchResult.count {
                 imgManager.requestImage(for: fetchResult.object(at: i), targetSize: CGSize(width: width, height: width), contentMode: .aspectFill, options: requestOptions) { image, error in
-                    self.classes.append(image!)
+                    self.images.append(image!)
                 }
             }
         }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Prepare
     }
 }
