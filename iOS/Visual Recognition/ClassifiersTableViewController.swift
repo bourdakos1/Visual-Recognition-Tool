@@ -16,9 +16,9 @@ class ClassifiersTableViewController: UITableViewController {
     
     let VISION_API_KEY: String
     
-    var progress = [PendingClassifier]()
+    var pending = [PendingClassifier]()
     
-    var array: [[String: AnyObject]] = []
+    var classifiers = [[String: AnyObject]]()
     
     required init?(coder aDecoder: NSCoder) {
         var keys: NSDictionary?
@@ -56,7 +56,7 @@ class ClassifiersTableViewController: UITableViewController {
             pendingClassifier.id = "g3eq80eun09132ue13e9012u9e01" // make this an actual id, this will be the directory
             pendingClassifier.name = textfield.text!
             
-            self.progress.append(pendingClassifier)
+            self.pending.append(pendingClassifier)
             self.tableView.reloadData()
             
             DatabaseController.saveContext()
@@ -87,9 +87,9 @@ class ClassifiersTableViewController: UITableViewController {
         
         do {
             let searchResults = try DatabaseController.getContext().fetch(fetchRequest)
-            progress = []
+            pending = []
             for result in searchResults as [PendingClassifier] {
-                progress.append(result)
+                pending.append(result)
                 print("\(result.name!)_\(result.id!):")
                 for result in result.relationship?.allObjects as! [PendingClass] {
                     print("\t\(result.name!)")
@@ -107,15 +107,17 @@ class ClassifiersTableViewController: UITableViewController {
             return
         }
         
-        let escapedApiKey = apiKey?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers")!)
         
-        
-        /// UPLOAD
-        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers?api_key=\(escapedApiKey!)&version=2016-05-20&verbose=true")!)
-        r.httpMethod = "GET"
+        r.query(params: [
+            "api_key": apiKey!,
+            "version": "2016-05-20",
+            "verbose": "true"
+        ])
         
         let task = URLSession.shared.dataTask(with: r) { data, response, error in
-            guard let data = data, error == nil else {               // check for fundamental networking error
+            // Check for fundamental networking error.
+            guard let data = data, error == nil else {
                 return
             }
             do {
@@ -126,11 +128,11 @@ class ClassifiersTableViewController: UITableViewController {
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
                     data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! })
-                    self.array = data
-                    self.array.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+                    self.classifiers = data
+                    self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
                     
                     // Test classifier
-                    self.array.insert(["name": "Test Training" as AnyObject, "classifier_id": "test_training_2146114590" as AnyObject, "status": "training" as AnyObject], at: 0)
+                    self.classifiers.insert(["name": "Test Training" as AnyObject, "classifier_id": "test_training_2146114590" as AnyObject, "status": "training" as AnyObject], at: 0)
                     
                     self.tableView.reloadData()
                 }
@@ -144,22 +146,15 @@ class ClassifiersTableViewController: UITableViewController {
         tableView.rowHeight = UITableViewAutomaticDimension
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return progress.count
+            return pending.count
         } else {
-            return array.count
+            return classifiers.count
         }
     }
     
@@ -175,13 +170,13 @@ class ClassifiersTableViewController: UITableViewController {
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
             
-            cell.textLabel?.text = progress[indexPath.item].name!
+            cell.textLabel?.text = pending[indexPath.item].name!
             
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath) as! ClassiferTableViewCell
             
-            let classifierData = array[indexPath.item]
+            let classifierData = classifiers[indexPath.item]
             
             cell.classifierNameLabel?.text = classifierData["name"] as? String
             cell.classifierIdLabel?.text = classifierData["classifier_id"] as? String
@@ -209,7 +204,7 @@ class ClassifiersTableViewController: UITableViewController {
             }
             
             cell.tapAction = { (cell) in
-                print(self.array[tableView.indexPath(for: cell)!.item]["classifier_id"] ?? "default")
+                print(self.classifiers[tableView.indexPath(for: cell)!.item]["classifier_id"] ?? "default")
 
                 let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                 
@@ -264,9 +259,9 @@ class ClassifiersTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 1 {
-            let classifierData = array[indexPath.item]
+            let classifierData = classifiers[indexPath.item]
             if classifierData["status"] as? String == "ready"{
-                UserDefaults.standard.set(array[indexPath.item]["classifier_id"], forKey: "classifier_id")
+                UserDefaults.standard.set(classifiers[indexPath.item]["classifier_id"], forKey: "classifier_id")
             }
         }
         self.tableView.reloadData()
@@ -284,9 +279,17 @@ class ClassifiersTableViewController: UITableViewController {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            DatabaseController.getContext().delete(progress[indexPath.item])
-            progress.remove(at: indexPath.item)
+            DatabaseController.getContext().delete(pending[indexPath.item])
+            pending.remove(at: indexPath.item)
             tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if  segue.identifier == "showClasses" && tableView.indexPathForSelectedRow?.section == 0,
+            let destination = segue.destination as? ClassesCollectionViewController,
+            let index = tableView.indexPathForSelectedRow?.item {
+            destination.classifier = pending[index]
         }
     }
 }
