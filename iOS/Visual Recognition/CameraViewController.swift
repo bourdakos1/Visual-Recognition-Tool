@@ -215,33 +215,28 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                     let classifier = classifiers.first as? [String: Any],
                     let classes = classifier["classes"] as? [Any] else {
                         print("Error: No classes returned.")
-                        self.getTableController { tableController in
-                            var myNewData = [[String: Any]]()
-                            
-                            myNewData.append([
-                                "class_name": "No classes found" as Any,
-                                "score": CGFloat(0.0) as Any
-                                ])
-                            
-                            tableController.myarray = myNewData
-                        }
+                        var myNewData = [[String: Any]]()
+                        
+                        myNewData.append([
+                            "class_name": "No classes found" as Any,
+                            "score": CGFloat(0.0) as Any
+                        ])
+                        self.push(data: myNewData)
                         return
                 }
                 
-                self.getTableController { tableController in
-                    var myNewData = [[String: Any]]()
-                    
-                    for case let classObj as [String: Any] in classes {
-                        myNewData.append([
-                            "class_name": classObj["class"] as Any,
-                            "score": classObj["score"] as Any
-                            ])
-                    }
-                    
-                    // Sort data by score and reload table.
-                    myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
-                    tableController.myarray = myNewData
+                var myNewData = [[String: Any]]()
+                
+                for case let classObj as [String: Any] in classes {
+                    myNewData.append([
+                        "class_name": classObj["class"] as Any,
+                        "score": classObj["score"] as Any
+                    ])
                 }
+                
+                // Sort data by score and reload table.
+                myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
+                self.push(data: myNewData)
             }
             task.resume()
             
@@ -251,12 +246,21 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         }
     }
     
+    // Convenience method for pushing data to the TableView.
+    func push(data: [[String: Any]]) {
+        getTableController { tableController, drawer in
+            tableController.classes = data
+            self.dismiss(animated: false, completion: nil)
+            drawer.setDrawerPosition(position: .partiallyRevealed, animated: true)
+        }
+    }
+    
     // Convenience method for reloading the TableView.
-    func getTableController(run: @escaping (_ tableController: ResultsTableViewController) -> Void) {
+    func getTableController(run: @escaping (_ tableController: ResultsTableViewController, _ drawer: PulleyViewController) -> Void) {
         if let drawer = self.parent as? PulleyViewController {
             if let tableController = drawer.drawerContentViewController as? ResultsTableViewController {
                 DispatchQueue.main.async {
-                    run(tableController)
+                    run(tableController, drawer)
                     tableController.tableView.reloadData()
                 }
             }
@@ -353,10 +357,17 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         apiKey.isHidden = true
         classifiersButton.isHidden = true
         
+        // Show an activity indicator while its loading.
+        let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
         
-        self.getTableController { tableController in
-            tableController.cameraHidden = true
-        }
+        alert.view.tintColor = UIColor.black
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50)) as UIActivityIndicatorView
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        loadingIndicator.startAnimating()
+        
+        alert.view.addSubview(loadingIndicator)
+        present(alert, animated: true, completion: nil)
     }
     
     @IBAction func retake() {
@@ -366,9 +377,9 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         apiKey.isHidden = false
         classifiersButton.isHidden = false
         
-        self.getTableController { tableController in
-            tableController.cameraHidden = false
-            tableController.myarray = []
+        getTableController { tableController, drawer in
+            drawer.setDrawerPosition(position: .closed, animated: true)
+            tableController.classes = []
         }
     }
 }
