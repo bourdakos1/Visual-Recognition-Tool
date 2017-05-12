@@ -516,7 +516,7 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="classCell" id="w5N-zV-583">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="classCell" id="w5N-zV-583" customClass="ClassCollectionViewCell" customModule="Visual_Recognition" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="150" height="269"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -557,6 +557,9 @@
                                 </constraints>
                                 <size key="customSize" width="150" height="269"/>
                                 <connections>
+                                    <outlet property="classImageCountLabel" destination="bOj-As-DL8" id="8Nv-fY-alO"/>
+                                    <outlet property="classImageImageView" destination="KoM-Kb-6G0" id="qnk-Ms-OtE"/>
+                                    <outlet property="classNameLabel" destination="tWM-4a-lLO" id="BXi-op-KF5"/>
                                     <segue destination="4qN-YW-6M6" kind="show" identifier="showImages" id="47K-ib-1XO"/>
                                 </connections>
                             </collectionViewCell>
@@ -570,6 +573,9 @@
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rch-Tm-Lhn">
                                             <rect key="frame" x="39" y="60" width="72" height="30"/>
                                             <state key="normal" title="New Class"/>
+                                            <connections>
+                                                <action selector="createClass" destination="0de-JU-aQR" eventType="touchUpInside" id="QP8-cX-DJA"/>
+                                            </connections>
                                         </button>
                                     </subviews>
                                 </view>

@@ -90,10 +90,6 @@ class ClassifiersTableViewController: UITableViewController {
             pending = []
             for result in searchResults as [PendingClassifier] {
                 pending.append(result)
-                print("\(result.name!)_\(result.id!):")
-                for result in result.relationship?.allObjects as! [PendingClass] {
-                    print("\t\(result.name!)")
-                }
             }
         }
         catch {
