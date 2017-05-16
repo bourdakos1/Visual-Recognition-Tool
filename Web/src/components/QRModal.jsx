@@ -89,15 +89,12 @@ export default class CredentialsModal extends React.Component {
         return (
             <Modal id={'credentials-modal'} isOpen={this.state.modal} toggle={this.toggle}>
                 <div className={'modal-header'}>
-                    <div style={title}>QR Code</div>
+                    <div style={title}>Top Secret</div>
                     <button onClick={this.toggle} style={deleteStyle} />
                 </div>
                 <ModalBody>
                     <div style={[textStyles.base, {marginTop: '5px', marginBottom: '5px'}]}>
-                        Do you often find yourself taking pictures with your phone and then have to upload them to you computer?
-                    </div>
-                    <div style={[textStyles.base, {marginTop: '5px', marginBottom: '36px'}]}>
-                        Try out the iOS app to easily train and test your classifiers on your phone. Scan this QR code to automatically log in with your credentials!
+                        Special feature coming soon.
                     </div>
                     <div style={{width: '200px', margin: 'auto', marginTop: '60px', marginBottom: '30px'}} >
                         <QRCode size={200} value={localStorage.getItem('api_key')} />
