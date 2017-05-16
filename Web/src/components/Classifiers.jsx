@@ -125,6 +125,10 @@ export default class Classifiers extends React.Component {
         this.forceUpdate()
     }
 
+    reData = () => {
+        this.loadClassifiers()
+    }
+
     render() {
         var self = this
         return (
@@ -144,11 +148,11 @@ export default class Classifiers extends React.Component {
                     {this.state.classifiers.map((c) => {
                         return (
                             <ClassifierDetail
-                                history={self.props.history}
                                 classifierID={c.classifier_id}
                                 name={c.name}
                                 status={c.status}
                                 reDraw={self.reDraw}
+                                reData={self.reData}
                                 key={c.classifier_id || c.name}/>
                         )
                     })}

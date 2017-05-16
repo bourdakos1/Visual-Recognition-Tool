@@ -39,10 +39,11 @@ export default class ClassifierDetail extends React.Component {
             var self = this
             req.query({api_key: localStorage.getItem('api_key')})
             req.end(function(err, res) {
+                console.log('deleted')
                 if (res.body.error != null) {
                     alert(res.body.error)
                 }
-                self.props.history.push('/')
+                self.props.reData()
             })
         }
     }
