@@ -68,7 +68,7 @@ export default class ClassifierDetail extends React.Component {
             req = request.post('/api/faces')
         } else {
             req = request.post('/api/classify')
-            req.query({classifier_ids: [this.props.classifierID || this.props.name]})
+            req.query({classifier_ids: [this.props.classifierID || this.props.name.toLowerCase()]})
             req.query({threshold: 0.0})
         }
 
@@ -90,6 +90,7 @@ export default class ClassifierDetail extends React.Component {
 
         req.end(function(err, res) {
             onProgress(100)
+            console.log(res)
             var results
             if (res.body != null && res.body.images != null) {
                 if (res.body.images[0].classifiers != null && res.body.images[0].classifiers.length > 0 ) {
