@@ -134,7 +134,7 @@ export default class ClassifierDetail extends React.Component {
             req = request.get('/api/faces')
         } else {
             req = request.get('/api/classify')
-            req.query({classifier_ids: [this.props.classifierID || this.props.name]})
+            req.query({classifier_ids: [this.props.classifierID || this.props.name.toLowerCase()]})
             req.query({threshold: 0.0})
         }
 
