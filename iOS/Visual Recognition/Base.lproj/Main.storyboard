@@ -505,7 +505,7 @@
         <scene sceneID="nKP-go-WPx">
             <objects>
                 <collectionViewController id="0de-JU-aQR" customClass="ClassesCollectionViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="bDO-ar-YGX">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="bDO-ar-YGX">
                         <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -564,26 +564,50 @@
                                 </connections>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="newClassCell" id="Xd9-BC-1cQ">
-                                <rect key="frame" x="160" y="59.5" width="150" height="150"/>
+                                <rect key="frame" x="225" y="0.0" width="150" height="269"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="150" height="269"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rch-Tm-Lhn">
-                                            <rect key="frame" x="39" y="60" width="72" height="30"/>
-                                            <state key="normal" title="New Class"/>
+                                        <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8hP-RQ-DhD">
+                                            <rect key="frame" x="0.5" y="0.0" width="150" height="150"/>
+                                            <color key="backgroundColor" red="0.97647058819999999" green="0.97647058819999999" blue="0.97647058819999999" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" secondItem="8hP-RQ-DhD" secondAttribute="height" multiplier="1:1" id="0yV-Y2-zpd"/>
+                                            </constraints>
                                             <connections>
-                                                <action selector="createClass" destination="0de-JU-aQR" eventType="touchUpInside" id="QP8-cX-DJA"/>
+                                                <action selector="createClass" destination="0de-JU-aQR" eventType="touchUpInside" id="qju-FA-Cfl"/>
                                             </connections>
                                         </button>
+                                        <stackView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="uPH-NV-WFq">
+                                            <rect key="frame" x="39" y="44" width="72" height="62"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="create.png" translatesAutoresizingMaskIntoConstraints="NO" id="xqf-CO-ySw">
+                                                    <rect key="frame" x="21" y="0.0" width="30" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="30" id="qrt-14-Sp8"/>
+                                                        <constraint firstAttribute="height" constant="30" id="usS-Hj-xZw"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rch-Tm-Lhn">
+                                                    <rect key="frame" x="0.0" y="32" width="72" height="30"/>
+                                                    <state key="normal" title="New Class">
+                                                        <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                </button>
+                                            </subviews>
+                                        </stackView>
                                     </subviews>
                                 </view>
                                 <constraints>
-                                    <constraint firstItem="rch-Tm-Lhn" firstAttribute="centerY" secondItem="Xd9-BC-1cQ" secondAttribute="centerY" id="0hq-Sp-9Y0"/>
-                                    <constraint firstItem="rch-Tm-Lhn" firstAttribute="centerX" secondItem="Xd9-BC-1cQ" secondAttribute="centerX" id="Yva-aT-0kn"/>
+                                    <constraint firstItem="uPH-NV-WFq" firstAttribute="centerX" secondItem="8hP-RQ-DhD" secondAttribute="centerX" id="EYc-mo-bku"/>
+                                    <constraint firstItem="8hP-RQ-DhD" firstAttribute="top" secondItem="Xd9-BC-1cQ" secondAttribute="top" id="S10-wV-vPc"/>
+                                    <constraint firstItem="8hP-RQ-DhD" firstAttribute="centerX" secondItem="Xd9-BC-1cQ" secondAttribute="centerX" id="bix-fD-54Z"/>
+                                    <constraint firstItem="8hP-RQ-DhD" firstAttribute="width" secondItem="Xd9-BC-1cQ" secondAttribute="width" id="c2e-1a-U2L"/>
+                                    <constraint firstItem="uPH-NV-WFq" firstAttribute="centerY" secondItem="8hP-RQ-DhD" secondAttribute="centerY" id="pYl-3a-bea"/>
                                 </constraints>
-                                <size key="customSize" width="150" height="150"/>
+                                <size key="customSize" width="150" height="269"/>
                             </collectionViewCell>
                         </cells>
                         <connections>
@@ -775,6 +799,7 @@
         <image name="capture.png" width="232" height="232"/>
         <image name="checkmark.png" width="60" height="60"/>
         <image name="classifiers.png" width="165" height="165"/>
+        <image name="create.png" width="90" height="90"/>
         <image name="library.png" width="165" height="165"/>
         <image name="scrim.png" width="41" height="133"/>
     </resources>

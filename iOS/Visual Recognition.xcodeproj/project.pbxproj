@@ -41,6 +41,7 @@
 		23AA52321EC0E6240073D4DC /* btn_dropdown.png in Resources */ = {isa = PBXBuildFile; fileRef = 23AA52311EC0E6240073D4DC /* btn_dropdown.png */; };
 		23AA52341EC0E7CD0073D4DC /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 23AA52331EC0E7CD0073D4DC /* checkmark.png */; };
 		23C9BE8D1ECB90C900FFD71C /* SnapperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C9BE8C1ECB90C900FFD71C /* SnapperViewController.swift */; };
+		23C9BE8F1ECBF52D00FFD71C /* create.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C9BE8E1ECBF52D00FFD71C /* create.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,6 +102,7 @@
 		23AA52311EC0E6240073D4DC /* btn_dropdown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_dropdown.png; sourceTree = "<group>"; };
 		23AA52331EC0E7CD0073D4DC /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
 		23C9BE8C1ECB90C900FFD71C /* SnapperViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapperViewController.swift; sourceTree = "<group>"; };
+		23C9BE8E1ECBF52D00FFD71C /* create.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = create.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -229,6 +231,7 @@
 				236DCB6A1E7DAA54009AE6D6 /* capture.png */,
 				236DCB6C1E7DAE04009AE6D6 /* cancel.png */,
 				231D6FE11EBAA8E0003DDE56 /* classifiers.png */,
+				23C9BE8E1ECBF52D00FFD71C /* create.png */,
 				232B9F8B1E80885900407BB8 /* scrim.png */,
 				231D6FE31EBADAA1003DDE56 /* library.png */,
 				23AA52331EC0E7CD0073D4DC /* checkmark.png */,
@@ -352,6 +355,7 @@
 				2389A7081E7C65A100D7C973 /* LaunchScreen.storyboard in Resources */,
 				2389A7051E7C65A100D7C973 /* Assets.xcassets in Resources */,
 				231D6FE41EBADAA1003DDE56 /* library.png in Resources */,
+				23C9BE8F1ECBF52D00FFD71C /* create.png in Resources */,
 				236DCB6B1E7DAA54009AE6D6 /* capture.png in Resources */,
 				236DCB6D1E7DAE04009AE6D6 /* cancel.png in Resources */,
 				23AA52341EC0E7CD0073D4DC /* checkmark.png in Resources */,

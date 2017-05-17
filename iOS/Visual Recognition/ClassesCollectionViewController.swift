@@ -43,9 +43,12 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
             cell.classImageImageView.clipsToBounds = true
             cell.classNameLabel.text = classes[indexPath.item].name
             return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "newClassCell", for: indexPath)
+            cell.viewWithTag(1)?.layer.cornerRadius = 5
+            cell.viewWithTag(1)?.clipsToBounds = true
+            return cell
         }
-        
-        return collectionView.dequeueReusableCell(withReuseIdentifier: "newClassCell", for: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
