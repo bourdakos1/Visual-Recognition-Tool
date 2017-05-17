@@ -11,10 +11,12 @@ import Photos
 
 class ImagesCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
+    var pendingClass = PendingClass()
     var images = [UIImage]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = pendingClass.name!
         grabPhotos()
     }
     
@@ -68,5 +70,9 @@ class ImagesCollectionViewController: UICollectionViewController, UICollectionVi
                 }
             }
         }
+    }
+    
+    @IBAction func unwindToImages(segue: UIStoryboardSegue) {
+        
     }
 }

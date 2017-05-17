@@ -40,6 +40,7 @@
 		23AA52301EC0DC550073D4DC /* ClassiferTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AA522F1EC0DC550073D4DC /* ClassiferTableViewCell.swift */; };
 		23AA52321EC0E6240073D4DC /* btn_dropdown.png in Resources */ = {isa = PBXBuildFile; fileRef = 23AA52311EC0E6240073D4DC /* btn_dropdown.png */; };
 		23AA52341EC0E7CD0073D4DC /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 23AA52331EC0E7CD0073D4DC /* checkmark.png */; };
+		23C9BE8D1ECB90C900FFD71C /* SnapperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C9BE8C1ECB90C900FFD71C /* SnapperViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +100,7 @@
 		23AA522F1EC0DC550073D4DC /* ClassiferTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassiferTableViewCell.swift; sourceTree = "<group>"; };
 		23AA52311EC0E6240073D4DC /* btn_dropdown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_dropdown.png; sourceTree = "<group>"; };
 		23AA52331EC0E7CD0073D4DC /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
+		23C9BE8C1ECB90C900FFD71C /* SnapperViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapperViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +176,7 @@
 				235DD00A1EC63F3A00B8432B /* ClassesCollectionViewController.swift */,
 				235DD00E1EC67B0800B8432B /* ClassCollectionViewCell.swift */,
 				235DD00C1EC6702E00B8432B /* ImagesCollectionViewController.swift */,
+				23C9BE8C1ECB90C900FFD71C /* SnapperViewController.swift */,
 				2395A02C1EC270BC00C29325 /* res */,
 				23609DBA1EBA727800FD03FC /* Keys.plist */,
 				233D0B9C1EC13101005E5594 /* Classifiers.xcdatamodeld */,
@@ -393,6 +396,7 @@
 				235DD00D1EC6702E00B8432B /* ImagesCollectionViewController.swift in Sources */,
 				233D0BA01EC17C53005E5594 /* DatabaseController.swift in Sources */,
 				233D0B9E1EC13101005E5594 /* Classifiers.xcdatamodeld in Sources */,
+				23C9BE8D1ECB90C900FFD71C /* SnapperViewController.swift in Sources */,
 				233D0BB71EC22EB6005E5594 /* PendingClassifier+CoreDataProperties.swift in Sources */,
 				2389A7381E7CAA7500D7C973 /* ResultTableViewCell.swift in Sources */,
 				2389A7361E7CA9E700D7C973 /* ProgressBar.swift in Sources */,

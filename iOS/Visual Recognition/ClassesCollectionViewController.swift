@@ -95,7 +95,11 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Prepare
+        if  segue.identifier == "showImages",
+            let destination = segue.destination as? ImagesCollectionViewController,
+            let index = collectionView?.indexPathsForSelectedItems?.first?.item {
+            destination.pendingClass = classes[index]
+        }
     }
     
     
