@@ -505,7 +505,7 @@
         <scene sceneID="nKP-go-WPx">
             <objects>
                 <collectionViewController id="0de-JU-aQR" customClass="ClassesCollectionViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="bDO-ar-YGX">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="bDO-ar-YGX">
                         <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -674,7 +674,7 @@
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="tot-2N-KYa"/>
                         <barButtonItem systemItem="camera" id="AFs-8e-qP8">
                             <connections>
-                                <segue destination="zjM-K8-kVZ" kind="presentation" id="jIv-IG-wuP"/>
+                                <segue destination="zjM-K8-kVZ" kind="presentation" identifier="showSnapper" id="jIv-IG-wuP"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="rsI-gf-IZi"/>
@@ -739,6 +739,18 @@
                                     <segue destination="yNw-u1-LOA" kind="unwind" unwindAction="unwindToImagesWithSegue:" id="Nia-Uz-zb6"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QUY-H0-coo">
+                                <rect key="frame" x="326" y="40" width="33" height="33"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="33" id="KEt-j8-cTd"/>
+                                    <constraint firstAttribute="width" constant="33" id="U7R-tt-hmW"/>
+                                </constraints>
+                                <state key="normal" image="cancel.png"/>
+                                <connections>
+                                    <action selector="retake" destination="BYZ-38-t0r" eventType="touchUpInside" id="gT1-Kg-HFu"/>
+                                    <segue destination="yNw-u1-LOA" kind="unwind" unwindAction="unwindToImagesWithSegue:" id="nvB-4e-c3v"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -750,10 +762,12 @@
                             <constraint firstItem="xcv-Pf-cMj" firstAttribute="centerY" secondItem="do6-7o-qgl" secondAttribute="centerY" id="PDK-5m-mmw"/>
                             <constraint firstItem="do6-7o-qgl" firstAttribute="leading" secondItem="98g-Sh-LsG" secondAttribute="leadingMargin" id="TVL-Lo-4Cv"/>
                             <constraint firstAttribute="trailing" secondItem="U26-ZO-1Um" secondAttribute="trailing" id="Xsm-eG-HvX"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="QUY-H0-coo" secondAttribute="trailing" id="bLb-hv-K9h"/>
                             <constraint firstItem="xcv-Pf-cMj" firstAttribute="centerX" secondItem="98g-Sh-LsG" secondAttribute="centerX" id="cCC-FL-xrK"/>
                             <constraint firstItem="BaX-FG-sQv" firstAttribute="centerX" secondItem="do6-7o-qgl" secondAttribute="centerX" id="rBH-DW-9hN"/>
                             <constraint firstItem="vd9-CM-w7K" firstAttribute="top" secondItem="U26-ZO-1Um" secondAttribute="bottom" id="x1x-RU-2zx"/>
                             <constraint firstItem="0FB-iI-Bq0" firstAttribute="centerX" secondItem="do6-7o-qgl" secondAttribute="centerX" id="ysV-w8-PvB"/>
+                            <constraint firstItem="QUY-H0-coo" firstAttribute="top" secondItem="jfY-j1-ZMq" secondAttribute="bottom" constant="20" id="zWg-4f-89I"/>
                         </constraints>
                     </view>
                     <connections>

@@ -17,6 +17,11 @@ class ImagesCollectionViewController: UICollectionViewController, UICollectionVi
     override func viewDidLoad() {
         super.viewDidLoad()
         title = pendingClass.name!
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        images = []
         grabPhotos()
     }
     
@@ -50,29 +55,39 @@ class ImagesCollectionViewController: UICollectionViewController, UICollectionVi
     }
     
     func grabPhotos() {
-        let imgManager = PHImageManager.default()
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         
-        let requestOptions = PHImageRequestOptions()
-        requestOptions.isSynchronous = true
-        requestOptions.deliveryMode = .highQualityFormat
-        
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        fetchOptions.fetchLimit = 50
-        
-        let width = (collectionView?.frame.width)! / 2 - 10
-        
-        let fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
-        if fetchResult.count > 0 {
-            for i in 0..<fetchResult.count {
-                imgManager.requestImage(for: fetchResult.object(at: i), targetSize: CGSize(width: width, height: width), contentMode: .aspectFill, options: requestOptions) { image, error in
-                    self.images.append(image!)
+        do {
+            // Get the directory contents urls (including subfolders urls)
+            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(pendingClass.name!), includingPropertiesForKeys: nil, options: [])
+            
+            // if you want to filter the directory contents you can do like this:
+            let jpgFiles = directoryContents.filter{ $0.pathExtension == "jpg" }
+                .map { url -> (URL, TimeInterval) in
+                    var lastModified = try? url.resourceValues(forKeys: [URLResourceKey.contentModificationDateKey])
+                    return (url, lastModified?.contentModificationDate?.timeIntervalSinceReferenceDate ?? 0)
                 }
+                .sorted(by: { $0.1 > $1.1 }) // sort descending modification dates
+                .map{ $0.0 }
+            
+            for file in jpgFiles {
+                images.append(UIImage(contentsOfFile: file.path)!)
             }
+            collectionView?.reloadData()
+            
+        } catch {
+            print(error.localizedDescription)
         }
     }
     
     @IBAction func unwindToImages(segue: UIStoryboardSegue) {
-        
+        // Unwind
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if  segue.identifier == "showSnapper",
+            let destination = segue.destination as? SnapperViewController {
+            destination.pendingClass = pendingClass
+        }
     }
 }

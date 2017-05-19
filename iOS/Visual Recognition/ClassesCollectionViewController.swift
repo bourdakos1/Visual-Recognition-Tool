@@ -12,19 +12,27 @@ import CoreData
 
 class ClassesCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
+    struct ClassObj {
+        var pendingClass: PendingClass
+        var image: UIImage
+        var imageCount: Int
+    }
+    
     var classifier = PendingClassifier()
-    var images = [UIImage]()
-    var classes = [PendingClass]()
+    var classes = [ClassObj]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = classifier.name!
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         classes = []
         for result in classifier.relationship?.allObjects as! [PendingClass] {
-            classes.append(result)
+            classes.append(grabPhoto(for: result))
         }
-        grabPhotos(classes.count)
+        collectionView?.reloadData()
     }
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -38,10 +46,16 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.item < classes.count {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "classCell", for: indexPath) as! ClassCollectionViewCell
-            cell.classImageImageView.image = images[indexPath.item]
+            if classes[indexPath.item].imageCount > 0 {
+                cell.classImageImageView.image = classes[indexPath.item].image
+            } else {
+                cell.classImageImageView.backgroundColor = UIColor(red: 249/255, green: 249/255, blue: 249/255, alpha: 1)
+                cell.classImageImageView.image = nil
+            }
             cell.classImageImageView.layer.cornerRadius = 5
             cell.classImageImageView.clipsToBounds = true
-            cell.classNameLabel.text = classes[indexPath.item].name
+            cell.classNameLabel.text = classes[indexPath.item].pendingClass.name
+            cell.classImageCountLabel.text = String(describing: classes[indexPath.item].imageCount)
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "newClassCell", for: indexPath)
@@ -68,43 +82,38 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsetsMake(CGFloat(20.0), CGFloat(20.0), CGFloat(20.0), CGFloat(20.0))
     }
-
-    func grabPhotos(_ amount: Int) {
-        var limit = amount
-        if limit == 0 {
-            limit = 1
-        }
+    
+    func grabPhoto(for pendingClass: PendingClass) -> ClassObj {
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         
-        let imgManager = PHImageManager.default()
-        
-        let requestOptions = PHImageRequestOptions()
-        requestOptions.isSynchronous = true
-        requestOptions.deliveryMode = .highQualityFormat
-        
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        fetchOptions.fetchLimit = limit
-        
-        let width = (collectionView?.frame.width)! / 2 - 10
-        
-        let fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
-        if fetchResult.count > 0 {
-            for i in 0..<fetchResult.count {
-                imgManager.requestImage(for: fetchResult.object(at: i), targetSize: CGSize(width: width, height: width), contentMode: .aspectFill, options: requestOptions) { image, error in
-                    self.images.append(image!)
+        do {
+            // Get the directory contents urls (including subfolders urls)
+            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(pendingClass.name!), includingPropertiesForKeys: nil, options: [])
+            
+            // if you want to filter the directory contents you can do like this:
+            let jpgFiles = directoryContents.filter{ $0.pathExtension == "jpg" }
+                .map { url -> (URL, TimeInterval) in
+                    var lastModified = try? url.resourceValues(forKeys: [URLResourceKey.contentModificationDateKey])
+                    return (url, lastModified?.contentModificationDate?.timeIntervalSinceReferenceDate ?? 0)
                 }
-            }
+                .sorted(by: { $0.1 > $1.1 }) // sort descending modification dates
+                .map{ $0.0 }
+            
+            return ClassObj(pendingClass: pendingClass, image: UIImage(contentsOfFile: jpgFiles.first!.path)!, imageCount: jpgFiles.count)
+            
+        } catch {
+            print(error.localizedDescription)
         }
+        return ClassObj(pendingClass: pendingClass, image: UIImage(), imageCount: 0)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if  segue.identifier == "showImages",
             let destination = segue.destination as? ImagesCollectionViewController,
             let index = collectionView?.indexPathsForSelectedItems?.first?.item {
-            destination.pendingClass = classes[index]
+            destination.pendingClass = classes[index].pendingClass
         }
     }
-    
     
     func handleTextDidChange(_ sender:UITextField) {
         // Enforce a minimum length of >= 1 for secure text alerts.
@@ -130,16 +139,31 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
             let textfield = alert.textFields!.first!
             print("saving: \(textfield.text!)")
             
-            let pendingClassClassName:String  = String(describing: PendingClass.self)
+            let classNames = self.classes.map{ $0.pendingClass.name! }
             
-            let pendingClass:PendingClass = NSEntityDescription.insertNewObject(forEntityName: pendingClassClassName, into: DatabaseController.getContext()) as! PendingClass
+            if classNames.contains(textfield.text!) {
+                let error = UIAlertController(title: "Class Already Exists", message: "Please choose a different name.", preferredStyle: .alert)
+                
+                let dismiss = UIAlertAction(title: "Dismiss", style: .cancel) { action in
+                    
+                }
+                
+                error.addAction(dismiss)
+                
+                self.present(error, animated: true, completion: nil)
+                return
+            }
+            
+            let pendingClassClassName: String = String(describing: PendingClass.self)
+            
+            let pendingClass: PendingClass = NSEntityDescription.insertNewObject(forEntityName: pendingClassClassName, into: DatabaseController.getContext()) as! PendingClass
             
             pendingClass.name = textfield.text!
             
             self.classifier.addToRelationship(pendingClass)
+
+            self.classes.append(self.grabPhoto(for: pendingClass))
             
-            self.classes.append(pendingClass)
-            self.grabPhotos(self.classes.count)
             self.collectionView?.reloadData()
             
             DatabaseController.saveContext()

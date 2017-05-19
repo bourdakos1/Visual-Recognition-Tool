@@ -12,6 +12,8 @@ import Photos
 
 class SnapperViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
+    var pendingClass = PendingClass()
+    
     // Set the StatusBar color.
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -43,25 +45,25 @@ class SnapperViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     }
     
     func grabPhoto() {
-        let imgManager = PHImageManager.default()
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         
-        let requestOptions = PHImageRequestOptions()
-        requestOptions.isSynchronous = true
-        requestOptions.deliveryMode = .highQualityFormat
-        
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        fetchOptions.fetchLimit = 1
-        
-        let width = 60
-        
-        let fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
-        if fetchResult.count > 0 {
-            for i in 0..<fetchResult.count {
-                imgManager.requestImage(for: fetchResult.object(at: i), targetSize: CGSize(width: width, height: width), contentMode: .aspectFill, options: requestOptions) { image, error in
-                    self.thumbnailImage.image = image!
+        do {
+            // Get the directory contents urls (including subfolders urls)
+            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(pendingClass.name!), includingPropertiesForKeys: nil, options: [])
+            
+            // if you want to filter the directory contents you can do like this:
+            let jpgFile = directoryContents.filter{ $0.pathExtension == "jpg" }
+                .map { url -> (URL, TimeInterval) in
+                    var lastModified = try? url.resourceValues(forKeys: [URLResourceKey.contentModificationDateKey])
+                    return (url, lastModified?.contentModificationDate?.timeIntervalSinceReferenceDate ?? 0)
                 }
-            }
+                .sorted(by: { $0.1 > $1.1 }) // sort descending modification dates
+                .map{ $0.0 }.first!
+            
+            thumbnailImage.image = UIImage(contentsOfFile: jpgFile.path)!
+            
+        } catch {
+            print(error.localizedDescription)
         }
     }
     
@@ -106,6 +108,24 @@ class SnapperViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                 forJPEGSampleBuffer: photoSampleBuffer!,
                 previewPhotoSampleBuffer: previewPhotoSampleBuffer
             )
+            
+            let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+            
+            let path = documentsUrl.appendingPathComponent(pendingClass.name!)
+            
+            do {
+                try FileManager.default.createDirectory(atPath: path.path, withIntermediateDirectories: false, attributes: nil)
+            } catch {
+                print(error.localizedDescription)
+            }
+            
+            let filename = path.appendingPathComponent("\(NSUUID().uuidString).jpg")
+            
+            do {
+                try imageData?.write(to: filename)
+            } catch {
+                print(error.localizedDescription)
+            }
             
             let dataProvider  = CGDataProvider(data: imageData! as CFData)
             
