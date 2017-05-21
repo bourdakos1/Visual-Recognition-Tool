@@ -11,6 +11,7 @@ import Photos
 
 class ImagesCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
+    var classifier = PendingClassifier()
     var pendingClass = PendingClass()
     var images = [UIImage]()
     
@@ -59,7 +60,7 @@ class ImagesCollectionViewController: UICollectionViewController, UICollectionVi
         
         do {
             // Get the directory contents urls (including subfolders urls)
-            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(pendingClass.name!), includingPropertiesForKeys: nil, options: [])
+            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(classifier.name!).appendingPathComponent(pendingClass.name!), includingPropertiesForKeys: nil, options: [])
             
             // if you want to filter the directory contents you can do like this:
             let jpgFiles = directoryContents.filter{ $0.pathExtension == "jpg" }
@@ -88,6 +89,7 @@ class ImagesCollectionViewController: UICollectionViewController, UICollectionVi
         if  segue.identifier == "showSnapper",
             let destination = segue.destination as? SnapperViewController {
             destination.pendingClass = pendingClass
+            destination.classifier = classifier
         }
     }
 }

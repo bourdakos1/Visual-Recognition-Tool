@@ -416,6 +416,55 @@ extension URLRequest {
         )
     }
     
+    mutating func attach(zip: Data, name: String) {
+        httpMethod = "POST"
+        let boundary = "Boundary-\(UUID().uuidString)"
+        setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        httpBody = createBody(
+            parameters: ["name": "Star Wars"],
+            boundary: boundary,
+            data: zip,
+            mimeType: "application/zip",
+            filename: "\(name).zip",
+            name: name
+        )
+    }
+    
+    private func createBody(parameters: [String: String],
+                            boundary: String,
+                            data: Data,
+                            mimeType: String,
+                            filename: String,
+                            name: String) -> Data {
+        let body = NSMutableData()
+        
+        let boundaryPrefix = "--\(boundary)\r\n"
+        
+        for (key, value) in parameters {
+            body.appendString(boundaryPrefix)
+            body.appendString("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n")
+            body.appendString("\(value)\r\n")
+        }
+        
+        body.appendString(boundaryPrefix)
+        // Don't worry about negative examples for now
+        body.appendString("Content-Disposition: form-data; name=\"\(name)_positive_examples\"; filename=\"\(filename)\"\r\n")
+        body.appendString("Content-Type: \(mimeType)\r\n\r\n")
+        body.append(data)
+        body.appendString("\r\n")
+        
+        body.appendString(boundaryPrefix)
+        // Don't worry about negative examples for now
+        body.appendString("Content-Disposition: form-data; name=\"\(name)2_positive_examples\"; filename=\"\(filename)\"\r\n")
+        body.appendString("Content-Type: \(mimeType)\r\n\r\n")
+        body.append(data)
+        body.appendString("\r\n")
+        
+        body.appendString("--".appending(boundary.appending("--")))
+        
+        return body as Data
+    }
+    
     mutating func query(params: [String: String]) {
         let parameterArray = params.map { (key, value) -> String in
             let percentEscapedKey = key.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)

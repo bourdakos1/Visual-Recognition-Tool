@@ -121,6 +121,9 @@ class ClassifiersTableViewController: UITableViewController {
                 DispatchQueue.main.async{
                     var data = json["classifiers"] as! [[String: AnyObject]]
                     
+                    // print
+                    print(data)
+                    
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
                     data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! })

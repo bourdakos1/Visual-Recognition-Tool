@@ -12,6 +12,7 @@ import Photos
 
 class SnapperViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     
+    var classifier = PendingClassifier()
     var pendingClass = PendingClass()
     
     // Set the StatusBar color.
@@ -49,7 +50,7 @@ class SnapperViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         
         do {
             // Get the directory contents urls (including subfolders urls)
-            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(pendingClass.name!), includingPropertiesForKeys: nil, options: [])
+            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(classifier.name!).appendingPathComponent(pendingClass.name!), includingPropertiesForKeys: nil, options: [])
             
             // if you want to filter the directory contents you can do like this:
             let jpgFile = directoryContents.filter{ $0.pathExtension == "jpg" }
@@ -109,24 +110,6 @@ class SnapperViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                 previewPhotoSampleBuffer: previewPhotoSampleBuffer
             )
             
-            let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-            
-            let path = documentsUrl.appendingPathComponent(pendingClass.name!)
-            
-            do {
-                try FileManager.default.createDirectory(atPath: path.path, withIntermediateDirectories: false, attributes: nil)
-            } catch {
-                print(error.localizedDescription)
-            }
-            
-            let filename = path.appendingPathComponent("\(NSUUID().uuidString).jpg")
-            
-            do {
-                try imageData?.write(to: filename)
-            } catch {
-                print(error.localizedDescription)
-            }
-            
             let dataProvider  = CGDataProvider(data: imageData! as CFData)
             
             let cgImageRef = CGImage(
@@ -141,6 +124,41 @@ class SnapperViewController: UIViewController, AVCapturePhotoCaptureDelegate {
                 scale: 1.0,
                 orientation: UIImageOrientation.right
             )
+            
+            let reducedImage = image.resized(toWidth: 300)!
+            
+            let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+            
+            let path = documentsUrl.appendingPathComponent(classifier.name!).appendingPathComponent(pendingClass.name!)
+            
+            do {
+                try FileManager.default.createDirectory(atPath: path.path, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                print(error.localizedDescription)
+            }
+            
+            let filename = path.appendingPathComponent("\(NSUUID().uuidString).jpg")
+            
+            do {
+                try UIImageJPEGRepresentation(reducedImage, 0.4)!.write(to: filename)
+            } catch {
+                print(error.localizedDescription)
+            }
+            
+//            let dataProvider  = CGDataProvider(data: imageData! as CFData)
+            
+//            let cgImageRef = CGImage(
+//                jpegDataProviderSource: dataProvider!,
+//                decode: nil,
+//                shouldInterpolate: true,
+//                intent: .defaultIntent
+//            )
+            
+//            let image = UIImage(
+//                cgImage: cgImageRef!,
+//                scale: 1.0,
+//                orientation: UIImageOrientation.right
+//            )
             
             UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseOut], animations: { () -> Void in
                 self.thumbnailImage.alpha = 0.0

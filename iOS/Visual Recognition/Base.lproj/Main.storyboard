@@ -617,7 +617,11 @@
                     </collectionView>
                     <toolbarItems>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="efS-T6-ABd"/>
-                        <barButtonItem title="Train" id="tI9-wn-8CD"/>
+                        <barButtonItem title="Train" id="tI9-wn-8CD">
+                            <connections>
+                                <action selector="train" destination="0de-JU-aQR" id="lGv-bf-YdG"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="crT-YW-Frd"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Title" id="USH-pf-klT">

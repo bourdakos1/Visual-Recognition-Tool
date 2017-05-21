@@ -9,6 +9,8 @@
 import UIKit
 import Photos
 import CoreData
+import Zip
+import Alamofire
 
 class ClassesCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
@@ -24,6 +26,20 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
     override func viewDidLoad() {
         super.viewDidLoad()
         title = classifier.name!
+        
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        
+        do {
+            // Get the directory contents urls (including subfolders urls)
+            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(classifier.name!), includingPropertiesForKeys: nil, options: [])
+            
+            let files = directoryContents.map{ $0.pathComponents.last! }
+            
+            print(files)
+            
+        } catch {
+            print(error.localizedDescription)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -88,7 +104,7 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
         
         do {
             // Get the directory contents urls (including subfolders urls)
-            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(pendingClass.name!), includingPropertiesForKeys: nil, options: [])
+            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(classifier.name!).appendingPathComponent(pendingClass.name!), includingPropertiesForKeys: nil, options: [])
             
             // if you want to filter the directory contents you can do like this:
             let jpgFiles = directoryContents.filter{ $0.pathExtension == "jpg" }
@@ -99,7 +115,11 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
                 .sorted(by: { $0.1 > $1.1 }) // sort descending modification dates
                 .map{ $0.0 }
             
-            return ClassObj(pendingClass: pendingClass, image: UIImage(contentsOfFile: jpgFiles.first!.path)!, imageCount: jpgFiles.count)
+            return ClassObj(
+                pendingClass: pendingClass,
+                image: UIImage(contentsOfFile: jpgFiles.first!.path)!,
+                imageCount: jpgFiles.count
+            )
             
         } catch {
             print(error.localizedDescription)
@@ -112,6 +132,7 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
             let destination = segue.destination as? ImagesCollectionViewController,
             let index = collectionView?.indexPathsForSelectedItems?.first?.item {
             destination.pendingClass = classes[index].pendingClass
+            destination.classifier = classifier
         }
     }
     
@@ -180,5 +201,69 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
         alert.addAction(saveAction)
         
         present(alert, animated: true, completion: nil)
+    }
+    
+    @IBAction func train() {
+        print("train")
+        do {
+            let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(classifier.name!)
+            
+            var paths = [URL]()
+            
+            for result in classifier.relationship?.allObjects as! [PendingClass] {
+                let destination = documentsUrl.appendingPathComponent(result.name!).appendingPathExtension("zip")
+                
+                paths.append(destination)
+                
+                if FileManager.default.fileExists(atPath: destination.path) {
+                    print("File already exists")
+                } else {
+                    try Zip.zipFiles(paths: [documentsUrl.appendingPathComponent(result.name!)], zipFilePath: destination, password: nil, progress: { progress in
+                        print(progress)
+                    })
+                }
+            }
+            
+            let url = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers")!
+            
+            let urlRequest = URLRequest(url: url)
+            
+            let parameters: Parameters = [
+                "api_key": UserDefaults.standard.string(forKey: "api_key")!,
+                "version": "2016-05-20",
+            ]
+            
+            let encodedURLRequest = try URLEncoding.queryString.encode(urlRequest, with: parameters)
+            
+            Alamofire.upload(
+                multipartFormData: { multipartFormData in
+                    for path in paths {
+                        multipartFormData.append(
+                            path,
+                            withName: "\((path.pathComponents.last! as NSString).deletingPathExtension)_positive_examples"
+                        )
+                    }
+                    multipartFormData.append(self.classifier.name!.data(using: .utf8, allowLossyConversion: false)!, withName :"name")
+                },
+                to: encodedURLRequest.url!,
+                encodingCompletion: { encodingResult in
+                    switch encodingResult {
+                    case .success(let upload, _, _):
+                        upload.responseJSON { response in
+                            debugPrint(response)
+                        }
+                        upload.uploadProgress(closure: { //Get Progress
+                            progress in
+                            print(progress.fractionCompleted)
+                        })
+                    case .failure(let encodingError):
+                        print(encodingError)
+                    }
+            })
+            
+        }
+        catch {
+            print(error)
+        }
     }
 }
