@@ -466,6 +466,11 @@
                                         <constraint firstAttribute="trailingMargin" secondItem="Twf-PJ-Baq" secondAttribute="trailing" constant="10" id="eZ1-Ro-oIB"/>
                                         <constraint firstItem="I5O-og-flQ" firstAttribute="centerY" secondItem="oL8-aV-CTz" secondAttribute="centerY" id="xdp-dp-jdZ"/>
                                     </constraints>
+                                    <variation key="default">
+                                        <mask key="subviews">
+                                            <exclude reference="Twf-PJ-Baq"/>
+                                        </mask>
+                                    </variation>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="activityIndicator" destination="RMY-uo-6A4" id="h7f-e4-Evm"/>
