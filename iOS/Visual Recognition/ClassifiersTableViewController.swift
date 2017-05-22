@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Alamofire
 
 class ClassifiersTableViewController: UITableViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -82,6 +83,9 @@ class ClassifiersTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.estimatedRowHeight = 85.0
+        tableView.rowHeight = UITableViewAutomaticDimension
     
         let fetchRequest:NSFetchRequest<PendingClassifier> = PendingClassifier.fetchRequest()
         
@@ -100,6 +104,8 @@ class ClassifiersTableViewController: UITableViewController {
         let apiKey = UserDefaults.standard.string(forKey: "api_key")
         
         if apiKey == nil || apiKey == "" {
+            self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+            // Don't need to reload, because its synchronous.
             return
         }
         
@@ -121,17 +127,11 @@ class ClassifiersTableViewController: UITableViewController {
                 DispatchQueue.main.async{
                     var data = json["classifiers"] as! [[String: AnyObject]]
                     
-                    // print
-                    print(data)
-                    
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
                     data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! })
                     self.classifiers = data
                     self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-                    
-                    // Test classifier
-                    self.classifiers.insert(["name": "Test Training" as AnyObject, "classifier_id": "test_training_2146114590" as AnyObject, "status": "training" as AnyObject], at: 0)
                     
                     self.tableView.reloadData()
                 }
@@ -140,17 +140,18 @@ class ClassifiersTableViewController: UITableViewController {
             }
         }
         task.resume()
-
-        tableView.estimatedRowHeight = 85.0
-        tableView.rowHeight = UITableViewAutomaticDimension
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
+        if pending.count <= 0 {
+            return 1
+        }
+        // There should always be at least 1 classifier.
         return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
+        if tableView.numberOfSections > 1 && section == 0 {
             return pending.count
         } else {
             return classifiers.count
@@ -158,7 +159,7 @@ class ClassifiersTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 {
+        if tableView.numberOfSections > 1 && section == 0 {
             return "in progress"
         } else {
             return "my classifiers"
@@ -166,7 +167,7 @@ class ClassifiersTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
+        if tableView.numberOfSections > 1 && indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
             
             cell.textLabel?.text = pending[indexPath.item].name!
@@ -257,7 +258,7 @@ class ClassifiersTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 1 {
+        if !(tableView.numberOfSections > 1 && indexPath.section == 0) {
             let classifierData = classifiers[indexPath.item]
             if classifierData["status"] as? String == "ready"{
                 UserDefaults.standard.set(classifiers[indexPath.item]["classifier_id"], forKey: "classifier_id")
@@ -269,8 +270,10 @@ class ClassifiersTableViewController: UITableViewController {
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
-        if indexPath.section == 1 {
-            return false
+        if !(tableView.numberOfSections > 1 && indexPath.section == 0) {
+            if indexPath.item == classifiers.count - 1 {
+                return false
+            }
         }
         return true
     }
@@ -278,14 +281,63 @@ class ClassifiersTableViewController: UITableViewController {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            DatabaseController.getContext().delete(pending[indexPath.item])
-            pending.remove(at: indexPath.item)
-            tableView.deleteRows(at: [indexPath], with: .fade)
+            if tableView.numberOfSections > 1 && indexPath.section == 0 {
+                let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                
+                let path = documentsUrl.appendingPathComponent(pending[indexPath.item].name!)
+                
+                do {
+                    try FileManager.default.removeItem(at: path)
+                    DatabaseController.getContext().delete(pending[indexPath.item])
+                    pending.remove(at: indexPath.item)
+                    if (pending.count <= 0) {
+                        tableView.deleteSections([indexPath.section], with: .fade)
+                    } else {
+                        tableView.deleteRows(at: [indexPath], with: .fade)
+                    }
+                } catch {
+                    // If it fails don't delete the row.
+                    // We don't want it stuck for all eternity.
+                    print("Error: \(error.localizedDescription)")
+                    if FileManager.default.fileExists(atPath: path.path) {
+                        print("still exists")
+                    } else {
+                        print("File does not exist")
+                        DatabaseController.getContext().delete(pending[indexPath.item])
+                        pending.remove(at: indexPath.item)
+                        if (pending.count <= 0) {
+                            tableView.deleteSections([indexPath.section], with: .fade)
+                        } else {
+                            tableView.deleteRows(at: [indexPath], with: .fade)
+                        }
+                    }
+                }
+            } else {
+                let url = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers/\(classifiers[indexPath.item]["classifier_id"]!)")!
+                
+                let parameters: Parameters = [
+                    "api_key": UserDefaults.standard.string(forKey: "api_key")!,
+                    "version": "2016-05-20",
+                    ]
+                
+                Alamofire.request(url, method: .delete, parameters: parameters).responseData { response in
+                    switch response.result {
+                    case .success:
+                        break
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
+                
+                // Don't worry about deleting these right away.
+                classifiers.remove(at: indexPath.item)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if  segue.identifier == "showClasses" && tableView.indexPathForSelectedRow?.section == 0,
+        if pending.count > 0 && segue.identifier == "showClasses" && (tableView.numberOfSections > 1 && tableView.indexPathForSelectedRow?.section == 0),
             let destination = segue.destination as? ClassesCollectionViewController,
             let index = tableView.indexPathForSelectedRow?.item {
             destination.classifier = pending[index]
