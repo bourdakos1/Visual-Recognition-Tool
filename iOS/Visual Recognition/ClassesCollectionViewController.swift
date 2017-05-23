@@ -44,6 +44,8 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.toolbar.isHidden = false
+        
         classes = []
         for result in classifier.relationship?.allObjects as! [PendingClass] {
             classes.append(grabPhoto(for: result))

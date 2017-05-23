@@ -80,9 +80,21 @@ class ClassifiersTableViewController: UITableViewController {
         // Enforce a minimum length of >= 1 for secure text alerts.
         AddAlertSaveAction!.isEnabled = (sender.text?.utf16.count)! >= 1
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.navigationController?.toolbar.isHidden = true
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationController?.navigationBar.setBackgroundImage(nil, for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = nil
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
+        
+        self.navigationController?.toolbar.isHidden = true
         
         tableView.estimatedRowHeight = 85.0
         tableView.rowHeight = UITableViewAutomaticDimension

@@ -54,6 +54,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Look in user defaults to see if we have a real key.
         var apiKeyText = UserDefaults.standard.string(forKey: "api_key")
         
@@ -71,6 +72,10 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         apiKey.layer.shadowRadius = 5
         apiKey.layer.masksToBounds = false
         apiKey.setAttributedTitle(NSAttributedString(string: apiKeyText!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+        
+        if let drawer = self.parent as? PulleyViewController {
+            drawer.navigationItem.title = "hdsiadh"
+        }
         
         // Give the API TextField styles and a stroke.
         apiKeyTextField.attributedPlaceholder = NSAttributedString(string: "API Key", attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 1, blue: 1, alpha: 0.5)])

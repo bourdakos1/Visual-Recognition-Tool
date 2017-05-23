@@ -62,7 +62,7 @@ public enum PulleyPosition: Int {
     
         guard let positionString = string?.lowercased() else {
             
-            return .collapsed
+            return .closed
         }
         
         switch positionString {
@@ -81,7 +81,7 @@ public enum PulleyPosition: Int {
             
         default:
             print("PulleyViewController: Position for string '\(positionString)' not found. Available values are: collapsed, partiallyRevealed, open, and closed. Defaulting to collapsed.")
-            return .collapsed
+            return .closed
         }
     }
 }
@@ -179,7 +179,7 @@ open class PulleyViewController: UIViewController {
     public weak var delegate: PulleyDelegate?
     
     /// The current position of the drawer.
-    public fileprivate(set) var drawerPosition: PulleyPosition = .collapsed {
+    public fileprivate(set) var drawerPosition: PulleyPosition = .closed {
         didSet {
             setNeedsStatusBarAppearanceUpdate()
         }
@@ -264,7 +264,7 @@ open class PulleyViewController: UIViewController {
     }
     
     /// The starting position for the drawer when it first loads
-    public var initialDrawerPosition: PulleyPosition = .collapsed
+    public var initialDrawerPosition: PulleyPosition = .closed
     
     /// This is here exclusively to support IBInspectable in Interface Builder because Interface Builder can't deal with enums. If you're doing this in code use the -initialDrawerPosition property instead. Available strings are: open, closed, partiallyRevealed, collapsed
     @IBInspectable public var initialDrawerPositionFromIB: String? {
@@ -404,7 +404,7 @@ open class PulleyViewController: UIViewController {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-        
+    
         // IB Support
         if primaryContentViewController == nil || drawerContentViewController == nil
         {
@@ -435,7 +435,55 @@ open class PulleyViewController: UIViewController {
     override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        self.drawerScrollView.isHidden = false
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.barStyle = .black
+        
         setNeedsSupportedDrawerPositionsUpdate()
+    }
+    
+    override open func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.drawerScrollView.isHidden = false
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.barStyle = .black
+        
+        self.navigationController?.toolbar.isHidden = true
+        self.setDrawerPosition(position: .closed, animated: false)
+    }
+    
+    override open func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.drawerScrollView.isHidden = true
+        
+        self.navigationController?.navigationBar.setBackgroundImage(nil, for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = nil
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.view.backgroundColor = UIColor.white
+        self.navigationController?.navigationBar.barStyle = .default
+        
+        self.setDrawerPosition(position: .closed, animated: false)
+    }
+    override open func viewDidDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.drawerScrollView.isHidden = true
+        
+        self.navigationController?.navigationBar.setBackgroundImage(nil, for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = nil
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.view.backgroundColor = UIColor.white
+        self.navigationController?.navigationBar.barStyle = .default
+        
+        self.setDrawerPosition(position: .closed, animated: false)
     }
     
     override open func viewDidLayoutSubviews() {
@@ -608,7 +656,7 @@ open class PulleyViewController: UIViewController {
             UIView.transition(with: drawerContentContainer, duration: 0.5, options: UIViewAnimationOptions.transitionCrossDissolve, animations: { [weak self] () -> Void in
                 
                 self?.drawerContentViewController = controller
-                self?.setDrawerPosition(position: self?.drawerPosition ?? .collapsed, animated: false)
+                self?.setDrawerPosition(position: self?.drawerPosition ?? .closed, animated: false)
                 
                 }, completion: nil)
         }
