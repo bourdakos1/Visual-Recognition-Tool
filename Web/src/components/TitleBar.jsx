@@ -85,7 +85,9 @@ export default class TitleBar extends React.Component {
             flex: 'none'
         }
 
-        var key = localStorage.getItem('api_key')
+        //var key = localStorage.getItem('api_key')
+        var username = localStorage.getItem('username')
+        var password = localStorage.getItem('password')
 
         return (
             <div style={shadow}>
@@ -95,7 +97,7 @@ export default class TitleBar extends React.Component {
 
                     <div style={right}>
                         <div style={user}>
-                            <span style={{cursor: 'pointer'}} onClick={this.showQR}>{Strings.key} </span>{key.slice(0, 1)}<span id='key' style={{fontSize: '0em'}}>{key.slice(1, -3)}</span>{key.slice(-3)} &nbsp;&nbsp;
+                            <span style={{cursor: 'pointer'}} >{Strings.key} </span>{username} &nbsp;&nbsp;
                         </div>
                     </div>
 

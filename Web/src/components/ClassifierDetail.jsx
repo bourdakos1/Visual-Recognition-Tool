@@ -34,10 +34,18 @@ export default class ClassifierDetail extends React.Component {
 
     deleteClassifier = (e) => {
         e.preventDefault()
+
         if (confirm('Delete ' + this.props.name + '?') == true) {
             var req = request.del('/api/classifiers/' + this.props.classifierID)
             var self = this
-            req.query({api_key: localStorage.getItem('api_key')})
+            //req.query({api_key: localStorage.getItem('api_key')})
+            // req.query({
+            //   username: localStorage.getItem('username'),
+            //   password: localStorage.getItem('password')
+            // })
+            req.query({username: localStorage.getItem('username')})
+            req.query({password: localStorage.getItem('password')})
+
             req.end(function(err, res) {
                 console.log('deleted')
                 if (res.body.error != null) {
@@ -77,7 +85,9 @@ export default class ClassifierDetail extends React.Component {
             req.attach('file', files[0])
         }
 
-        req.query({api_key: localStorage.getItem('api_key')})
+        //req.query({api_key: localStorage.getItem('api_key')})
+        req.query({username: localStorage.getItem('username')})
+        req.query({password: localStorage.getItem('password')})
 
         req.on('progress', function(e) {
             if (e.direction == 'upload') {
@@ -141,7 +151,9 @@ export default class ClassifierDetail extends React.Component {
 
         req.query({url: link})
 
-        req.query({api_key: localStorage.getItem('api_key')})
+        //req.query({api_key: localStorage.getItem('api_key')})
+        req.query({username: localStorage.getItem('username')})
+        req.query({password: localStorage.getItem('password')})
 
         req.on('progress', function(e) {
             if (e.direction == 'upload') {

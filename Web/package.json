@@ -17,6 +17,7 @@
   "author": "Josh Zheng <joshzheng@us.ibm.com> (https://github.com/boxcarton)",
   "license": "BSD-2-Clause",
   "dependencies": {
+    "body-parser": "^1.17.1",
     "express": "4.14.0",
     "express-fileupload": "0.1.2",
     "mime-types": "2.1.11",
@@ -32,7 +33,7 @@
     "reactstrap": "4.3.0",
     "superagent": "3.4.1",
     "superagent-no-cache": "^0.1.1",
-    "watson-developer-cloud": "2.14.4"
+    "watson-developer-cloud": "2.32.0"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
