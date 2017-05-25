@@ -66,20 +66,15 @@ export default class Classifiers extends React.Component {
 
     loadClassifiers = () => {
         var self = this
-        //console.log(localStorage.getItem('api_key'))
-        console.log(localStorage.getItem('username'))
-        console.log(localStorage.getItem('password'))
-
         var req = request.get('/api/classifiers')
         req.use(nocache)
 
-        //req.query({ api_key: localStorage.getItem('api_key') })
         req.query({username: localStorage.getItem('username')})
         req.query({password: localStorage.getItem('password')})
         req.query({ verbose: true })
 
         req.end((err, res) => {
-            console.log('loaded')
+            console.log(res)
             var training = []
             var classifiers = []
 
@@ -89,14 +84,14 @@ export default class Classifiers extends React.Component {
                 alert(res.body.error)
             } else {
                 classifiers = res.body.classifiers
-                classifiers.sort((a, b) => {
-                    return new Date(b.created) - new Date(a.created)
-                })
+                if (classifiers != null) {
+                    classifiers.sort((a, b) => {
+                        return new Date(b.created) - new Date(a.created)
+                    })
+                }
 
                 classifiers.push(
-                    {name: Strings.classifier_general, status: Strings.status_ready},
-                    {name: Strings.classifier_food, status: Strings.status_ready},
-                    {name: Strings.classifier_face, status: Strings.status_ready}
+                    {name: Strings.classifier_general, status: Strings.status_ready}
                 )
             }
 
@@ -116,17 +111,15 @@ export default class Classifiers extends React.Component {
 
     componentDidMount() {
         this.setState({
-            //tmpKey: localStorage.getItem('api_key')
             tmpUsr: localStorage.getItem('username'),
             tmpPswrd: localStorage.getItem('password')
         }, this.loadClassifiers())
     }
 
     componentWillReceiveProps(newProps) {
-        if ( (this.state.tmpUsr != localStorage.getItem('username')) &&
-            (this.state.tmpPswrd != localStorage.getItem('password')) ) {
+        if ((this.state.tmpUsr != localStorage.getItem('username')) &&
+            (this.state.tmpPswrd != localStorage.getItem('password'))) {
             this.setState({
-                //tmpKey: localStorage.getItem('api_key')
                 tmpUsr: localStorage.getItem('username'),
                 tmpPswrd: localStorage.getItem('password')
             }, this.loadClassifiers())

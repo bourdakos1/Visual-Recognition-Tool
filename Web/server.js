@@ -28,25 +28,6 @@ if(process.env.NODE_ENV !== 'production') {
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use(bodyParser.json());
 
-app.get('/api/token', function(req, res) {
-    var visual_recognition = new VisualRecognitionV3({
-        username: req.query.username,
-        password: req.query.password,
-        version_date: '2016-05-20'
-    });
-
-    var authService = new AuthorizationV1(visual_recognition.initCredentials(visual_recognition.username, visual_recognition.password));
-
-    authService.getToken(function(err, token) {
-        if (err) {
-            res.send(err);
-            return;
-        } else {
-            res.send({token: token});
-        }
-    });
-});
-
 app.get('/api/validate', function(req, res) {
     var username = req.query.username;
     var password = req.query.password;
@@ -61,20 +42,10 @@ app.get('/api/validate', function(req, res) {
     });
 });
 
-// app.get('/api/validate', function(req, res) {
-//     var api_key = req.query.api_key;
-//
-//     request.post('https://gateway-a.watsonplatform.net/visual-recognition/api')
-//     .query({api_key: api_key})
-//     .end(function(err, response) {
-//         res.send({valid: !(response.body.statusInfo == 'invalid-api-key')});
-//     });
-// });
-
 app.get('/api/classifiers', function(req, res) {
     var visual_recognition = new VisualRecognitionV3({
-        username: req.query.username,
-        password: req.query.password,
+        url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+        api_key: req.query.username,
         version_date: '2016-05-20'
     });
 
@@ -89,8 +60,8 @@ app.get('/api/classifiers', function(req, res) {
 
 app.get('/api/classifiers/:id', function(req, res) {
     var visual_recognition = new VisualRecognitionV3({
-        username: req.query.username,
-        password: req.query.password,
+        url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+        api_key: req.query.username,
         version_date: '2016-05-20'
     });
 
@@ -105,48 +76,12 @@ app.get('/api/classifiers/:id', function(req, res) {
 
 app.delete('/api/classifiers/:id', function(req, res) {
     var visual_recognition = new VisualRecognitionV3({
-        username: req.query.username,
-        password: req.query.password,
+        url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+        api_key: req.query.username,
         version_date: '2016-05-20'
     });
 
     visual_recognition.deleteClassifier({classifier_id: req.params.id }, function(err, data) {
-        if (err) {
-            res.send(err);
-            return;
-        }
-        res.send(data);
-    });
-});
-
-app.get('/api/classify', function(req, res) {
-    var visual_recognition = new VisualRecognitionV3({
-        username: req.query.username,
-        password: req.query.password,
-        version_date: '2016-05-20'
-    });
-
-    var params = req.query;
-
-    visual_recognition.classify(params, function(err, data) {
-        if (err) {
-            res.send(err);
-            return;
-        }
-        res.send(data);
-    });
-});
-
-app.get('/api/faces', function(req, res) {
-    var visual_recognition = new VisualRecognitionV3({
-        username: req.query.username,
-        password: req.query.password,
-        version_date: '2016-05-20'
-    });
-
-    var params = req.query;
-
-    visual_recognition.detectFaces(params, function(err, data) {
         if (err) {
             res.send(err);
             return;
@@ -197,14 +132,15 @@ app.post('/api/classify', function(req, res) {
         }
 
         var visual_recognition = new VisualRecognitionV3({
-            username: req.query.username,
-            password: req.query.password,
+            url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+            api_key: req.query.username,
             version_date: '2016-05-20'
         });
 
-        var params = req.query;
-
-        params.images_file = fs.createReadStream(req.file.path);
+        var params = {
+          images_file: fs.createReadStream(req.file.path),
+          threshold: 0.0
+        };
 
         console.log(req.file.path)
 
@@ -217,40 +153,14 @@ app.post('/api/classify', function(req, res) {
         visual_recognition.classify(params, function(err, data) {
             fs.unlinkSync(req.file.path);
             if (err) {
+                console.log(err);
                 res.send(err);
                 return;
             }
+            console.log(data);
             res.send(data);
         });
 
-    });
-});
-
-app.post('/api/faces', function(req, res) {
-    fileUpload(req, res, function (err) {
-        if (err) {
-            res.send(err);
-            return;
-        }
-
-        var visual_recognition = new VisualRecognitionV3({
-            username: req.query.username,
-            password: req.query.password,
-            version_date: '2016-05-20'
-        });
-
-        var params = req.query;
-
-        params.images_file = fs.createReadStream(req.file.path);
-
-        visual_recognition.detectFaces(params, function(err, data) {
-            fs.unlinkSync(req.file.path);
-            if (err) {
-                res.send(err);
-                return;
-            }
-            res.send(data);
-        });
     });
 });
 
@@ -274,8 +184,8 @@ app.post('/api/classifiers', function(req, res) {
         }
 
         var visual_recognition = new VisualRecognitionV3({
-            username: req.query.username,
-            password: req.query.password,
+            url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+            api_key: req.query.username,
             version_date: '2016-05-20'
         });
 
@@ -313,8 +223,8 @@ app.put('/api/classifiers/:id', function(req, res) {
         }
 
         var visual_recognition = new VisualRecognitionV3({
-            username: req.query.username,
-            password: req.query.password,
+            url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+            api_key: req.query.username,
             version_date: '2016-05-20'
         });
 
