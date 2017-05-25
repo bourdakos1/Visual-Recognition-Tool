@@ -51,31 +51,53 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         
         super.init(coder: aDecoder)
     }
+    override open func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if let drawer = self.parent as? PulleyViewController {
+            // Look in user defaults to see if we have a real key.
+            var apiKeyText = UserDefaults.standard.string(forKey: "api_key")
+            
+            if apiKeyText == nil || apiKeyText == "" {
+                // If we don't have a key set the text of the bar to "API Key".
+                apiKeyText = "🔑 API Key"
+            } else {
+                // If we do have a key, obscure it.
+                apiKeyText = obscureKey(key: apiKeyText!)
+            }
+            
+            let apiKey2 = UIButton()
+            
+            // Style the API text.
+            apiKey2.layer.shadowOffset = CGSize(width: 0, height: 1)
+            apiKey2.layer.shadowOpacity = 0.2
+            apiKey2.layer.shadowRadius = 5
+            apiKey2.layer.masksToBounds = false
+            apiKey2.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
+            apiKey2.setAttributedTitle(NSAttributedString(string: apiKeyText!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+            drawer.navigationItem.titleView = apiKey2
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Look in user defaults to see if we have a real key.
-        var apiKeyText = UserDefaults.standard.string(forKey: "api_key")
-        
-        if apiKeyText == nil || apiKeyText == "" {
-            // If we don't have a key set the text of the bar to "API Key".
-            apiKeyText = "🔑 API Key"
-        } else {
-            // If we do have a key, obscure it.
-            apiKeyText = obscureKey(key: apiKeyText!)
-        }
-        
-        // Style the API text.
-        apiKey.layer.shadowOffset = CGSize(width: 0, height: 1)
-        apiKey.layer.shadowOpacity = 0.2
-        apiKey.layer.shadowRadius = 5
-        apiKey.layer.masksToBounds = false
-        apiKey.setAttributedTitle(NSAttributedString(string: apiKeyText!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
-        
-        if let drawer = self.parent as? PulleyViewController {
-            drawer.navigationItem.title = "hdsiadh"
-        }
+//        // Look in user defaults to see if we have a real key.
+//        var apiKeyText = UserDefaults.standard.string(forKey: "api_key")
+//        
+//        if apiKeyText == nil || apiKeyText == "" {
+//            // If we don't have a key set the text of the bar to "API Key".
+//            apiKeyText = "🔑 API Key"
+//        } else {
+//            // If we do have a key, obscure it.
+//            apiKeyText = obscureKey(key: apiKeyText!)
+//        }
+//        
+//        // Style the API text.
+//        apiKey.layer.shadowOffset = CGSize(width: 0, height: 1)
+//        apiKey.layer.shadowOpacity = 0.2
+//        apiKey.layer.shadowRadius = 5
+//        apiKey.layer.masksToBounds = false
+//        apiKey.setAttributedTitle(NSAttributedString(string: apiKeyText!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
         
         // Give the API TextField styles and a stroke.
         apiKeyTextField.attributedPlaceholder = NSAttributedString(string: "API Key", attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 1, blue: 1, alpha: 0.5)])
