@@ -3,7 +3,7 @@ import Radium from 'radium'
 import { Link } from 'react-router-dom'
 
 import Styles from './Styles'
-import Strings from './Strings'
+import i18next from 'i18next'
 
 @Radium
 export default class DropDown extends React.Component {
@@ -90,9 +90,9 @@ export default class DropDown extends React.Component {
                 onMouseLeave={this.toggleHover}>
                 <button className={this.props.className} style={dropbtn}></button>
                 <div style={dropdownContent}>
-                    <a className='link--classifiers--api-reference' style={[aStyle, aa]} key='0' href='https://www.ibm.com/watson/developercloud/visual-recognition/api/v3/?node#classify_an_image' target='_blank'>{Strings.api_reference}</a>
-                    <Link style={{textDecoration: 'none'}} to={'/update_classifier/' + this.props.classifierID}><span className='link--classifiers--update' style={[aStyle, ab]} key='1' href="#">{Strings.update}</span></Link>
-                    <a className='link--classifiers--delete' style={[aStyle, ac, {color: '#f44336'}]} key='2' href="#" onClick={this.props.delete}>{Strings.delete}</a>
+                    <a className='link--classifiers--api-reference' style={[aStyle, aa]} key='0' href='https://www.ibm.com/watson/developercloud/visual-recognition/api/v3/?node#classify_an_image' target='_blank'>{i18next.t('api_reference')}</a>
+                    <Link style={{textDecoration: 'none'}} to={'/update_classifier/' + this.props.classifierID}><span className='link--classifiers--update' style={[aStyle, ab]} key='1' href="#">{i18next.t('update')}</span></Link>
+                    <a className='link--classifiers--delete' style={[aStyle, ac, {color: '#f44336'}]} key='2' href="#" onClick={this.props.delete}>{i18next.t('delete')}</a>
                 </div>
             </div>
         )

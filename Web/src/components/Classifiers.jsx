@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 
 import ClassifierDetail from './ClassifierDetail'
 import Button from './Button'
-import Strings from './Strings'
+import i18next from 'i18next'
 
 @Radium
 export default class Classifiers extends React.Component {
@@ -42,7 +42,7 @@ export default class Classifiers extends React.Component {
 
         req.end(function(err, res) {
             if (res.body == null) {
-                alert(Strings.generic_error)
+                alert(i18next.t('generic_error'))
             } else if (res.body.error != null) {
                 alert(res.body.error)
             } else {
@@ -77,7 +77,7 @@ export default class Classifiers extends React.Component {
             var classifiers = []
 
             if (res.body == null) {
-                alert(Strings.generic_error)
+                alert(i18next.t('generic_error'))
             } else if (res.body.error != null) {
                 alert(res.body.error)
             } else {
@@ -89,7 +89,7 @@ export default class Classifiers extends React.Component {
                 classifiers.push(
                     {name: 'default', status: 'ready'},
                     {name: 'food', status: 'ready'},
-                    {name: Strings.classifier_face, status: 'ready'}
+                    {name: i18next.t('classifier_face'), status: 'ready'}
                 )
             }
 
@@ -137,7 +137,7 @@ export default class Classifiers extends React.Component {
                     <Button
                         style={{margin: '21px 0px'}}
                         id="button--classifiers--create"
-                        text={Strings.create_classifier}
+                        text={i18next.t('create_classifier')}
                         kind={"bold"}
                         icon={"/btn_create.png"}/>
                 </Link>

@@ -4,7 +4,7 @@ import Radium from 'radium'
 import { Tooltip } from 'reactstrap'
 
 import Styles from './Styles'
-import Strings from './Strings'
+import i18next from 'i18next'
 import ResultList from './ResultList'
 import DropButton from './DropButton'
 import Card from './Card'
@@ -50,9 +50,9 @@ export default class ClassifierDetail extends React.Component {
 
     getName = () => {
       if (this.props.name == 'default') {
-        return Strings.classifier_general
+        return i18next.t('classifier_general')
       } else if (this.props.name == 'food') {
-        return Strings.classifier_food
+        return i18next.t('classifier_food')
       } else {
         return this.props.name
       }
@@ -60,13 +60,13 @@ export default class ClassifierDetail extends React.Component {
 
     getStatus = () => {
       if ( this.props.status == 'ready') {
-        return Strings.status_ready
+        return i18next.t('status_ready')
       } else if (this.props.status == 'training') {
-        return Strings.status_training
+        return i18next.t('status_training')
       } else if (this.props.status == 'retraining') {
-        return Strings.status_retraining
+        return i18next.t('status_retraining')
       } else {
-        return this.props.status
+        return i18next.t('status_failed')
       }
     }
 
@@ -80,14 +80,14 @@ export default class ClassifierDetail extends React.Component {
             if (rejects != null && rejects[0].size > 2 * 1024 * 1024
                 && (rejects[0].type == 'image/jpeg'
                 || rejects[0].type == 'image/png')) {
-                self.setState({ error: Strings.mb2_error }, self.stateChanged)
+                self.setState({ error: i18next.t('mb2_error') }, self.stateChanged)
                 return
             }
-            self.setState({ error: Strings.invalid_image_error }, self.stateChanged)
+            self.setState({ error: i18next.t('invalid_image_error') }, self.stateChanged)
             return
         }
 
-        if (this.props.classifierID == null && this.props.name == Strings.classifier_face) {
+        if (this.props.classifierID == null && this.props.name == i18next.t('classifier_face')) {
             req = request.post('/api/faces')
         } else {
             req = request.post('/api/classify')
@@ -124,22 +124,22 @@ export default class ClassifierDetail extends React.Component {
                 } else if (res.body.images[0].faces != null && res.body.images[0].faces.length > 0) {
                     results = res.body.images[0].faces
                 } else if (res.body.images[0].faces != null) {
-                    self.setState({ error: Strings.faces_error }, self.stateChanged)
+                    self.setState({ error: i18next.t('faces_error') }, self.stateChanged)
                 } else if (res.body.images[0].error != null) {
                     console.error(res.body.images[0].error.description)
                     if (res.body.images[0].error.description == 'Image size limit exceeded (2935034 bytes > 2097152 bytes [2 MiB]).') {
-                        self.setState({ error: Strings.mb2_error }, self.stateChanged)
+                        self.setState({ error: i18next.t('mb2_error') }, self.stateChanged)
                     } else {
                         self.setState({ error: res.body.images[0].error.description }, self.stateChanged)
                     }
                 }
             } else if (res.body.code == 'LIMIT_FILE_SIZE') {
-                self.setState({ error: Strings.mb2_error }, self.stateChanged)
+                self.setState({ error: i18next.t('mb2_error') }, self.stateChanged)
             } else if (res.body.error != null) {
                 var error = res.body.error
                 self.setState({ error: error }, self.stateChanged)
             } else {
-                var error = Strings.unknown_error
+                var error = i18next.t('unknown_error')
                 self.setState({ error: error }, self.stateChanged)
             }
             self.setState({ file: files[0], results: results, link: null }, self.stateChanged)
@@ -153,7 +153,7 @@ export default class ClassifierDetail extends React.Component {
 
         self.setState({ error: null }, self.stateChanged)
 
-        if (this.props.classifierID == null && this.props.name == Strings.classifier_face) {
+        if (this.props.classifierID == null && this.props.name == i18next.t('classifier_face')) {
             req = request.get('/api/faces')
         } else {
             req = request.get('/api/classify')
@@ -191,22 +191,22 @@ export default class ClassifierDetail extends React.Component {
                     } else if (res.body.images[0].faces != null && res.body.images[0].faces.length > 0) {
                         results = res.body.images[0].faces
                     } else if (res.body.images[0].faces != null) {
-                        self.setState({ error: Strings.faces_error }, self.stateChanged)
+                        self.setState({ error: i18next.t('faces_error') }, self.stateChanged)
                     } else if (res.body.images[0].error != null) {
                         console.error(res.body.images[0].error.description)
                         if (res.body.images[0].error.description == 'Image size limit exceeded (2935034 bytes > 2097152 bytes [2 MiB]).') {
-                            self.setState({ error: Strings.mb2_error }, self.stateChanged)
+                            self.setState({ error: i18next.t('mb2_error') }, self.stateChanged)
                         } else {
                             self.setState({ error: res.body.images[0].error.description }, self.stateChanged)
                         }
                     }
                 } else if (res.body.code == 'LIMIT_FILE_SIZE') {
-                    self.setState({ error: Strings.mb2_error }, self.stateChanged)
+                    self.setState({ error: i18next.t('mb2_error') }, self.stateChanged)
                 } else if (res.body.error != null) {
                     var error = res.body.error
                     self.setState({ error: error }, self.stateChanged)
                 } else {
-                    var error = Strings.unknown_error
+                    var error = i18next.t('unknown_error')
                     self.setState({ error: error }, self.stateChanged)
                 }
                 console.log(width + ', ' + height)
@@ -312,8 +312,8 @@ export default class ClassifierDetail extends React.Component {
                         upload={true}
                         onLink={this.onLink}
                         onDrop={this.onDrop}
-                        text={Strings.drag_image}
-                        subtext={Strings.choose_image} />
+                        text={i18next.t('drag_image')}
+                        subtext={i18next.t('choose_image')} />
                     :
                     <DropButton
                         style={{
@@ -324,8 +324,8 @@ export default class ClassifierDetail extends React.Component {
                             borderRightColor: 'transparent',
                         }}
                         id={this.props.classifierID || this.props.name}
-                        text={Strings.drag_image}
-                        subtext={Strings.choose_image}
+                        text={i18next.t('drag_image')}
+                        subtext={i18next.t('choose_image')}
                         disabled={true}/>
                 }
                 {this.state.results ?

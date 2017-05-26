@@ -3,8 +3,7 @@ import Dropzone from 'react-dropzone'
 import Radium, { StyleRoot } from 'radium'
 
 import Styles from './Styles'
-import Strings from './Strings'
-
+import i18next from 'i18next'
 
 @Radium
 export default class DropButton extends React.Component {
@@ -425,7 +424,7 @@ export default class DropButton extends React.Component {
                                 {this.state.files.map((file) => <div key={file.name} style={[containerStyles.base, containerStyles.image]}><img style={imgStyle} src={file.preview}/></div> )}
                                 {this.props.upload ?
                                     <div id="loading-ellipsis" style={[textStyles.base, textStyles.uploading]}>
-                                        <div style={textStyles.clip}>{Strings.uploading + this.state.files[this.state.files.length - 1].name}</div>
+                                        <div style={textStyles.clip}>{i18next.t('uploading') + this.state.files[this.state.files.length - 1].name}</div>
                                         <StyleRoot>
                                             <span style={dot}>.</span>
                                             <span style={[dot, two]}>.</span>
@@ -442,7 +441,7 @@ export default class DropButton extends React.Component {
                                     {this.props.text}
                                 </div>
                                 <div style={[textStyles.base, textStyles.subheader]}>
-                                    {Strings.or} <span style={[textStyles.base, textStyles.link]}>{this.props.subtext}</span>
+                                    {i18next.t('or')} <span style={[textStyles.base, textStyles.link]}>{this.props.subtext}</span>
                                 </div>
                             </div>
                         }

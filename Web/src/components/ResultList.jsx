@@ -3,7 +3,7 @@ import Radium from 'radium'
 import { Tooltip } from 'reactstrap'
 
 import Styles from './Styles'
-import Strings from './Strings'
+import i18next from 'i18next'
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
@@ -386,10 +386,10 @@ export default class ResultList extends React.Component {
                 {this.state.faces == null ?
                     <Tooltip placement='top' isOpen={self.state.tooltipOpen} delay={{show: 200, hide: 100}} autohide={false} target={'results_' + this.props.id} toggle={self.toggle}>
                         <div style={{textAlign: 'left'}}>
-                            {Strings.result_tooltip}
+                            {i18next.t('result_tooltip')}
                         </div>
                         <a style={{color: 'white'}} href='https://www.ibm.com/watson/developercloud/doc/visual-recognition/customizing.html#guidelines-for-good-training' target='_blank'>
-                            <u>{Strings.improve_score}</u>
+                            <u>{i18next.t('improve_score')}</u>
                         </a>
                     </Tooltip>:
                     null

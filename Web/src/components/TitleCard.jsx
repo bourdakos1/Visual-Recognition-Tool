@@ -2,7 +2,7 @@ import React from 'react'
 import Radium, {Style} from 'radium'
 
 import Styles from './Styles'
-import Strings from './Strings'
+import i18next from 'i18next'
 
 @Radium
 export default class TitleCard extends React.Component {
@@ -56,7 +56,7 @@ export default class TitleCard extends React.Component {
                 {this.props.negative || this.props.fixedTitle ?
                     this.props.negative ?
                         <div style={[text.base, this.props.inputStyle]}>
-                            {Strings.negative_class}&nbsp;&nbsp;<div style={[optional, {display: 'inline-block'}]}>{Strings.optional}</div>
+                            {i18next.t('negative_class')}&nbsp;&nbsp;<div style={[optional, {display: 'inline-block'}]}>{i18next.t('optional')}</div>
                         </div> :
                         <div style={[text.base, this.props.inputStyle, {wordWrap: 'break-word'}]}>
                             {this.props.title}

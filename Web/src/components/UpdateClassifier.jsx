@@ -4,8 +4,8 @@ import nocache from 'superagent-no-cache'
 import Radium from 'radium'
 
 import Styles from './Styles'
-import Strings from './Strings'
 import WorkSpace from './WorkSpace'
+import i18next from 'i18next'
 
 var myNum = 0
 
@@ -65,9 +65,9 @@ export default class UpdateClassifier extends React.Component {
         return (
             <WorkSpace
                 match = {this.props.match}
-                progressModalText={Strings.updating_classifier}
-                titleText={Strings.update_classifier}
-                subTitleText={Strings.update_classifier_description}
+                progressModalText={i18next.t('updating_classifier')}
+                titleText={i18next.t('update_classifier')}
+                subTitleText={i18next.t('update_classifier_description')}
                 classesInfo={false}
                 classifier={this.state.classifier}
                 classes={this.state.classes} />

@@ -2,17 +2,17 @@ import React from 'react'
 import Radium from 'radium'
 
 import Styles from './Styles'
-import Strings from './Strings'
 import WorkSpace from './WorkSpace'
+import i18next from 'i18next'
 
 @Radium
 export default class CreateClassifier extends React.Component {
     render() {
         return (
             <WorkSpace
-                progressModalText={Strings.creating_classifier}
-                titleText={Strings.create_classifier_title}
-                subTitleText={Strings.create_classifier_description}
+                progressModalText={i18next.t('creating_classifier')}
+                titleText={i18next.t('create_classifier_title')}
+                subTitleText={i18next.t('create_classifier_description')}
                 classesInfo={true}
                 classifier={{name: '', fixed: false}}
                 classes={[

@@ -1,3 +1,6 @@
+import i18next from 'i18next'
+import i18nextBrowserLanguageDetector from 'i18next-browser-languagedetector'
+
 var english = {
   invalid_key: 'Invalid api key',
   update_key: 'Update API key',
@@ -31,6 +34,7 @@ var english = {
   status_ready: 'ready',
   status_training: 'training',
   status_retraining: 'retraining',
+  status_failed: 'failed',
   documention: 'Documentation',
 
   // Create Classifier
@@ -542,28 +546,32 @@ var korean = {
   updating_classifier: '분류자 업데이트 중'
 }
 
-var locale = 'korean';
-
-switch (locale) {
-    case 'spanish':
-        module.exports = spanish;
-        break;
-    case 'arabic':
-        module.exports = arabic;
-        break;
-    case 'german':
-        module.exports = german;
-        break;
-    case 'italian':
-        module.exports = italian;
-        break;
-    case 'japanese':
-        module.exports = japanese;
-        break;
-    case 'korean':
-        module.exports = korean;
-        break;
-    default:
-        module.exports = english;
-        break;
-}
+i18next.use(i18nextBrowserLanguageDetector).init({
+    fallbackLng: 'en',
+    resources: {
+        en: {
+            translation: english
+        },
+        de: {
+            translation: german
+        },
+        es: {
+            translation: spanish
+        },
+        ar: {
+            translation: arabic
+        },
+        it: {
+            translation: italian
+        },
+        ja: {
+            translation: japanese
+        },
+        ko: {
+            translation: korean
+        }
+    },
+    debug: true
+}, (err, t) => {
+    if (err) return console.log('something went wrong loading', err)
+})

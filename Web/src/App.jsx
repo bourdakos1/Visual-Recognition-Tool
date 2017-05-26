@@ -9,6 +9,8 @@ import UpdateClassifier from './components/UpdateClassifier'
 import CredentialsModal from './components/CredentialsModal'
 import LandingPage from './components/LandingPage'
 
+// Must load strings to get localization
+import Strings from './components/Strings'
 
 // This is the base of the App
 // It holds our "Base" component which is just a TitleBar and content
