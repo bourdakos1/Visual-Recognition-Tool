@@ -84,35 +84,33 @@ class ClassifiersTableViewController: UITableViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.navigationController?.toolbar.isHidden = true
-        
-        let myHiderThing = UIView()
-        myHiderThing.backgroundColor = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
-        myHiderThing.frame = CGRect(x: 0, y: -64, width: 500, height: 64)
-        
-        view.addSubview(myHiderThing)
-        view.clipsToBounds = false
+        v.removeFromSuperview()
+//        var fixedFrame = v.frame
+//        fixedFrame.origin.y = 0
+//        v.frame = fixedFrame
+//        UIApplication.shared.keyWindow?.addSubview(v)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        let myHiderThing = UIView()
-        myHiderThing.backgroundColor = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
-        myHiderThing.frame = CGRect(x: 0, y: -64, width: 500, height: 64)
-        
-        view.addSubview(myHiderThing)
-        view.clipsToBounds = false
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewDidAppear(false)
+        v.removeFromSuperview()
     }
+    
+//    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        var fixedFrame = v.frame
+//        fixedFrame.origin.y = scrollView.contentOffset.y
+//        v.frame = fixedFrame
+//    }
+//    
+    let v = UIView(frame: CGRect(x: 0, y: -64, width: 500, height: 64))
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.navigationBar.setBackgroundImage(nil, for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = nil
-        self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.navigationBar.barTintColor = UIColor.white
-        
-        self.navigationController?.toolbar.isHidden = true
+        v.backgroundColor = UIColor.white
+//        v.translatesAutoresizingMaskIntoConstraints = false
+        tableView.addSubview(v)
+        tableView.bringSubview(toFront: v)
         
         tableView.estimatedRowHeight = 85.0
         tableView.rowHeight = UITableViewAutomaticDimension
