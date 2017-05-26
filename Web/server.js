@@ -7,9 +7,14 @@ var multer = require('multer');
 var fs = require('fs');
 var crypto = require('crypto');
 var mime = require('mime-types')
+var locale = require('browser-locale');
+var i18next = require('i18next');
+var lngDetector = require('i18next-browser-languagedetector');
 var app = express();
 
 var PORT = process.env.VCAP_APP_PORT || 8080; //bluemix
+
+//console.log(i18next.use(lngDetector).init(i18nextOptions));
 
 // using webpack-dev-server and middleware in development environment
 if(process.env.NODE_ENV !== 'production') {
@@ -38,7 +43,8 @@ app.get('/api/validate', function(req, res) {
 app.get('/api/classifiers', function(req, res) {
     var visual_recognition = new VisualRecognitionV3({
         api_key: req.query.api_key,
-        version_date: req.query.version || '2016-05-19'
+        version_date: req.query.version || '2016-05-19',
+        headers: { 'Accept-Language': locale.browserLocale}
     });
 
     visual_recognition.listClassifiers(req.query, function(err, data) {
@@ -53,7 +59,8 @@ app.get('/api/classifiers', function(req, res) {
 app.get('/api/classifiers/:id', function(req, res) {
     var visual_recognition = new VisualRecognitionV3({
         api_key: req.query.api_key,
-        version_date: req.query.version || '2016-05-19'
+        version_date: req.query.version || '2016-05-19',
+        headers: { 'Accept-Language': locale.browserLocale}
     });
 
     visual_recognition.getClassifier({classifier_id: req.params.id }, function(err, data) {
@@ -68,7 +75,8 @@ app.get('/api/classifiers/:id', function(req, res) {
 app.delete('/api/classifiers/:id', function(req, res) {
     var visual_recognition = new VisualRecognitionV3({
         api_key: req.query.api_key,
-        version_date: req.query.version || '2016-05-19'
+        version_date: req.query.version || '2016-05-19',
+        headers: { 'Accept-Language': locale.browserLocale}
     });
 
     visual_recognition.deleteClassifier({classifier_id: req.params.id }, function(err, data) {
@@ -83,7 +91,8 @@ app.delete('/api/classifiers/:id', function(req, res) {
 app.get('/api/classify', function(req, res) {
     var visual_recognition = new VisualRecognitionV3({
         api_key: req.query.api_key,
-        version_date: req.query.version || '2016-05-19'
+        version_date: req.query.version || '2016-05-19',
+        headers: { 'Accept-Language': locale.browserLocale}
     });
 
     var params = req.query;
@@ -100,7 +109,8 @@ app.get('/api/classify', function(req, res) {
 app.get('/api/faces', function(req, res) {
     var visual_recognition = new VisualRecognitionV3({
         api_key: req.query.api_key,
-        version_date: req.query.version || '2016-05-19'
+        version_date: req.query.version || '2016-05-19',
+        headers: { 'Accept-Language': locale.browserLocale}
     });
 
     var params = req.query;
@@ -157,7 +167,8 @@ app.post('/api/classify', function(req, res) {
 
         var visual_recognition = new VisualRecognitionV3({
             api_key: req.query.api_key,
-            version_date: req.query.version || '2016-05-19'
+            version_date: req.query.version || '2016-05-19',
+            headers: { 'Accept-Language': locale.browserLocale}
         });
 
         var params = req.query;
@@ -193,7 +204,8 @@ app.post('/api/faces', function(req, res) {
 
         var visual_recognition = new VisualRecognitionV3({
             api_key: req.query.api_key,
-            version_date: req.query.version || '2016-05-19'
+            version_date: req.query.version || '2016-05-19',
+            headers: { 'Accept-Language': locale.browserLocale}
         });
 
         var params = req.query;
@@ -232,7 +244,8 @@ app.post('/api/classifiers', function(req, res) {
 
         var visual_recognition = new VisualRecognitionV3({
             api_key: req.query.api_key,
-            version_date: req.query.version || '2016-05-19'
+            version_date: req.query.version || '2016-05-19',
+            headers: { 'Accept-Language': locale.browserLocale}
         });
 
         var params = {
@@ -270,7 +283,8 @@ app.put('/api/classifiers/:id', function(req, res) {
 
         var visual_recognition = new VisualRecognitionV3({
             api_key: req.query.api_key,
-            version_date: req.query.version || '2016-05-19'
+            version_date: req.query.version || '2016-05-19',
+            headers: { 'Accept-Language': locale.browserLocale}
         });
 
         var params = {
@@ -314,3 +328,8 @@ app.listen(PORT, function(error) {
         console.info("==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.", PORT, PORT);
     }
 });
+
+if (locale.browserLocale == 'en' || locale.browserLocale == 'en-US') {
+  console.log('boop');
+}
+console.log(locale.browserLocale);

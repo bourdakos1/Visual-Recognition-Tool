@@ -46,7 +46,7 @@ export default class Classifiers extends React.Component {
             } else if (res.body.error != null) {
                 alert(res.body.error)
             } else {
-                if (res.body.status == Strings.status_ready) {
+                if (res.body.status == 'ready') {
                     var newClassifiers = $.extend([], self.state.classifiers)
                     for (var i in newClassifiers) {
                         if (newClassifiers[i].classifier_id == classifier_id) {
@@ -87,14 +87,14 @@ export default class Classifiers extends React.Component {
                 })
 
                 classifiers.push(
-                    {name: Strings.classifier_general, status: Strings.status_ready},
-                    {name: Strings.classifier_food, status: Strings.status_ready},
-                    {name: Strings.classifier_face, status: Strings.status_ready}
+                    {name: 'default', status: 'ready'},
+                    {name: 'food', status: 'ready'},
+                    {name: Strings.classifier_face, status: 'ready'}
                 )
             }
 
             for (var i in classifiers) {
-                if (classifiers[i].status == Strings.status_training) {
+                if (classifiers[i].status == 'training') {
                     training.push(classifiers[i].classifier_id)
                 }
             }

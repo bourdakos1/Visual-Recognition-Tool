@@ -48,6 +48,28 @@ export default class ClassifierDetail extends React.Component {
         }
     }
 
+    getName = () => {
+      if (this.props.name == 'default') {
+        return Strings.classifier_general
+      } else if (this.props.name == 'food') {
+        return Strings.classifier_food
+      } else {
+        return this.props.name
+      }
+    }
+
+    getStatus = () => {
+      if ( this.props.status == 'ready') {
+        return Strings.status_ready
+      } else if (this.props.status == 'training') {
+        return Strings.status_training
+      } else if (this.props.status == 'retraining') {
+        return Strings.status_retraining
+      } else {
+        return this.props.status
+      }
+    }
+
     onDrop = (files, rejects, onFinished, onProgress) => {
         var self = this
         var req
@@ -244,7 +266,7 @@ export default class ClassifierDetail extends React.Component {
         var color
         if (this.props.status == 'ready') {
             color = '#64dd17'
-        } else if (this.props.status == 'training'  || this.props.status == 'retraining'){
+        } else if (this.props.status == 'training' || this.props.status == 'retraining'){
             color = '#ffab00'
         } else {
             color = '#F44336'
@@ -257,9 +279,9 @@ export default class ClassifierDetail extends React.Component {
                     null
                 }
 
-                <div style={titleStyle}>{this.props.name}</div>
+                <div style={titleStyle}>{this.getName()}</div>
                 <div style={textStyle}>{this.props.classifierID}</div>
-                <div style={textStyle}><div style={[status, {background: color}]}/>{this.props.status}</div>
+                <div style={textStyle}><div style={[status, {background: color}]}/>{this.getStatus()}</div>
 
                 {/*To soothe my pain*/}
                 {this.props.classifierID ? null : <div style={{height: '1em', marginTop: '2px'}}></div>}
