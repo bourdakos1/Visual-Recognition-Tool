@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, AVCapturePhotoCaptureDelegate {
+class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, AVCapturePhotoCaptureDelegate, AKPickerViewDelegate, AKPickerViewDataSource {
     
     // Set the StatusBar color.
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -38,6 +38,8 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     @IBOutlet var apiKeySubmit: UIButton!
     @IBOutlet var apiKeyTextField: UITextField!
     @IBOutlet var hintTextView: UITextView!
+    
+    @IBOutlet var pickerView: AKPickerView!
     
     // Init with the demo API key.
     required init?(coder aDecoder: NSCoder) {
@@ -78,26 +80,28 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         }
     }
     
+    func numberOfItemsInPickerView(_ pickerView: AKPickerView) -> Int {
+        return 8
+    }
+    
+    func pickerView(_ pickerView: AKPickerView, titleForItem item: Int) -> String {
+        return "TEST THING"
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        // Look in user defaults to see if we have a real key.
-//        var apiKeyText = UserDefaults.standard.string(forKey: "api_key")
-//        
-//        if apiKeyText == nil || apiKeyText == "" {
-//            // If we don't have a key set the text of the bar to "API Key".
-//            apiKeyText = "🔑 API Key"
-//        } else {
-//            // If we do have a key, obscure it.
-//            apiKeyText = obscureKey(key: apiKeyText!)
-//        }
-//        
-//        // Style the API text.
-//        apiKey.layer.shadowOffset = CGSize(width: 0, height: 1)
-//        apiKey.layer.shadowOpacity = 0.2
-//        apiKey.layer.shadowRadius = 5
-//        apiKey.layer.masksToBounds = false
-//        apiKey.setAttributedTitle(NSAttributedString(string: apiKeyText!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+        pickerView.delegate = self
+        pickerView.dataSource = self
+        
+//        pickerView.viewDepth = CGFloat(0.0)
+        pickerView.interitemSpacing = CGFloat(-5.0)
+        pickerView.pickerViewStyle = .flat
+        pickerView.maskDisabled = true
+        pickerView.font = UIFont.boldSystemFont(ofSize: 14)
+        pickerView.highlightedTextColor = UIColor.white
+        pickerView.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6)
+        
         
         // Give the API TextField styles and a stroke.
         apiKeyTextField.attributedPlaceholder = NSAttributedString(string: "API Key", attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 1, blue: 1, alpha: 0.5)])

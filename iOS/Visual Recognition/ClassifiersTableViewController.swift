@@ -85,10 +85,6 @@ class ClassifiersTableViewController: UITableViewController {
         super.viewDidAppear(animated)
         self.navigationController?.toolbar.isHidden = true
         v.removeFromSuperview()
-//        var fixedFrame = v.frame
-//        fixedFrame.origin.y = 0
-//        v.frame = fixedFrame
-//        UIApplication.shared.keyWindow?.addSubview(v)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -96,19 +92,12 @@ class ClassifiersTableViewController: UITableViewController {
         v.removeFromSuperview()
     }
     
-//    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        var fixedFrame = v.frame
-//        fixedFrame.origin.y = scrollView.contentOffset.y
-//        v.frame = fixedFrame
-//    }
-//    
     let v = UIView(frame: CGRect(x: 0, y: -64, width: 500, height: 64))
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         v.backgroundColor = UIColor.white
-//        v.translatesAutoresizingMaskIntoConstraints = false
         tableView.addSubview(v)
         tableView.bringSubview(toFront: v)
         

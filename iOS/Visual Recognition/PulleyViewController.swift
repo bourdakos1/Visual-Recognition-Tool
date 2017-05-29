@@ -492,10 +492,7 @@ open class PulleyViewController: UIViewController {
         
         self.drawerScrollView.isHidden = true
         
-//        self.navigationController?.navigationBar.setBackgroundImage(nil, for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = nil
-//        self.navigationController?.navigationBar.isTranslucent = false
-//        self.navigationController?.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.barStyle = .default
 
         self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0, height: 0)
@@ -510,10 +507,7 @@ open class PulleyViewController: UIViewController {
         
         self.drawerScrollView.isHidden = true
         
-//        self.navigationController?.navigationBar.setBackgroundImage(nil, for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = nil
-//        self.navigationController?.navigationBar.isTranslucent = false
-//        self.navigationController?.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.barStyle = .default
         
         self.v.backgroundColor = UIColor.white

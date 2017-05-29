@@ -79,7 +79,7 @@
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="beL-ak-Suw">
-                                <rect key="frame" x="149" y="546" width="77" height="77"/>
+                                <rect key="frame" x="149" y="537" width="77" height="77"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="77" id="Zg2-F3-GK0"/>
                                     <constraint firstAttribute="height" constant="77" id="t7k-2t-j0C"/>
@@ -150,22 +150,29 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3n4-v9-abV">
-                                <rect key="frame" x="299" y="587" width="60" height="60"/>
+                                <rect key="frame" x="299" y="554" width="60" height="60"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="Bx1-cL-hGz"/>
                                     <constraint firstAttribute="width" constant="60" id="ias-Gm-9GR"/>
                                 </constraints>
                                 <state key="normal" image="classifiers.png"/>
                                 <connections>
-                                    <segue destination="c0r-LS-hjU" kind="show" id="ODN-GD-YWB"/>
+                                    <segue destination="c0r-LS-hjU" kind="show" identifier="showClassifiers" id="ODN-GD-YWB"/>
                                 </connections>
                             </button>
                             <textView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Don't want to type out your key? Click 🔑 in the desktop tool and scan the code!" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9WH-Si-Dao">
-                                <rect key="frame" x="16" y="132" width="343" height="414"/>
+                                <rect key="frame" x="16" y="132" width="343" height="405"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f82-Na-Q0n" customClass="AKPickerView" customModule="Visual_Recognition" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="LoC-kJ-YdC"/>
+                                </constraints>
+                            </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rJY-jN-pfZ">
                                 <rect key="frame" x="16" y="210" width="60" height="60"/>
                                 <constraints>
@@ -178,18 +185,20 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="hbX-2x-72A" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="1FF-Zd-XB0"/>
+                            <constraint firstAttribute="bottom" secondItem="f82-Na-Q0n" secondAttribute="bottom" id="4By-J0-GWU"/>
                             <constraint firstAttribute="trailing" secondItem="iHJ-Ta-u2A" secondAttribute="trailing" id="5bo-HH-Nku"/>
                             <constraint firstAttribute="trailingMargin" secondItem="3n4-v9-abV" secondAttribute="trailing" id="5il-vD-nEX"/>
                             <constraint firstItem="KQS-fI-xsI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6Op-bq-ic7"/>
+                            <constraint firstAttribute="trailing" secondItem="f82-Na-Q0n" secondAttribute="trailing" id="8UI-ub-WOR"/>
                             <constraint firstItem="KQQ-I6-IMA" firstAttribute="centerY" secondItem="iHJ-Ta-u2A" secondAttribute="centerY" id="8wS-pM-hrR"/>
                             <constraint firstItem="beL-ak-Suw" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="9BU-LJ-PaA"/>
                             <constraint firstAttribute="trailing" secondItem="aaW-Uw-VLV" secondAttribute="trailing" id="9FE-Zn-s1d"/>
-                            <constraint firstAttribute="bottom" secondItem="beL-ak-Suw" secondAttribute="bottom" constant="44" id="9Se-79-qGf"/>
+                            <constraint firstAttribute="bottom" secondItem="beL-ak-Suw" secondAttribute="bottom" constant="53" id="9Se-79-qGf"/>
                             <constraint firstAttribute="trailing" secondItem="KQS-fI-xsI" secondAttribute="trailing" id="BUu-HX-RNL"/>
                             <constraint firstItem="KQS-fI-xsI" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="HWh-hL-tPp"/>
                             <constraint firstItem="usO-SO-NRr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Jaz-UD-2zg"/>
                             <constraint firstItem="iHJ-Ta-u2A" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Jml-9L-6p4"/>
-                            <constraint firstAttribute="bottom" secondItem="3n4-v9-abV" secondAttribute="bottom" constant="20" id="McQ-QF-AhU"/>
+                            <constraint firstAttribute="bottom" secondItem="3n4-v9-abV" secondAttribute="bottom" constant="53" id="McQ-QF-AhU"/>
                             <constraint firstItem="LMj-gK-YYp" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Oya-16-T0E"/>
                             <constraint firstItem="usO-SO-NRr" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="QFY-5U-VVu"/>
                             <constraint firstItem="usO-SO-NRr" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="RHN-0f-5pi"/>
@@ -206,6 +215,7 @@
                             <constraint firstItem="UjN-QC-Tx6" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="kGU-2H-5S8"/>
                             <constraint firstItem="9WH-Si-Dao" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="lFM-Pp-elE"/>
                             <constraint firstAttribute="trailing" secondItem="usO-SO-NRr" secondAttribute="trailing" id="mby-rG-lt1"/>
+                            <constraint firstItem="f82-Na-Q0n" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="mgh-HR-efY"/>
                             <constraint firstItem="KQQ-I6-IMA" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="n9a-qV-sUM"/>
                             <constraint firstItem="9WH-Si-Dao" firstAttribute="top" secondItem="LMj-gK-YYp" secondAttribute="bottom" constant="20" id="nIY-Ih-Hbu"/>
                             <constraint firstItem="beL-ak-Suw" firstAttribute="top" secondItem="9WH-Si-Dao" secondAttribute="bottom" id="pvT-xC-O4h"/>
@@ -229,6 +239,7 @@
                         <outlet property="captureButton" destination="beL-ak-Suw" id="feO-4D-SvN"/>
                         <outlet property="classifiersButton" destination="3n4-v9-abV" id="Obg-sh-CIM"/>
                         <outlet property="hintTextView" destination="9WH-Si-Dao" id="Zdo-Gx-lQ8"/>
+                        <outlet property="pickerView" destination="f82-Na-Q0n" id="SzL-hW-FGi"/>
                         <outlet property="retakeButton" destination="hbX-2x-72A" id="65k-eg-5be"/>
                         <outlet property="tempImageView" destination="usO-SO-NRr" id="TsN-d7-azE"/>
                     </connections>
@@ -802,7 +813,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="FDT-sa-UqY" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" misplaced="YES" shadowImage="api.png" id="b8m-IB-9qV">
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" shadowImage="api.png" id="b8m-IB-9qV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
