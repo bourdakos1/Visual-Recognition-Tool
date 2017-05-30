@@ -128,6 +128,10 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                         self.classifiers = data
                         self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
                         
+                        if self.select >= self.classifiers.count {
+                            self.pickerView.selectItem(self.classifiers.count - 1)
+                        }
+                        
                         self.pickerView.reloadData()
                         if self.select >= 0 {
                             self.pickerView.selectItem(self.select)

@@ -207,6 +207,17 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
     
     @IBAction func train() {
         print("train")
+        // Show an activity indicator while its loading.
+        let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
+        
+        alert.view.tintColor = UIColor.black
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50)) as UIActivityIndicatorView
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        loadingIndicator.startAnimating()
+        
+        alert.view.addSubview(loadingIndicator)
+        present(alert, animated: true, completion: nil)
         do {
             let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(classifier.name!)
             
@@ -218,10 +229,22 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
                 paths.append(destination)
                 
                 if FileManager.default.fileExists(atPath: destination.path) {
-                    print("File already exists")
-                } else {
+                    print("Exists, deleting")
+                    // Exist so delete first and then try.
+                    do {
+                        try FileManager.default.removeItem(at: destination)
+                    } catch {
+                        print("Error: \(error.localizedDescription)")
+                        if FileManager.default.fileExists(atPath: destination.path) {
+                            print("still exists")
+                        }
+                    }
+                }
+                
+                // Make sure it's actually gone...
+                if !FileManager.default.fileExists(atPath: destination.path) {
                     try Zip.zipFiles(paths: [documentsUrl.appendingPathComponent(result.name!)], zipFilePath: destination, password: nil, progress: { progress in
-                        print(progress)
+                        print("Zipping: \(progress)")
                     })
                 }
             }
@@ -252,6 +275,8 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
                     switch encodingResult {
                     case .success(let upload, _, _):
                         upload.responseJSON { response in
+                            self.dismiss(animated: false, completion: nil)
+                            self.navigationController?.popViewController(animated: true)
                             debugPrint(response)
                         }
                         upload.uploadProgress(closure: { //Get Progress
