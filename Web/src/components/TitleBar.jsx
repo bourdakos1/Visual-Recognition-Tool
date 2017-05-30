@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import Button from './Button'
 import QRModal from './QRModal'
 import Styles from './Styles'
-import Strings from './Strings'
+import i18next from 'i18next'
 
 @Radium
 export default class TitleBar extends React.Component {
@@ -93,11 +93,11 @@ export default class TitleBar extends React.Component {
             <div style={shadow}>
                 <div style={contentWrapper}>
                     <Link to='/' style={logo}><img src={'/watson_color.png'} style={logo}></img></Link>
-                    <Link to='/' style={title}>{Strings.visual_recognition_tool}</Link>
+                    <Link to='/' style={title}>{i18next.t('visual_recognition_tool')}</Link>
 
                     <div style={right}>
                         <div style={user}>
-                            <span style={{cursor: 'pointer'}} >{Strings.key} </span>{username} &nbsp;&nbsp;
+                            <span style={{cursor: 'pointer'}} >{i18next.t('key')} </span>{username} &nbsp;&nbsp;
                         </div>
                     </div>
 
@@ -105,7 +105,7 @@ export default class TitleBar extends React.Component {
                         style={button}
                         id={'button--base--update-api-key'}
                         onClick={this.props.showModal}
-                        text={Strings.update_key_button}/>
+                        text={i18next.t('update_key_button')}/>
                 </div>
                 <QRModal
                     visible={this.state.showQR}

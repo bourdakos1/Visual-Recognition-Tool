@@ -3,7 +3,7 @@ import Radium, { StyleRoot } from 'radium'
 import { Modal, ModalBody } from 'reactstrap'
 
 import Styles from './Styles'
-import Strings from './Strings'
+import i18next from 'i18next'
 
 @Radium
 export default class ProgressModal extends React.Component {
@@ -135,7 +135,7 @@ export default class ProgressModal extends React.Component {
             <Modal isOpen={this.state.modal} toggle={this.toggle} backdrop={'static'}>
                 <div className={'modal-header'}>
                     <div style={textStyles.title}>{this.props.title}</div>
-                    <div style={textStyles.base}>{Strings.progress_modal_description}</div>
+                    <div style={textStyles.base}>{i18next.t('progress_modal_description')}</div>
                 </div>
                 <ModalBody>
                     <div style={dropzoneStyle}>

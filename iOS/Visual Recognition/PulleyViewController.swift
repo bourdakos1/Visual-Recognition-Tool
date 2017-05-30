@@ -437,10 +437,22 @@ open class PulleyViewController: UIViewController {
         
         self.drawerScrollView.isHidden = false
         
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        
+        let rect = CGRect(origin: .zero, size: CGSize(width: 1.0, height: 1.0/UIScreen.main.scale))
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
+        UIColor(red: 1, green: 1, blue: 1, alpha: 0.5).setFill()
+        UIRectFill(rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        self.navigationController?.navigationBar.shadowImage = image
+        
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.barStyle = .black
+        
+        self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0, height: 1)
+        self.navigationController?.navigationBar.layer.shadowColor = UIColor.black.cgColor
+        self.navigationController?.navigationBar.layer.shadowOpacity = 0.10
         
         setNeedsSupportedDrawerPositionsUpdate()
     }
@@ -450,10 +462,22 @@ open class PulleyViewController: UIViewController {
         
         self.drawerScrollView.isHidden = false
         
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        
+        let rect = CGRect(origin: .zero, size: CGSize(width: 1.0, height: 1.0/UIScreen.main.scale))
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
+        UIColor(red: 1, green: 1, blue: 1, alpha: 0.5).setFill()
+        UIRectFill(rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        self.navigationController?.navigationBar.shadowImage = image
+        
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.barStyle = .black
+        
+        self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0, height: 1)
+        self.navigationController?.navigationBar.layer.shadowColor = UIColor.black.cgColor
+        self.navigationController?.navigationBar.layer.shadowOpacity = 0.10
         
         self.navigationController?.toolbar.isHidden = true
         self.setDrawerPosition(position: .closed, animated: false)
@@ -470,6 +494,10 @@ open class PulleyViewController: UIViewController {
         self.navigationController?.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.barStyle = .default
         
+        self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0, height: 0)
+        self.navigationController?.navigationBar.layer.shadowColor = UIColor.clear.cgColor
+        self.navigationController?.navigationBar.layer.shadowOpacity = 0.0
+        
         self.setDrawerPosition(position: .closed, animated: false)
     }
     override open func viewDidDisappear(_ animated: Bool) {
@@ -482,6 +510,10 @@ open class PulleyViewController: UIViewController {
         self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.barStyle = .default
+        
+        self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0, height: 0)
+        self.navigationController?.navigationBar.layer.shadowColor = UIColor.clear.cgColor
+        self.navigationController?.navigationBar.layer.shadowOpacity = 0.0
         
         self.setDrawerPosition(position: .closed, animated: false)
     }

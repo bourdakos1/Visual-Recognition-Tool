@@ -84,6 +84,24 @@ class ClassifiersTableViewController: UITableViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.navigationController?.toolbar.isHidden = true
+        
+        let myHiderThing = UIView()
+        myHiderThing.backgroundColor = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
+        myHiderThing.frame = CGRect(x: 0, y: -64, width: 500, height: 64)
+        
+        view.addSubview(myHiderThing)
+        view.clipsToBounds = false
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let myHiderThing = UIView()
+        myHiderThing.backgroundColor = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
+        myHiderThing.frame = CGRect(x: 0, y: -64, width: 500, height: 64)
+        
+        view.addSubview(myHiderThing)
+        view.clipsToBounds = false
     }
 
     override func viewDidLoad() {

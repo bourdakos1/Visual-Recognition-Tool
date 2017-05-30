@@ -4,7 +4,6 @@ import { Modal, ModalBody } from 'reactstrap'
 import QRCode from 'qrcode.react'
 
 import Styles from './Styles'
-import Strings from './Strings'
 
 @Radium
 export default class CredentialsModal extends React.Component {

@@ -4,7 +4,7 @@ import request from 'superagent'
 import nocache from 'superagent-no-cache'
 
 import Styles from './Styles'
-import Strings from './Strings'
+import i18next from 'i18next'
 
 @Radium
 export default class LandingPage extends React.Component {
@@ -37,7 +37,7 @@ export default class LandingPage extends React.Component {
             if (res.body.valid) {
                 self.props.setCredentials(username, password)
             } else {
-                self.setState({error: Strings.invalid_key})
+                self.setState({error: i18next.t('invalid_key')})
             }
         })
     }
@@ -251,7 +251,7 @@ export default class LandingPage extends React.Component {
         return(
             <div id='landing-page' style={background}>
                 <img src='/watson_color_landing.png' style={logo}></img>
-                <div style={title}>{Strings.visual_recognition_tool}</div>
+                <div style={title}>{i18next.t('visual_recognition_tool')}</div>
 
                 <div style={this.state.focus ? skrim : skrimNone}/>
 
@@ -290,7 +290,7 @@ export default class LandingPage extends React.Component {
 
                 {this.state.error && this.state.focus ?
                     <div id='error--landing-page--api-key' style={error}>
-                        {Strings.invalid_key}
+                        {i18next.t('invalid_key')}
                     </div> :
                     null
                 }
@@ -302,7 +302,7 @@ export default class LandingPage extends React.Component {
                         onFocus={this.onFocus}
                         onBlur={this.onBlur}
                         style={buttonStyle.base}
-                        placeholder={'Credentials'}
+                        placeholder={'username:password'}
                         onChange={this.onTextChange}/>
                     <button
                         style={this.state.focus ? pics : picsNone}
@@ -316,7 +316,7 @@ export default class LandingPage extends React.Component {
                         href='https://console.dys0.bluemix.net/catalog/services/visual-recognition-dedicatedsoftbankdev/'
                         target='_blank'
                         style={link}>
-                        {Strings.sign_up}
+                        {i18next.t('sign_up')}
                     </a>
                 </div>
             </div>

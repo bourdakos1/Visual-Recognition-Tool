@@ -5,11 +5,11 @@ import StackGrid from 'react-stack-grid'
 import { Link, Redirect } from 'react-router-dom'
 
 import Styles from './Styles'
-import Strings from './Strings'
 import TitleCard from './TitleCard'
 import Button from './Button'
 import Class from './Class'
 import ProgressModal from './ProgressModal'
+import i18next from 'i18next'
 
 @Radium
 export default class WorkSpace extends React.Component {
@@ -69,12 +69,12 @@ export default class WorkSpace extends React.Component {
             var errors = this.state.errors
             if (this.state.classifier.name == null || this.state.classifier.name == '') {
                 errors = true
-                titleError = Strings.classifier_name_required_error
+                titleError = i18next.t('classifier_name_required_error')
                 this.setState({errors: errors, titleError: titleError})
             } else if (/[*\\|{}$/'`"\-]/.test(this.state.classifier.name)) {
                 errors = true
                 var invalidChars = this.state.classifier.name.match(/[*\\|{}$/'`"\-]/g)
-                titleError = Strings.invalid_chars_error + invalidChars.join(' ')
+                titleError = i18next.t('invalid_chars_error') + invalidChars.join(' ')
                 this.setState({errors: errors, titleError: titleError})
             }
 
@@ -119,7 +119,7 @@ export default class WorkSpace extends React.Component {
                     if (/[*\\|{}$/'`"\-]/.test(c.name)) {
                         errors = true
                         var invalidChars = c.name.match(/[*\\|{}$/'`"\-]/g)
-                        error = Strings.invalid_chars_error + invalidChars.join(' ')
+                        error = i18next.t('invalid_chars_error') + invalidChars.join(' ')
                         self.setState({errors: errors, error: error})
                     }
                 }
@@ -127,7 +127,7 @@ export default class WorkSpace extends React.Component {
             console.log(Object.keys(dupes).length + ' / ' + classCount)
             if (Object.keys(dupes).length < classCount) {
                 errors = true
-                error = Strings.conflicting_class_name_error
+                error = i18next.t('conflicting_class_name_error')
                 self.setState({errors: errors, error: error})
                 return
             }
@@ -137,7 +137,7 @@ export default class WorkSpace extends React.Component {
 
             if (totalbytes / (1000 * 1000) > 256) {
                 errors = true
-                error = Strings.mb250_error
+                error = i18next.t('mb250_error')
                 self.setState({errors: errors, error: error})
                 return
             }
@@ -148,7 +148,7 @@ export default class WorkSpace extends React.Component {
                 // THIS IS FOR UPDATE
                 if (validClasses < 1) {
                     errors = true
-                    error = Strings.modify_class
+                    error = i18next.t('modify_class')
                     this.setState({errors: errors})
                     return
                 }
@@ -157,11 +157,11 @@ export default class WorkSpace extends React.Component {
                 if (validClasses < 2) {
                     errors = true
                     if (hasNeg) {
-                        error = Strings.add_class_error
+                        error = i18next.t('add_class_error')
                     } else if (validClasses == 1) {
-                        error = Strings.add_neg_or_class_error
+                        error = i18next.t('add_neg_or_class_error')
                     } else {
-                        error = Strings.no_classes_error
+                        error = i18next.t('no_classes_error')
                     }
                     this.setState({errors: errors, error: error})
                     return
@@ -214,9 +214,9 @@ export default class WorkSpace extends React.Component {
         req.then(function(res, err) {
             console.log(res)
             if (res.body == null) {
-                alert(Strings.generic_error);
+                alert(i18next.t('generic_error'))
             } else if (res.body.error != null) {
-                alert(res.body.error);
+                alert(res.body.error)
             }
             onFinished()
             self.setState({upload: false, finished: true})
@@ -341,7 +341,7 @@ export default class WorkSpace extends React.Component {
                     inputId='input--create-classifier--classifier-name'
                     maxlength='30'
                     errors={self.state.errors}
-                    placeholder={Strings.classifier_name}
+                    placeholder={i18next.t('classifier_name')}
                     title={self.state.classifier.name}
                     fixedTitle={self.state.classifier.fixed}
                     onChange={this.onTextChange}
@@ -356,10 +356,10 @@ export default class WorkSpace extends React.Component {
                                 border: 'none',
                             }}>
                             <div style={[textStyles.header2, {marginBottom: '5px'}]}>
-                                {Strings.classes}
+                                {i18next.t('classes')}
                             </div>
                             <div style={[textStyles.base]}>
-                                {Strings.classifier_requirements}
+                                {i18next.t('classifier_requirements')}
                             </div>
                         </div> :
                         null
@@ -399,18 +399,18 @@ export default class WorkSpace extends React.Component {
                         <Button
                             id='button--create-classifier--add-class'
                             onClick={this.addClass}
-                            text={Strings.add_class}
+                            text={i18next.t('add_class')}
                             style={{float: 'left'}}/>
                         <Link to='/'>
                             <Button
                                 id='button--create-classifier--cancel'
-                                text={Strings.cancel}
+                                text={i18next.t('cancel')}
                                 style={{marginRight: '20px'}}/>
                         </Link>
                         <Button
                             id='button--create-classifier--create'
                             onClick={this.errorCheck}
-                            text={Strings.create}
+                            text={i18next.t('create')}
                             kind='bold'/>
                     </div>
                 </TitleCard>
