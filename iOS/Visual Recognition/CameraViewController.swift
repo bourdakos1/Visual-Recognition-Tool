@@ -53,6 +53,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         
         super.init(coder: aDecoder)
     }
+    
     override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if let drawer = self.parent as? PulleyViewController {
@@ -80,25 +81,37 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         }
     }
     
+    var classifiers = [[String: AnyObject]]()
+    var select = -1
+    
     func numberOfItemsInPickerView(_ pickerView: AKPickerView) -> Int {
-        return 8
+        return classifiers.count
     }
     
     func pickerView(_ pickerView: AKPickerView, titleForItem item: Int) -> String {
-        return "TEST THING"
+        if classifiers[item]["classifier_id"] as? String == UserDefaults.standard.string(forKey: "classifier_id") {
+            select = item
+        }
+        return classifiers[item]["name"] as! String
+    }
+    
+    func pickerView(_ pickerView: AKPickerView, didSelectItem item: Int) {
+        UserDefaults.standard.set(classifiers[item]["classifier_id"], forKey: "classifier_id")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        classifiers.append(["name": "Loading..." as AnyObject])
+        
         pickerView.delegate = self
         pickerView.dataSource = self
         
-//        pickerView.viewDepth = CGFloat(0.0)
-        pickerView.interitemSpacing = CGFloat(-5.0)
+        pickerView.interitemSpacing = CGFloat(25.0)
         pickerView.pickerViewStyle = .flat
         pickerView.maskDisabled = true
         pickerView.font = UIFont.boldSystemFont(ofSize: 14)
+        pickerView.highlightedFont = UIFont.boldSystemFont(ofSize: 14)
         pickerView.highlightedTextColor = UIColor.white
         pickerView.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6)
         
@@ -124,6 +137,44 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         view.bringSubview(toFront: apiKeyDoneButton)
         view.bringSubview(toFront: apiKeySubmit)
         view.bringSubview(toFront: hintTextView)
+        
+        // Load from Watson
+        let apiKey = UserDefaults.standard.string(forKey: "api_key")
+        
+        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers")!)
+        
+        r.query(params: [
+            "api_key": apiKey!,
+            "version": "2016-05-20",
+            "verbose": "true"
+            ])
+        
+        let task = URLSession.shared.dataTask(with: r) { data, response, error in
+            // Check for fundamental networking error.
+            guard let data = data, error == nil else {
+                return
+            }
+            do {
+                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
+                DispatchQueue.main.async{
+                    var data = json["classifiers"] as! [[String: AnyObject]]
+                    
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+                    data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! }).filter({ $0["status"] as? String == "ready" })
+                    self.classifiers = data
+                    self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+                    
+                    self.pickerView.reloadData()
+                    if self.select >= 0 {
+                        self.pickerView.selectItem(self.select)
+                    }
+                }
+            } catch let error as NSError {
+                print("error : \(error)")
+            }
+        }
+        task.resume()
     }
     
     // Initialize camera.
