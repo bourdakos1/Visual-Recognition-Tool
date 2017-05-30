@@ -40,6 +40,7 @@
 		23AA52301EC0DC550073D4DC /* ClassiferTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AA522F1EC0DC550073D4DC /* ClassiferTableViewCell.swift */; };
 		23AA52321EC0E6240073D4DC /* btn_dropdown.png in Resources */ = {isa = PBXBuildFile; fileRef = 23AA52311EC0E6240073D4DC /* btn_dropdown.png */; };
 		23AA52341EC0E7CD0073D4DC /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 23AA52331EC0E7CD0073D4DC /* checkmark.png */; };
+		23C62EC21EDDF5BA002A0311 /* select.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C62EC11EDDF5BA002A0311 /* select.png */; };
 		23C9BE8D1ECB90C900FFD71C /* SnapperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C9BE8C1ECB90C900FFD71C /* SnapperViewController.swift */; };
 		23C9BE8F1ECBF52D00FFD71C /* create.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C9BE8E1ECBF52D00FFD71C /* create.png */; };
 		23E5ED911ED9F84A00E5AF97 /* watson_icon2.png in Resources */ = {isa = PBXBuildFile; fileRef = 23E5ED901ED9F84A00E5AF97 /* watson_icon2.png */; };
@@ -107,6 +108,7 @@
 		23AA522F1EC0DC550073D4DC /* ClassiferTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassiferTableViewCell.swift; sourceTree = "<group>"; };
 		23AA52311EC0E6240073D4DC /* btn_dropdown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_dropdown.png; sourceTree = "<group>"; };
 		23AA52331EC0E7CD0073D4DC /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
+		23C62EC11EDDF5BA002A0311 /* select.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = select.png; sourceTree = "<group>"; };
 		23C9BE8C1ECB90C900FFD71C /* SnapperViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapperViewController.swift; sourceTree = "<group>"; };
 		23C9BE8E1ECBF52D00FFD71C /* create.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = create.png; sourceTree = "<group>"; };
 		23E5ED901ED9F84A00E5AF97 /* watson_icon2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = watson_icon2.png; sourceTree = "<group>"; };
@@ -257,6 +259,7 @@
 				231D6FE11EBAA8E0003DDE56 /* classifiers.png */,
 				23C9BE8E1ECBF52D00FFD71C /* create.png */,
 				232B9F8B1E80885900407BB8 /* scrim.png */,
+				23C62EC11EDDF5BA002A0311 /* select.png */,
 				231D6FE31EBADAA1003DDE56 /* library.png */,
 				23AA52331EC0E7CD0073D4DC /* checkmark.png */,
 				23E5ED901ED9F84A00E5AF97 /* watson_icon2.png */,
@@ -420,6 +423,7 @@
 				23E5ED911ED9F84A00E5AF97 /* watson_icon2.png in Resources */,
 				23AA52341EC0E7CD0073D4DC /* checkmark.png in Resources */,
 				231D6FE21EBAA8E0003DDE56 /* classifiers.png in Resources */,
+				23C62EC21EDDF5BA002A0311 /* select.png in Resources */,
 				2389A7031E7C65A100D7C973 /* Main.storyboard in Resources */,
 				23AA52321EC0E6240073D4DC /* btn_dropdown.png in Resources */,
 			);

@@ -79,6 +79,62 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             apiKey2.setAttributedTitle(NSAttributedString(string: apiKeyText!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
             drawer.navigationItem.titleView = apiKey2
         }
+        
+        // Set the selection so it's right.
+        // Then reload data incase something changed.
+        
+        for (item, classifier) in classifiers.enumerated() {
+            if classifier["classifier_id"] as? String == UserDefaults.standard.string(forKey: "classifier_id") {
+                select = item
+                pickerView.selectItem(select)
+                break
+            }
+        }
+        
+        // Load from Watson
+        let apiKey = UserDefaults.standard.string(forKey: "api_key")
+        
+        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers")!)
+        
+        r.query(params: [
+            "api_key": apiKey!,
+            "version": "2016-05-20",
+            "verbose": "true"
+            ])
+        
+        let task = URLSession.shared.dataTask(with: r) { data, response, error in
+            // Check for fundamental networking error.
+            guard let data = data, error == nil else {
+                return
+            }
+            do {
+                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
+                DispatchQueue.main.async{
+                    var data = json["classifiers"] as! [[String: AnyObject]]
+                    
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+                    data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! }).filter({ $0["status"] as? String == "ready" })
+                    
+                    // it should be safe to check the first and last date and the length is the same
+                    // count - 1 to account for no default
+                    if !(self.classifiers.first!["created"] as? String == data.first!["created"] as? String
+                        && self.classifiers[self.classifiers.count - 2]["created"] as? String == data.last!["created"] as? String
+                        && self.classifiers.count - 1 == data.count) {
+                        self.classifiers = data
+                        self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+                        
+                        self.pickerView.reloadData()
+                        if self.select >= 0 {
+                            self.pickerView.selectItem(self.select)
+                        }
+                    }
+                }
+            } catch let error as NSError {
+                print("error : \(error)")
+            }
+        }
+        task.resume()
     }
     
     var classifiers = [[String: AnyObject]]()
@@ -115,7 +171,6 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         pickerView.highlightedTextColor = UIColor.white
         pickerView.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6)
         
-        
         // Give the API TextField styles and a stroke.
         apiKeyTextField.attributedPlaceholder = NSAttributedString(string: "API Key", attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 1, blue: 1, alpha: 0.5)])
         apiKeyTextField.setLeftPaddingPoints(20)
@@ -137,44 +192,6 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         view.bringSubview(toFront: apiKeyDoneButton)
         view.bringSubview(toFront: apiKeySubmit)
         view.bringSubview(toFront: hintTextView)
-        
-        // Load from Watson
-        let apiKey = UserDefaults.standard.string(forKey: "api_key")
-        
-        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers")!)
-        
-        r.query(params: [
-            "api_key": apiKey!,
-            "version": "2016-05-20",
-            "verbose": "true"
-            ])
-        
-        let task = URLSession.shared.dataTask(with: r) { data, response, error in
-            // Check for fundamental networking error.
-            guard let data = data, error == nil else {
-                return
-            }
-            do {
-                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
-                DispatchQueue.main.async{
-                    var data = json["classifiers"] as! [[String: AnyObject]]
-                    
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-                    data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! }).filter({ $0["status"] as? String == "ready" })
-                    self.classifiers = data
-                    self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-                    
-                    self.pickerView.reloadData()
-                    if self.select >= 0 {
-                        self.pickerView.selectItem(self.select)
-                    }
-                }
-            } catch let error as NSError {
-                print("error : \(error)")
-            }
-        }
-        task.resume()
     }
     
     // Initialize camera.
@@ -439,6 +456,10 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         apiKey.isHidden = true
         classifiersButton.isHidden = true
         
+        if let drawer = self.parent as? PulleyViewController {
+            drawer.navigationController?.navigationBar.isHidden = true
+        }
+        
         // Show an activity indicator while its loading.
         let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
         
@@ -458,6 +479,10 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         retakeButton.isHidden = true
         apiKey.isHidden = false
         classifiersButton.isHidden = false
+        
+        if let drawer = self.parent as? PulleyViewController {
+            drawer.navigationController?.navigationBar.isHidden = false
+        }
         
         getTableController { tableController, drawer in
             drawer.setDrawerPosition(position: .closed, animated: true)

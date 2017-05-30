@@ -124,7 +124,7 @@
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KQQ-I6-IMA">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KQQ-I6-IMA">
                                 <rect key="frame" x="326" y="5.5" width="33" height="33"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="33" id="nho-Ky-d73"/>
@@ -173,6 +173,13 @@
                                     <constraint firstAttribute="height" constant="50" id="LoC-kJ-YdC"/>
                                 </constraints>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="select.png" translatesAutoresizingMaskIntoConstraints="NO" id="Vih-RT-oNx">
+                                <rect key="frame" x="181.5" y="661" width="12" height="6"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="6" id="4Z9-VE-iUd"/>
+                                    <constraint firstAttribute="width" constant="12" id="G1a-5C-bff"/>
+                                </constraints>
+                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rJY-jN-pfZ">
                                 <rect key="frame" x="16" y="210" width="60" height="60"/>
                                 <constraints>
@@ -199,6 +206,7 @@
                             <constraint firstItem="usO-SO-NRr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Jaz-UD-2zg"/>
                             <constraint firstItem="iHJ-Ta-u2A" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Jml-9L-6p4"/>
                             <constraint firstAttribute="bottom" secondItem="3n4-v9-abV" secondAttribute="bottom" constant="53" id="McQ-QF-AhU"/>
+                            <constraint firstItem="Vih-RT-oNx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Nqp-wx-HAJ"/>
                             <constraint firstItem="LMj-gK-YYp" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Oya-16-T0E"/>
                             <constraint firstItem="usO-SO-NRr" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="QFY-5U-VVu"/>
                             <constraint firstItem="usO-SO-NRr" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="RHN-0f-5pi"/>
@@ -214,6 +222,7 @@
                             <constraint firstItem="UjN-QC-Tx6" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="k16-fO-Yiu"/>
                             <constraint firstItem="UjN-QC-Tx6" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="kGU-2H-5S8"/>
                             <constraint firstItem="9WH-Si-Dao" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="lFM-Pp-elE"/>
+                            <constraint firstAttribute="bottom" secondItem="Vih-RT-oNx" secondAttribute="bottom" id="mXQ-zA-Pel"/>
                             <constraint firstAttribute="trailing" secondItem="usO-SO-NRr" secondAttribute="trailing" id="mby-rG-lt1"/>
                             <constraint firstItem="f82-Na-Q0n" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="mgh-HR-efY"/>
                             <constraint firstItem="KQQ-I6-IMA" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="n9a-qV-sUM"/>
@@ -226,6 +235,7 @@
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="iHJ-Ta-u2A"/>
+                                <exclude reference="KQQ-I6-IMA"/>
                                 <exclude reference="rJY-jN-pfZ"/>
                             </mask>
                         </variation>
@@ -843,5 +853,6 @@
         <image name="create.png" width="90" height="90"/>
         <image name="library.png" width="165" height="165"/>
         <image name="scrim.png" width="41" height="133"/>
+        <image name="select.png" width="36" height="18"/>
     </resources>
 </document>
