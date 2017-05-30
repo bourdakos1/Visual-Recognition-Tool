@@ -1,12 +1,14 @@
 var path = require('path');
 var express = require('express');
 var VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
+var AuthorizationV1 = require('watson-developer-cloud/authorization/v1');
 var fileUpload = require('express-fileupload');
 var request = require('superagent');
 var multer = require('multer');
 var fs = require('fs');
 var crypto = require('crypto');
-var mime = require('mime-types');
+var mime = require('mime-types')
+var bodyParser = require('body-parser');
 var app = express();
 
 var PORT = process.env.VCAP_APP_PORT || 8080; //bluemix
@@ -24,21 +26,27 @@ if(process.env.NODE_ENV !== 'production') {
 }
 
 app.use(express.static(path.join(__dirname, 'dist')));
+app.use(bodyParser.json());
 
 app.get('/api/validate', function(req, res) {
-    var api_key = req.query.api_key;
+    var username = req.query.username;
+    var password = req.query.password;
 
-    request.post('https://gateway-a.watsonplatform.net/visual-recognition/api')
-    .query({api_key: api_key})
+    request.post('https://console.dys0.bluemix.net/services/watson_vision_combined-dedicated.softbankdev/api')
+    .query({
+      username: username,
+      password: password
+    })
     .end(function(err, response) {
-        res.send({valid: !(response.body.statusInfo == 'invalid-api-key')});
+        res.send({valid: !(err.status == 401)});
     });
 });
 
 app.get('/api/classifiers', function(req, res) {
     var visual_recognition = new VisualRecognitionV3({
-        api_key: req.query.api_key,
-        version_date: req.query.version || '2016-05-19'
+        url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+        api_key: req.query.username,
+        version_date: '2016-05-20'
     });
 
     visual_recognition.listClassifiers(req.query, function(err, data) {
@@ -52,8 +60,9 @@ app.get('/api/classifiers', function(req, res) {
 
 app.get('/api/classifiers/:id', function(req, res) {
     var visual_recognition = new VisualRecognitionV3({
-        api_key: req.query.api_key,
-        version_date: req.query.version || '2016-05-19'
+        url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+        api_key: req.query.username,
+        version_date: '2016-05-20'
     });
 
     visual_recognition.getClassifier({classifier_id: req.params.id }, function(err, data) {
@@ -67,45 +76,12 @@ app.get('/api/classifiers/:id', function(req, res) {
 
 app.delete('/api/classifiers/:id', function(req, res) {
     var visual_recognition = new VisualRecognitionV3({
-        api_key: req.query.api_key,
-        version_date: req.query.version || '2016-05-19'
+        url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+        api_key: req.query.username,
+        version_date: '2016-05-20'
     });
 
     visual_recognition.deleteClassifier({classifier_id: req.params.id }, function(err, data) {
-        if (err) {
-            res.send(err);
-            return;
-        }
-        res.send(data);
-    });
-});
-
-app.get('/api/classify', function(req, res) {
-    var visual_recognition = new VisualRecognitionV3({
-        api_key: req.query.api_key,
-        version_date: req.query.version || '2016-05-19'
-    });
-
-    var params = req.query;
-
-    visual_recognition.classify(params, function(err, data) {
-        if (err) {
-            res.send(err);
-            return;
-        }
-        res.send(data);
-    });
-});
-
-app.get('/api/faces', function(req, res) {
-    var visual_recognition = new VisualRecognitionV3({
-        api_key: req.query.api_key,
-        version_date: req.query.version || '2016-05-19'
-    });
-
-    var params = req.query;
-
-    visual_recognition.detectFaces(params, function(err, data) {
         if (err) {
             res.send(err);
             return;
@@ -156,13 +132,15 @@ app.post('/api/classify', function(req, res) {
         }
 
         var visual_recognition = new VisualRecognitionV3({
-            api_key: req.query.api_key,
-            version_date: req.query.version || '2016-05-19'
+            url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+            api_key: req.query.username,
+            version_date: '2016-05-20'
         });
 
-        var params = req.query;
-
-        params.images_file = fs.createReadStream(req.file.path);
+        var params = {
+          images_file: fs.createReadStream(req.file.path),
+          threshold: 0.0
+        };
 
         console.log(req.file.path)
 
@@ -175,39 +153,14 @@ app.post('/api/classify', function(req, res) {
         visual_recognition.classify(params, function(err, data) {
             fs.unlinkSync(req.file.path);
             if (err) {
+                console.log(err);
                 res.send(err);
                 return;
             }
+            console.log(data);
             res.send(data);
         });
 
-    });
-});
-
-app.post('/api/faces', function(req, res) {
-    fileUpload(req, res, function (err) {
-        if (err) {
-            res.send(err);
-            return;
-        }
-
-        var visual_recognition = new VisualRecognitionV3({
-            api_key: req.query.api_key,
-            version_date: req.query.version || '2016-05-19'
-        });
-
-        var params = req.query;
-
-        params.images_file = fs.createReadStream(req.file.path);
-
-        visual_recognition.detectFaces(params, function(err, data) {
-            fs.unlinkSync(req.file.path);
-            if (err) {
-                res.send(err);
-                return;
-            }
-            res.send(data);
-        });
     });
 });
 
@@ -231,8 +184,9 @@ app.post('/api/classifiers', function(req, res) {
         }
 
         var visual_recognition = new VisualRecognitionV3({
-            api_key: req.query.api_key,
-            version_date: req.query.version || '2016-05-19'
+            url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+            api_key: req.query.username,
+            version_date: '2016-05-20'
         });
 
         var params = {
@@ -269,9 +223,11 @@ app.put('/api/classifiers/:id', function(req, res) {
         }
 
         var visual_recognition = new VisualRecognitionV3({
-            api_key: req.query.api_key,
-            version_date: req.query.version || '2016-05-19'
+            url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+            api_key: req.query.username,
+            version_date: '2016-05-20'
         });
+
 
         var params = {
             classifier_id: req.params.id

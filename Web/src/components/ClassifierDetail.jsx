@@ -34,10 +34,14 @@ export default class ClassifierDetail extends React.Component {
 
     deleteClassifier = (e) => {
         e.preventDefault()
+
         if (confirm('Delete ' + this.props.name + '?') == true) {
             var req = request.del('/api/classifiers/' + this.props.classifierID)
             var self = this
-            req.query({api_key: localStorage.getItem('api_key')})
+
+            req.query({username: localStorage.getItem('username')})
+            req.query({password: localStorage.getItem('password')})
+
             req.end(function(err, res) {
                 console.log('deleted')
                 if (res.body.error != null) {
@@ -99,7 +103,8 @@ export default class ClassifierDetail extends React.Component {
             req.attach('file', files[0])
         }
 
-        req.query({api_key: localStorage.getItem('api_key')})
+        req.query({username: localStorage.getItem('username')})
+        req.query({password: localStorage.getItem('password')})
 
         req.on('progress', function(e) {
             if (e.direction == 'upload') {
@@ -113,11 +118,14 @@ export default class ClassifierDetail extends React.Component {
 
         req.end(function(err, res) {
             onProgress(100)
-            console.log(res)
             var results
             if (res.body != null && res.body.images != null) {
-                if (res.body.images[0].classifiers != null && res.body.images[0].classifiers.length > 0 ) {
-                    results = res.body.images[0].classifiers[0].classes
+                if (res.body.images[0].classifiers != null) {
+                    var classifier = res.body.images[0].classifiers.filter((classifier) => {
+                        return classifier.classifier_id == self.props.classifierID || classifier.classifier_id == self.props.name.toLowerCase()
+                    })
+
+                    results = classifier[0].classes
                     results.sort(function(a, b) {
                         return b.score - a.score
                     })
@@ -163,7 +171,9 @@ export default class ClassifierDetail extends React.Component {
 
         req.query({url: link})
 
-        req.query({api_key: localStorage.getItem('api_key')})
+        //req.query({api_key: localStorage.getItem('api_key')})
+        req.query({username: localStorage.getItem('username')})
+        req.query({password: localStorage.getItem('password')})
 
         req.on('progress', function(e) {
             if (e.direction == 'upload') {

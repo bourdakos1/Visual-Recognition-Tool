@@ -2,7 +2,7 @@ import i18next from 'i18next'
 import i18nextBrowserLanguageDetector from 'i18next-browser-languagedetector'
 
 var english = {
-  invalid_key: 'Invalid api key',
+  invalid_key: 'Invalid credentials',
   update_key: 'Update API key',
   key_modal_description: 'This tool needs a Watson Visual Recognition API key.',
   sign_up: 'Sign up for bluemix to get your free key',
