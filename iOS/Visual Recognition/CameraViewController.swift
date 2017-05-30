@@ -78,6 +78,10 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             apiKey2.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
             apiKey2.setAttributedTitle(NSAttributedString(string: apiKeyText!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
             drawer.navigationItem.titleView = apiKey2
+            
+            let recognizer = UITapGestureRecognizer(target: self, action: #selector(addApiKey))
+            drawer.navigationItem.titleView?.isUserInteractionEnabled = true
+            drawer.navigationItem.titleView?.addGestureRecognizer(recognizer)
         }
         
         // Set the selection so it's right.
@@ -391,10 +395,6 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 return
             }
             
-            DispatchQueue.main.async {
-                self.apiKeyDone()
-            }
-            
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
                 
@@ -424,6 +424,10 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     }
     
     @IBAction func addApiKey() {
+        if let drawer = self.parent as? PulleyViewController {
+            drawer.navigationController?.navigationBar.isHidden = true
+        }
+        
         blurredEffectView.isHidden = false
         apiKeyTextField.isHidden = false
         apiKeyDoneButton.isHidden = false
@@ -434,18 +438,23 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     }
     
     @IBAction func apiKeyDone() {
+        if let drawer = self.parent as? PulleyViewController {
+            drawer.navigationController?.navigationBar.isHidden = false
+        }
+        
         apiKeyTextField.isHidden = true
         apiKeyDoneButton.isHidden = true
         apiKeySubmit.isHidden = true
         hintTextView.isHidden = true
         blurredEffectView.isHidden = true
-        
+
         view.endEditing(true)
         apiKeyTextField.text = ""
     }
     
     @IBAction func submitApiKey() {
         let key = apiKeyTextField.text
+        apiKeyDone()
         testKey(key: key!)
     }
     
