@@ -8,8 +8,6 @@ var fs = require('fs');
 var crypto = require('crypto');
 var mime = require('mime-types')
 var bodyParser = require('body-parser');
-var i18next = require('i18next');
-var i18nextBrowserLanguageDetector = require('i18next-browser-languagedetector');
 var app = express();
 
 var PORT = process.env.VCAP_APP_PORT || 8080; //bluemix
