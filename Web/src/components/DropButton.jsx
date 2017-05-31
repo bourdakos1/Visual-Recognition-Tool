@@ -378,7 +378,7 @@ export default class DropButton extends React.Component {
                             {this.props.text}
                         </div>
                         <div style={[textStyles.base, textStyles.subheader]}>
-                            Or <span style={[textStyles.base, textStyles.link]}>{this.props.subtext}</span>
+                            {i18next.t('or')} <span style={[textStyles.base, textStyles.link]}>{this.props.subtext}</span>
                         </div>
                     </div>
                     :

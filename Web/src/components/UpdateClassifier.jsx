@@ -29,13 +29,9 @@ export default class UpdateClassifier extends React.Component {
         var req = request.get('/api/classifiers/' + this.props.match.params.classifierID)
         req.use(nocache)
 
-        // req.query({
-        //   //api_key: localStorage.getItem('api_key')
-        //   username: localStorage.getItem('username'),
-        //   password: localStorage.getItem('password')
-        // })
         req.query({username: localStorage.getItem('username')})
         req.query({password: localStorage.getItem('password')})
+        req.query({lang: i18next.languages[0]})
 
         req.end(function(err, res) {
             if (err != null) {

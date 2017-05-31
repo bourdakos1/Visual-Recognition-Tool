@@ -1,6 +1,6 @@
 ---
 applications:
-- name: visual-recognition-tooling
+- name: vr-test-lang
   buildpack: sdk-for-nodejs
   path: .
   memory: 512M

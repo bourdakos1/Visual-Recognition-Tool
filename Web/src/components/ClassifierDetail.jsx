@@ -35,12 +35,13 @@ export default class ClassifierDetail extends React.Component {
     deleteClassifier = (e) => {
         e.preventDefault()
 
-        if (confirm('Delete ' + this.props.name + '?') == true) {
+        if (confirm(i18next.t('delete') + ' ' + this.props.name + '?') == true) {
             var req = request.del('/api/classifiers/' + this.props.classifierID)
             var self = this
 
             req.query({username: localStorage.getItem('username')})
             req.query({password: localStorage.getItem('password')})
+            req.query({lang: i18next.languages[0]})
 
             req.end(function(err, res) {
                 console.log('deleted')
@@ -105,6 +106,8 @@ export default class ClassifierDetail extends React.Component {
 
         req.query({username: localStorage.getItem('username')})
         req.query({password: localStorage.getItem('password')})
+
+        req.query({lang: i18next.languages[0]})
 
         req.on('progress', function(e) {
             if (e.direction == 'upload') {
@@ -171,9 +174,10 @@ export default class ClassifierDetail extends React.Component {
 
         req.query({url: link})
 
-        //req.query({api_key: localStorage.getItem('api_key')})
         req.query({username: localStorage.getItem('username')})
         req.query({password: localStorage.getItem('password')})
+
+        req.query({lang: i18next.languages[0]})
 
         req.on('progress', function(e) {
             if (e.direction == 'upload') {

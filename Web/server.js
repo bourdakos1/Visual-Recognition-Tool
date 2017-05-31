@@ -1,7 +1,6 @@
 var path = require('path');
 var express = require('express');
 var VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
-var AuthorizationV1 = require('watson-developer-cloud/authorization/v1');
 var fileUpload = require('express-fileupload');
 var request = require('superagent');
 var multer = require('multer');
@@ -9,6 +8,8 @@ var fs = require('fs');
 var crypto = require('crypto');
 var mime = require('mime-types')
 var bodyParser = require('body-parser');
+var i18next = require('i18next');
+var i18nextBrowserLanguageDetector = require('i18next-browser-languagedetector');
 var app = express();
 
 var PORT = process.env.VCAP_APP_PORT || 8080; //bluemix
@@ -44,9 +45,10 @@ app.get('/api/validate', function(req, res) {
 
 app.get('/api/classifiers', function(req, res) {
     var visual_recognition = new VisualRecognitionV3({
-        url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+        url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition-sk/api',
         api_key: req.query.username,
-        version_date: '2016-05-20'
+        version_date: '2016-05-20',
+        headers: {'Accept-Language': req.query.lang}
     });
 
     visual_recognition.listClassifiers(req.query, function(err, data) {
@@ -60,9 +62,10 @@ app.get('/api/classifiers', function(req, res) {
 
 app.get('/api/classifiers/:id', function(req, res) {
     var visual_recognition = new VisualRecognitionV3({
-        url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+        url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition-sk/api',
         api_key: req.query.username,
-        version_date: '2016-05-20'
+        version_date: '2016-05-20',
+        headers: {'Accept-Language': req.query.lang}
     });
 
     visual_recognition.getClassifier({classifier_id: req.params.id }, function(err, data) {
@@ -76,9 +79,10 @@ app.get('/api/classifiers/:id', function(req, res) {
 
 app.delete('/api/classifiers/:id', function(req, res) {
     var visual_recognition = new VisualRecognitionV3({
-        url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+        url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition-sk/api',
         api_key: req.query.username,
-        version_date: '2016-05-20'
+        version_date: '2016-05-20',
+        headers: {'Accept-Language': req.query.lang}
     });
 
     visual_recognition.deleteClassifier({classifier_id: req.params.id }, function(err, data) {
@@ -132,10 +136,13 @@ app.post('/api/classify', function(req, res) {
         }
 
         var visual_recognition = new VisualRecognitionV3({
-            url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+            url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition-sk/api',
             api_key: req.query.username,
-            version_date: '2016-05-20'
+            version_date: '2016-05-20',
+            headers: {'Accept-Language': req.query.lang}
         });
+
+        console.log(req.query.lang);
 
         var params = {
           images_file: fs.createReadStream(req.file.path),
@@ -184,9 +191,10 @@ app.post('/api/classifiers', function(req, res) {
         }
 
         var visual_recognition = new VisualRecognitionV3({
-            url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+            url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition-sk/api',
             api_key: req.query.username,
-            version_date: '2016-05-20'
+            version_date: '2016-05-20',
+            headers: {'Accept-Language': req.query.lang}
         });
 
         var params = {
@@ -223,11 +231,11 @@ app.put('/api/classifiers/:id', function(req, res) {
         }
 
         var visual_recognition = new VisualRecognitionV3({
-            url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition/api',
+            url: 'https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition-sk/api',
             api_key: req.query.username,
-            version_date: '2016-05-20'
+            version_date: '2016-05-20',
+            headers: {'Accept-Language': req.query.lang}
         });
-
 
         var params = {
             classifier_id: req.params.id

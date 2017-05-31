@@ -38,10 +38,9 @@ export default class Classifiers extends React.Component {
         var req = request.get('/api/classifiers/' + classifier_id)
         req.use(nocache)
 
-        //req.query({ api_key: localStorage.getItem('api_key') })
-
         req.query({username: localStorage.getItem('username')})
         req.query({password: localStorage.getItem('password')})
+        req.query({lang: i18next.languages[0]})
 
         req.end(function(err, res) {
             if (res.body == null) {
@@ -71,6 +70,7 @@ export default class Classifiers extends React.Component {
 
         req.query({username: localStorage.getItem('username')})
         req.query({password: localStorage.getItem('password')})
+        req.query({lang: i18next.languages[0]})
         req.query({ verbose: true })
 
         req.end((err, res) => {
@@ -91,7 +91,7 @@ export default class Classifiers extends React.Component {
                 }
 
                 classifiers.push(
-                    {name: Strings.classifier_general, status: Strings.status_ready}
+                    {name: 'default', status: 'ready'}
                 )
             }
 

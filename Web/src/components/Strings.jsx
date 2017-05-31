@@ -3,39 +3,40 @@ import i18nextBrowserLanguageDetector from 'i18next-browser-languagedetector'
 
 var english = {
   invalid_key: 'Invalid credentials',
-  update_key: 'Update API key',
-  key_modal_description: 'This tool needs a Watson Visual Recognition API key.',
-  sign_up: 'Sign up for bluemix to get your free key',
+  update_key: 'Update credentials',
+  key_modal_description: 'This tool needs Watson Visual Recognition credentials.',
+  sign_up: 'Sign up for bluemix to get your free credentials',
   log_out: 'Log out',
-  save_key: 'Save key',
+  save_key: 'Save credentials',
   mb100_error: 'Size limit (100MB) exceeded',
   invalid_file_error: 'Invalid file (must be .zip)',
   class_name: 'Class name',
   drag_zip: 'Drag .zip here to train class',
   choose_file: 'choose your file',
-  negatives_tooltip: 'Negative examples are not used to create a class within the created classifier, but does define what the new classifier is not. The compressed file should contain images that do not depict the subject of any of the positive examples.',
+  negatives_tooltip: 'Negative examples should depict what the classifier is not. This set should be visually similar images to the positive examples, but do include any positive images within this negative set. You do not provide a name for this Negative class.',
   negative_class: 'Negative',
   optional: '(Optional)',
-  mb2_error: 'Image size limit (2MB) exceeded',
+  mb2_error: 'Image size limit (10MB) exceeded',
   invalid_image_error: 'Invalid image file (must be .jpg or .png)',
-  faces_error: 'No faces found',
   unknown_error: 'Unknown error',
   drag_image: 'Drag images here to classify them',
   choose_image: 'choose your files',
   create_classifier: 'Create classifier',
   visual_recognition_tool: 'Visual Recognition Tool',
-  key: '🔑',
-  api_key: 'API Key',
-  update_key_button: 'Update key',
-  classifier_general: 'Default',
+  key: 'User',
+  api_key: 'Username:Password',
+  update_key_button: 'Update credentials',
+  classifier_general: 'default',
   general: 'General',
-  classifier_food: 'Food',
-  classifier_face: 'Face Detection',
   status_ready: 'ready',
   status_training: 'training',
   status_retraining: 'retraining',
   status_failed: 'failed',
   documention: 'Documentation',
+  username: 'Username',
+  password: 'Password',
+  cancel: 'Cancel',
+  ok: 'OK',
 
   // Create Classifier
   classifier_name_required_error: 'Classifier name is required',
@@ -47,7 +48,7 @@ var english = {
   no_classes_error: 'You need a minimum of 2 classes.',
   generic_error: 'An error occurred while processing your request.',
   create_classifier_title: 'Create a new classifier',
-  create_classifier_description: 'Creating a custom classifier will allow you to identify highly specialized subject matter. You can train it with your own images to create a model that is tailored to fit your unique use case.',
+  create_classifier_description: 'Creating a custom classifier will allow you to identify highly specialized subject matter. A classifier is created from  a group of images trained by the Visual Recognition service to identify the subject matter of interest.',
   update_classifier_description: 'You can update an existing classifier by adding new classes, or by adding new images to existing classes. You must supply at least one compressed file, with additional positive or negative examples.',
   classifier_name: 'Classifier name',
   classes: 'Classes',
@@ -552,8 +553,8 @@ i18next.use(i18nextBrowserLanguageDetector).init({
         en: {
             translation: english
         },
-        de: {
-            translation: german
+        ko: {
+            translation: korean
         },
         es: {
             translation: spanish
@@ -567,9 +568,15 @@ i18next.use(i18nextBrowserLanguageDetector).init({
         ja: {
             translation: japanese
         },
-        ko: {
-            translation: korean
+        de: {
+            translation: german
         }
+    },
+    detection: {
+      order: ["localStorage", "navigator"],
+      lookupQuerystring: "lng",
+      caches: ["cookie"],
+      cacheDir: 1000
     },
     debug: true
 }, (err, t) => {

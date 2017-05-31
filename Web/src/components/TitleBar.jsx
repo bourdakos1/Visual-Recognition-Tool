@@ -85,7 +85,6 @@ export default class TitleBar extends React.Component {
             flex: 'none'
         }
 
-        //var key = localStorage.getItem('api_key')
         var username = localStorage.getItem('username')
         var password = localStorage.getItem('password')
 

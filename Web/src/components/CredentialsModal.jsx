@@ -34,7 +34,6 @@ export default class CredentialsModal extends React.Component {
         req.use(nocache)
 
         req.query({
-            //api_key: apiKey
             username: username,
             password: password
          })
@@ -104,8 +103,8 @@ export default class CredentialsModal extends React.Component {
                     <button onClick={this.toggle} style={deleteStyle} />
                 </div>
                 <ModalBody>
-                    <p>{Strings.key_modal_description}</p>
-                    <p><a href={'https://console.dys0.bluemix.net/catalog/services/visual-recognition-dedicatedsoftbankdev/'} target={'_blank'}>{Strings.sign_up}</a></p>
+                    <p>{i18next.t('key_modal_description')}</p>
+                    <p><a href={'https://console.dys0.bluemix.net/catalog/services/visual-recognition-dedicatedsoftbankdev/'} target={'_blank'}>{i18next.t('sign_up')}</a></p>
                     {this.state.error ? <p id={'error--api-key-modal--api-key'} style={error}>{this.state.error}</p> : null}
                     <form id={'api-key-form'} role={'form'} action={'#'}>
                         <div className={this.state.error ? 'form-group has-danger' : 'form-group'}>

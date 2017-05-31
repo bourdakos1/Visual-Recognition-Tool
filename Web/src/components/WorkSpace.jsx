@@ -194,15 +194,11 @@ export default class WorkSpace extends React.Component {
             }
         })
 
-        // req.query({
-        //   //api_key: localStorage.getItem('api_key')
-        //   username: localStorage.getItem('username'),
-        //   password: localStorage.getItem('password')
-        // })
         req.query({username: localStorage.getItem('username')})
         req.query({password: localStorage.getItem('password')})
 
         req.query({ name: this.state.classifier.name })
+        req.query({lang: i18next.languages[0]})
 
         req.on('progress', function(e) {
             if (e.direction == 'upload') {
