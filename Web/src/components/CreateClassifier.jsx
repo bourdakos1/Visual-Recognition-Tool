@@ -13,6 +13,7 @@ export default class CreateClassifier extends React.Component {
                 progressModalText={Strings.creating_classifier}
                 titleText={Strings.create_classifier_title}
                 subTitleText={Strings.create_classifier_description}
+                submitText={Strings.create}
                 classesInfo={true}
                 classifier={{name: '', fixed: false}}
                 classes={[

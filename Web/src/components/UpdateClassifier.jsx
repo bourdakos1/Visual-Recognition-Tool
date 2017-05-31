@@ -68,6 +68,7 @@ export default class UpdateClassifier extends React.Component {
                 progressModalText={Strings.updating_classifier}
                 titleText={Strings.update_classifier}
                 subTitleText={Strings.update_classifier_description}
+                submitText={Strings.update}
                 classesInfo={false}
                 classifier={this.state.classifier}
                 classes={this.state.classes} />
