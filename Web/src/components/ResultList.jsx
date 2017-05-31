@@ -388,7 +388,7 @@ export default class ResultList extends React.Component {
                         <div style={{textAlign: 'left'}}>
                             {i18next.t('result_tooltip')}
                         </div>
-                        <a style={{color: 'white'}} href='https://www.ibm.com/watson/developercloud/doc/visual-recognition/customizing.html#guidelines-for-good-training' target='_blank'>
+                        <a style={{color: 'white'}} href='https://console.ng.bluemix.net/docs/services/visual-recognition-dedicated/customizing.html#good-training' target='_blank'>
                             <u>{i18next.t('improve_score')}</u>
                         </a>
                     </Tooltip>:

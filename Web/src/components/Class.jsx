@@ -138,7 +138,7 @@ export default class Class extends React.Component {
                                 <div style={{textAlign: 'left'}}>
                                     {i18next.t('negatives_tooltip')}
                                 </div>
-                                <a style={{color: 'white'}} href='https://www.ibm.com/watson/developercloud/doc/visual-recognition/customizing.html#structure' target='_blank'>
+                                <a style={{color: 'white'}} href='https://console.ng.bluemix.net/docs/services/visual-recognition-dedicated/customizing.html#structure' target='_blank'>
                                     <u>{i18next.t('documention')}</u>
                                 </a>
                             </Tooltip> :
