@@ -28,14 +28,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.use(bodyParser.json());
 
 app.get('/api/validate', function(req, res) {
-    var username = req.query.username;
-    var password = req.query.password;
-
-    request.post('https://console.dys0.bluemix.net/services/watson_vision_combined-dedicated.softbankdev/api')
-    .query({
-      username: username,
-      password: password
-    })
+    request.post('https://'+req.query.username+':'+req.query.password+'@gateway-d.s01.jp.watsonplatform.net/visual-recognition-sk/api')
     .end(function(err, response) {
         res.send({valid: !(err.status == 401)});
     });

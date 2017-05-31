@@ -26,9 +26,8 @@ export default class CredentialsModal extends React.Component {
     saveApiKey = (e) => {
         e.preventDefault()
         var self = this
-        //var apiKey = this.apiKey.value
-        var username = ReactDOM.findDOMNode(this.refs.username).value
-        var password = ReactDOM.findDOMNode(this.refs.password).value
+        var username = this.username.value
+        var password = this.password.value
 
         var req = request.get('/api/validate')
         req.use(nocache)
@@ -41,7 +40,6 @@ export default class CredentialsModal extends React.Component {
         req.end((err, res) => {
             if (res.body.valid) {
                 self.toggle()
-                //self.props.setCredentials(apiKey)
                 self.props.setCredentials(username, password)
             } else {
                 self.setState({error: i18next.t('invalid_key')})
@@ -111,12 +109,12 @@ export default class CredentialsModal extends React.Component {
                               <input
                                   style={{marginBottom: '12px'}}
                                   id={'input--api-key-modal--api-key'}
-                                  ref={'username'}
+                                  ref={(username) => { this.username = username }}
                                   className={'form-control'}
                                   type={'text'}
                                   placeholder={'username'}/>
                               <input
-                                  ref={'password'}
+                                  ref={(password) => { this.password = password }}
                                   className={'form-control'}
                                   type={'text'}
                                   placeholder={'password'}/>
