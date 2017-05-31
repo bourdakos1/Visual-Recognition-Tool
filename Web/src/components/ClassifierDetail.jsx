@@ -322,7 +322,7 @@ export default class ClassifierDetail extends React.Component {
                         id={this.props.classifierID || this.props.name}
                         className='dropzone--classifier-detail'
                         accept={'image/jpeg, image/png, .jpg, .jpeg, .png'}
-                        maxSize={2 * 1024 * 1024}
+                        maxSize={10 * 1024 * 1024}
                         upload={true}
                         onLink={this.onLink}
                         onDrop={this.onDrop}
