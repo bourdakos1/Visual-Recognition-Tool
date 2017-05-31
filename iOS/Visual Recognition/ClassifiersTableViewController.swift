@@ -84,35 +84,78 @@ class ClassifiersTableViewController: UITableViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.navigationController?.toolbar.isHidden = true
-        
-        let myHiderThing = UIView()
-        myHiderThing.backgroundColor = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
-        myHiderThing.frame = CGRect(x: 0, y: -64, width: 500, height: 64)
-        
-        view.addSubview(myHiderThing)
-        view.clipsToBounds = false
+        v.removeFromSuperview()
+        loadClassifiers()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    func loadClassifiers() {
+        // Load from Watson
+        let apiKey = UserDefaults.standard.string(forKey: "api_key")
         
-        let myHiderThing = UIView()
-        myHiderThing.backgroundColor = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
-        myHiderThing.frame = CGRect(x: 0, y: -64, width: 500, height: 64)
+        if apiKey == nil || apiKey == "" {
+            self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+            // Don't need to reload, because its synchronous.
+            return
+        }
         
-        view.addSubview(myHiderThing)
-        view.clipsToBounds = false
+        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers")!)
+        
+        r.query(params: [
+            "api_key": apiKey!,
+            "version": "2016-05-20",
+            "verbose": "true"
+            ])
+        
+        let task = URLSession.shared.dataTask(with: r) { data, response, error in
+            // Check for fundamental networking error.
+            guard let data = data, error == nil else {
+                return
+            }
+            do {
+                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
+                DispatchQueue.main.async{
+                    var data = json["classifiers"] as! [[String: AnyObject]]
+                    
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+                    data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! })
+                    
+                    let training = data.filter({ $0["status"] as? String == "training" })
+                    if training.count > 0 {
+                        self.reloadClassifiers()
+                    }
+                    
+                    self.classifiers = data
+                    self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+                    
+                    self.tableView.reloadData()
+                }
+            } catch let error as NSError {
+                print("error : \(error)")
+            }
+        }
+        task.resume()
     }
+    
+    func reloadClassifiers() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(4), execute: {
+            self.loadClassifiers()
+        })
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewDidAppear(false)
+        v.removeFromSuperview()
+    }
+    
+    let v = UIView(frame: CGRect(x: 0, y: -64, width: 500, height: 64))
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.navigationBar.setBackgroundImage(nil, for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = nil
-        self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.navigationBar.barTintColor = UIColor.white
-        
-        self.navigationController?.toolbar.isHidden = true
+        v.backgroundColor = UIColor.white
+        tableView.addSubview(v)
+        tableView.bringSubview(toFront: v)
         
         tableView.estimatedRowHeight = 85.0
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -129,47 +172,6 @@ class ClassifiersTableViewController: UITableViewController {
         catch {
             print("Error: \(error)")
         }
-        
-        // Load from Watson
-        let apiKey = UserDefaults.standard.string(forKey: "api_key")
-        
-        if apiKey == nil || apiKey == "" {
-            self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-            // Don't need to reload, because its synchronous.
-            return
-        }
-        
-        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers")!)
-        
-        r.query(params: [
-            "api_key": apiKey!,
-            "version": "2016-05-20",
-            "verbose": "true"
-        ])
-        
-        let task = URLSession.shared.dataTask(with: r) { data, response, error in
-            // Check for fundamental networking error.
-            guard let data = data, error == nil else {
-                return
-            }
-            do {
-                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
-                DispatchQueue.main.async{
-                    var data = json["classifiers"] as! [[String: AnyObject]]
-                    
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-                    data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! })
-                    self.classifiers = data
-                    self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-                    
-                    self.tableView.reloadData()
-                }
-            } catch let error as NSError {
-                print("error : \(error)")
-            }
-        }
-        task.resume()
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -214,6 +216,9 @@ class ClassifiersTableViewController: UITableViewController {
             cell.statusIndicator?.layer.cornerRadius = 6
             
             if classifierData["status"] as? String == "ready" {
+                cell.classifierNameLabel?.alpha = 1.0
+                cell.classifierIdLabel?.alpha = 1.0
+                cell.classifierStatusLabel?.alpha = 1.0
                 cell.statusIndicator?.backgroundColor = UIColor(red: 105/255, green: 219/255, blue: 48/255, alpha: 1)
                 cell.activityIndicator?.stopAnimating()
                 cell.activityIndicator?.isHidden = true

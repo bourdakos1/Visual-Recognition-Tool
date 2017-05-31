@@ -457,6 +457,8 @@ open class PulleyViewController: UIViewController {
         setNeedsSupportedDrawerPositionsUpdate()
     }
     
+    let v = UIView(frame: CGRect(x: 0, y: 0, width: 500, height: 64))
+    
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -475,6 +477,8 @@ open class PulleyViewController: UIViewController {
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.barStyle = .black
         
+        self.v.removeFromSuperview()
+        
         self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0, height: 1)
         self.navigationController?.navigationBar.layer.shadowColor = UIColor.black.cgColor
         self.navigationController?.navigationBar.layer.shadowOpacity = 0.10
@@ -488,29 +492,27 @@ open class PulleyViewController: UIViewController {
         
         self.drawerScrollView.isHidden = true
         
-        self.navigationController?.navigationBar.setBackgroundImage(nil, for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = nil
-        self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.barStyle = .default
-        
+
         self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0, height: 0)
         self.navigationController?.navigationBar.layer.shadowColor = UIColor.clear.cgColor
         self.navigationController?.navigationBar.layer.shadowOpacity = 0.0
         
         self.setDrawerPosition(position: .closed, animated: false)
     }
+    
     override open func viewDidDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         self.drawerScrollView.isHidden = true
         
-        self.navigationController?.navigationBar.setBackgroundImage(nil, for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = nil
-        self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.barStyle = .default
         
+        self.v.backgroundColor = UIColor.white
+        self.navigationController?.view.insertSubview(self.v, belowSubview: (self.navigationController?.navigationBar)!)
+
         self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0, height: 0)
         self.navigationController?.navigationBar.layer.shadowColor = UIColor.clear.cgColor
         self.navigationController?.navigationBar.layer.shadowOpacity = 0.0

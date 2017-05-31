@@ -40,8 +40,12 @@
 		23AA52301EC0DC550073D4DC /* ClassiferTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AA522F1EC0DC550073D4DC /* ClassiferTableViewCell.swift */; };
 		23AA52321EC0E6240073D4DC /* btn_dropdown.png in Resources */ = {isa = PBXBuildFile; fileRef = 23AA52311EC0E6240073D4DC /* btn_dropdown.png */; };
 		23AA52341EC0E7CD0073D4DC /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 23AA52331EC0E7CD0073D4DC /* checkmark.png */; };
+		23C62EC21EDDF5BA002A0311 /* select.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C62EC11EDDF5BA002A0311 /* select.png */; };
 		23C9BE8D1ECB90C900FFD71C /* SnapperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C9BE8C1ECB90C900FFD71C /* SnapperViewController.swift */; };
 		23C9BE8F1ECBF52D00FFD71C /* create.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C9BE8E1ECBF52D00FFD71C /* create.png */; };
+		23E5ED911ED9F84A00E5AF97 /* watson_icon2.png in Resources */ = {isa = PBXBuildFile; fileRef = 23E5ED901ED9F84A00E5AF97 /* watson_icon2.png */; };
+		23E5ED931ED9F90400E5AF97 /* watson_icon2_180.png in Resources */ = {isa = PBXBuildFile; fileRef = 23E5ED921ED9F90400E5AF97 /* watson_icon2_180.png */; };
+		23E5ED951EDBCF1D00E5AF97 /* AKPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E5ED941EDBCF1D00E5AF97 /* AKPickerView.swift */; };
 		93DBAE19C7AA42B9500F9564 /* Pods_Visual_RecognitionTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DFA349A8CB1EED0AFEBAA9B /* Pods_Visual_RecognitionTests.framework */; };
 		99AC11A04682C2DBC2FD727A /* Pods_Visual_RecognitionUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40D21E18884F9EBCAE9B4E12 /* Pods_Visual_RecognitionUITests.framework */; };
 		B612154EA8ED8142169DDDBB /* Pods_Visual_Recognition.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E7A675C0D15330F38D50AD4 /* Pods_Visual_Recognition.framework */; };
@@ -104,8 +108,12 @@
 		23AA522F1EC0DC550073D4DC /* ClassiferTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassiferTableViewCell.swift; sourceTree = "<group>"; };
 		23AA52311EC0E6240073D4DC /* btn_dropdown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_dropdown.png; sourceTree = "<group>"; };
 		23AA52331EC0E7CD0073D4DC /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
+		23C62EC11EDDF5BA002A0311 /* select.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = select.png; sourceTree = "<group>"; };
 		23C9BE8C1ECB90C900FFD71C /* SnapperViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapperViewController.swift; sourceTree = "<group>"; };
 		23C9BE8E1ECBF52D00FFD71C /* create.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = create.png; sourceTree = "<group>"; };
+		23E5ED901ED9F84A00E5AF97 /* watson_icon2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = watson_icon2.png; sourceTree = "<group>"; };
+		23E5ED921ED9F90400E5AF97 /* watson_icon2_180.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = watson_icon2_180.png; sourceTree = "<group>"; };
+		23E5ED941EDBCF1D00E5AF97 /* AKPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKPickerView.swift; sourceTree = "<group>"; };
 		25E2F1463D728724954979E2 /* Pods-Visual Recognition.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Visual Recognition.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Visual Recognition/Pods-Visual Recognition.debug.xcconfig"; sourceTree = "<group>"; };
 		28C086BB3DBE81D5AA58AF0F /* Pods-Visual RecognitionTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Visual RecognitionTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Visual RecognitionTests/Pods-Visual RecognitionTests.release.xcconfig"; sourceTree = "<group>"; };
 		2DFA349A8CB1EED0AFEBAA9B /* Pods_Visual_RecognitionTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Visual_RecognitionTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -237,6 +245,7 @@
 			isa = PBXGroup;
 			children = (
 				2389A72D1E7C79C100D7C973 /* PulleyPassthroughScrollView.swift */,
+				23E5ED941EDBCF1D00E5AF97 /* AKPickerView.swift */,
 				2389A72F1E7C79CA00D7C973 /* PulleyViewController.swift */,
 			);
 			name = PulleyLibrary;
@@ -250,9 +259,12 @@
 				231D6FE11EBAA8E0003DDE56 /* classifiers.png */,
 				23C9BE8E1ECBF52D00FFD71C /* create.png */,
 				232B9F8B1E80885900407BB8 /* scrim.png */,
+				23C62EC11EDDF5BA002A0311 /* select.png */,
 				231D6FE31EBADAA1003DDE56 /* library.png */,
 				23AA52331EC0E7CD0073D4DC /* checkmark.png */,
+				23E5ED901ED9F84A00E5AF97 /* watson_icon2.png */,
 				23AA52311EC0E6240073D4DC /* btn_dropdown.png */,
+				23E5ED921ED9F90400E5AF97 /* watson_icon2_180.png */,
 				232B9F891E80842D00407BB8 /* api.png */,
 			);
 			name = res;
@@ -402,13 +414,16 @@
 				232B9F8C1E80885900407BB8 /* scrim.png in Resources */,
 				232B9F8A1E80842D00407BB8 /* api.png in Resources */,
 				2389A7081E7C65A100D7C973 /* LaunchScreen.storyboard in Resources */,
+				23E5ED931ED9F90400E5AF97 /* watson_icon2_180.png in Resources */,
 				2389A7051E7C65A100D7C973 /* Assets.xcassets in Resources */,
 				231D6FE41EBADAA1003DDE56 /* library.png in Resources */,
 				23C9BE8F1ECBF52D00FFD71C /* create.png in Resources */,
 				236DCB6B1E7DAA54009AE6D6 /* capture.png in Resources */,
 				236DCB6D1E7DAE04009AE6D6 /* cancel.png in Resources */,
+				23E5ED911ED9F84A00E5AF97 /* watson_icon2.png in Resources */,
 				23AA52341EC0E7CD0073D4DC /* checkmark.png in Resources */,
 				231D6FE21EBAA8E0003DDE56 /* classifiers.png in Resources */,
+				23C62EC21EDDF5BA002A0311 /* select.png in Resources */,
 				2389A7031E7C65A100D7C973 /* Main.storyboard in Resources */,
 				23AA52321EC0E6240073D4DC /* btn_dropdown.png in Resources */,
 			);
@@ -586,6 +601,7 @@
 				2389A72E1E7C79C100D7C973 /* PulleyPassthroughScrollView.swift in Sources */,
 				235DD00D1EC6702E00B8432B /* ImagesCollectionViewController.swift in Sources */,
 				233D0BA01EC17C53005E5594 /* DatabaseController.swift in Sources */,
+				23E5ED951EDBCF1D00E5AF97 /* AKPickerView.swift in Sources */,
 				233D0B9E1EC13101005E5594 /* Classifiers.xcdatamodeld in Sources */,
 				23C9BE8D1ECB90C900FFD71C /* SnapperViewController.swift in Sources */,
 				233D0BB71EC22EB6005E5594 /* PendingClassifier+CoreDataProperties.swift in Sources */,
