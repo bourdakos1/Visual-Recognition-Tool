@@ -70,6 +70,7 @@ export default class UpdateClassifier extends React.Component {
                 progressModalText={i18next.t('updating_classifier')}
                 titleText={i18next.t('update_classifier')}
                 subTitleText={i18next.t('update_classifier_description')}
+                submitText={i18next.t('update')}
                 classesInfo={false}
                 classifier={this.state.classifier}
                 classes={this.state.classes} />

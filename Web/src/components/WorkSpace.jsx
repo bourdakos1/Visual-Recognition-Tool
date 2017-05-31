@@ -406,7 +406,7 @@ export default class WorkSpace extends React.Component {
                         <Button
                             id='button--create-classifier--create'
                             onClick={this.errorCheck}
-                            text={i18next.t('create')}
+                            text={this.props.submitText}
                             kind='bold'/>
                     </div>
                 </TitleCard>
