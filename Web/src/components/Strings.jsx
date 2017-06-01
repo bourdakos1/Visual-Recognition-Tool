@@ -136,7 +136,7 @@ var spanish = {
   creating_classifier: 'Creando clasificador',
 
   // Drop button
-  uploading: 'Cargando',
+  uploading: 'Cargando ',
   or: 'O ',
 
   // Drop Down
