@@ -71,13 +71,7 @@ export default class WorkSpace extends React.Component {
                 errors = true
                 titleError = i18next.t('classifier_name_required_error')
                 this.setState({errors: errors, titleError: titleError})
-            } else if (/[*\\|{}$/'`"\-]/.test(this.state.classifier.name)) {
-                errors = true
-                var invalidChars = this.state.classifier.name.match(/[*\\|{}$/'`"\-]/g)
-                titleError = i18next.t('invalid_chars_error') + invalidChars.join(' ')
-                this.setState({errors: errors, titleError: titleError})
-            }
-
+            } 
             var validClasses = 0
             var hasNeg = false
 
