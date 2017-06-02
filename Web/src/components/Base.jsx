@@ -4,10 +4,13 @@ import TitleBar from './TitleBar'
 
 export default class Base extends React.Component {
     render() {
+        document.body.style.backgroundColor = '#fafafa'
+        document.body.style.paddingTop = '66px'
+
         var content = {
             maxWidth: '1000px',
             width: '100%',
-            margin: 'auto'
+            margin: 'auto',
         }
 
         return (

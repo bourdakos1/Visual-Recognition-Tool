@@ -395,7 +395,7 @@ export default class WorkSpace extends React.Component {
                             onClick={this.addClass}
                             text={Strings.add_class}
                             style={{float: 'left'}}/>
-                        <Link to='/'>
+                        <Link to='/tool'>
                             <Button
                                 id='button--create-classifier--cancel'
                                 text={Strings.cancel}
@@ -412,7 +412,7 @@ export default class WorkSpace extends React.Component {
                     visible={this.state.upload}
                     title={this.props.progressModalText}
                     load={this.create}/>
-                {this.state.finished ? <Redirect to='/'/> : null}
+                {this.state.finished ? <Redirect to='/tool'/> : null}
             </div>
         )
     }

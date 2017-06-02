@@ -8,6 +8,7 @@ import CreateClassifier from './components/CreateClassifier'
 import UpdateClassifier from './components/UpdateClassifier'
 import CredentialsModal from './components/CredentialsModal'
 import LandingPage from './components/LandingPage'
+import TestPage from './components/TestPage'
 
 
 // This is the base of the App
@@ -44,20 +45,72 @@ class App extends React.Component {
     render() {
         return (
             <BrowserRouter>
-                {localStorage.getItem('api_key') == 'undefined'
-                    || localStorage.getItem('api_key') == null
-                    || localStorage.getItem('api_key') == '' ?
-                    <LandingPage setCredentials={this.setCredentials}/> :
-                    <Base showModal={this.showModal}>
-                        <Route exact path='/' component={Classifiers}/>
-                        <Route exact path='/create_classifier' component={CreateClassifier}/>
-                        <Route exact path='/update_classifier/:classifierID' component={UpdateClassifier}/>
-                        <CredentialsModal
-                            visible={this.state.showModal}
-                            setCredentials={this.setCredentials}
-                            onHidden={this.hideModal}/>
-                    </Base>
-                }
+                <div>
+                    <Route exact path='/' component={TestPage}/>
+
+                    <Route exact path='/tool' render={(props) => (
+                        <div>
+                            {
+                                localStorage.getItem('api_key') == 'undefined'
+                                    || localStorage.getItem('api_key') == null
+                                    || localStorage.getItem('api_key') == '' ?
+
+                                <LandingPage setCredentials={this.setCredentials}/> :
+                                <div>
+                                    <Base showModal={this.showModal}>
+                                        <Classifiers {...props}/>
+                                    </Base>
+                                    <CredentialsModal
+                                        visible={this.state.showModal}
+                                        setCredentials={this.setCredentials}
+                                        onHidden={this.hideModal}/>
+                                </div>
+                            }
+                        </div>
+                    )}/>
+
+                    <Route exact path='/tool/create_classifier' render={(props) => (
+                        <div>
+                            {
+                                localStorage.getItem('api_key') == 'undefined'
+                                    || localStorage.getItem('api_key') == null
+                                    || localStorage.getItem('api_key') == '' ?
+
+                                <LandingPage setCredentials={this.setCredentials}/> :
+                                <div>
+                                    <Base showModal={this.showModal}>
+                                        <CreateClassifier {...props}/>
+                                    </Base>
+                                    <CredentialsModal
+                                        visible={this.state.showModal}
+                                        setCredentials={this.setCredentials}
+                                        onHidden={this.hideModal}/>
+                                </div>
+                            }
+                        </div>
+                    )}/>
+
+                    <Route exact path='/tool/update_classifier/:classifierID' render={(props) => (
+                        <div>
+                            {
+                                localStorage.getItem('api_key') == 'undefined'
+                                    || localStorage.getItem('api_key') == null
+                                    || localStorage.getItem('api_key') == '' ?
+
+                                <LandingPage setCredentials={this.setCredentials}/> :
+                                <div>
+                                    <Base showModal={this.showModal}>
+                                        <UpdateClassifier {...props}/>
+                                    </Base>
+                                    <CredentialsModal
+                                        visible={this.state.showModal}
+                                        setCredentials={this.setCredentials}
+                                        onHidden={this.hideModal}/>
+                                </div>
+                            }
+                        </div>
+                    )}/>
+                </div>
             </BrowserRouter>
         )
     }

@@ -91,7 +91,7 @@ export default class DropDown extends React.Component {
                 <button className={this.props.className} style={dropbtn}></button>
                 <div style={dropdownContent}>
                     <a className='link--classifiers--api-reference' style={[aStyle, aa]} key='0' href='https://www.ibm.com/watson/developercloud/visual-recognition/api/v3/?node#classify_an_image' target='_blank'>{Strings.api_reference}</a>
-                    <Link style={{textDecoration: 'none'}} to={'/update_classifier/' + this.props.classifierID}><span className='link--classifiers--update' style={[aStyle, ab]} key='1' href="#">{Strings.update}</span></Link>
+                    <Link style={{textDecoration: 'none'}} to={'/tool/update_classifier/' + this.props.classifierID}><span className='link--classifiers--update' style={[aStyle, ab]} key='1' href="#">{Strings.update}</span></Link>
                     <a className='link--classifiers--delete' style={[aStyle, ac, {color: '#f44336'}]} key='2' href="#" onClick={this.props.delete}>{Strings.delete}</a>
                 </div>
             </div>

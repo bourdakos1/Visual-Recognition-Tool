@@ -133,7 +133,7 @@ export default class Classifiers extends React.Component {
         var self = this
         return (
             <div>
-                <Link to='/create_classifier'>
+                <Link to='/tool/create_classifier'>
                     <Button
                         style={{margin: '21px 0px'}}
                         id="button--classifiers--create"
