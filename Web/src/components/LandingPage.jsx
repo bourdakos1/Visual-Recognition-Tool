@@ -302,7 +302,7 @@ export default class LandingPage extends React.Component {
                         onFocus={this.onFocus}
                         onBlur={this.onBlur}
                         style={buttonStyle.base}
-                        placeholder={'username:password'}
+                        placeholder={i18next.t('api_key')}
                         onChange={this.onTextChange}/>
                     <button
                         style={this.state.focus ? pics : picsNone}

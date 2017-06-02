@@ -112,12 +112,12 @@ export default class CredentialsModal extends React.Component {
                                   ref={(username) => { this.username = username }}
                                   className={'form-control'}
                                   type={'text'}
-                                  placeholder={'username'}/>
+                                  placeholder={i18next.t('username')}/>
                               <input
                                   ref={(password) => { this.password = password }}
                                   className={'form-control'}
                                   type={'text'}
-                                  placeholder={'password'}/>
+                                  placeholder={i18next.t('password')}/>
                         </div>
                     </form>
                 </ModalBody>
