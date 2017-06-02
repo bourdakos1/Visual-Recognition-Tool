@@ -6,7 +6,7 @@ import Button from './Button'
 import Styles from './Styles'
 
 @Radium
-export default class TestPage extends React.Component {
+export default class Demo extends React.Component {
     render() {
         var logo = {
             height: '60px',
@@ -45,6 +45,10 @@ export default class TestPage extends React.Component {
             }
         }
 
+        var active = {
+            color: Styles.colorPrimary,
+        }
+
         var shadow = {
             // boxShadow: '0 1px 1px rgba(0, 0, 0, 0.1)',
             background: '#fff',
@@ -52,19 +56,27 @@ export default class TestPage extends React.Component {
         }
 
         var section = {
-            height: '566px',
-            width: '100%',
+            borderTop: '1px solid #d3d3d3',
             display: 'flex',
-            alignItems: 'center',
-            padding: '0 0 0 80px'
-            // backgroundColor: 'red',
+            justifyContent: 'center', /* align horizontal */
+            alignItems: 'center', /* align vertical */
+            position: 'fixed',
+            bottom: '120px',
+            left: '0',
+            right: '0',
+            top: '85px',
+            paddingRight: '300px',
             // backgroundColor: Styles.colorPrimary,
         }
 
-        var section2 = {
-            height: '500px',
-            // backgroundColor: 'blue',
-            backgroundColor: Styles.colorPrimary,
+        var results = {
+            borderLeft: '1px solid #d3d3d3',
+            width: '300px',
+            position: 'fixed',
+            bottom: '120px',
+            right: '0',
+            top: '85px',
+            // backgroundColor: Styles.colorPrimary,
         }
 
         var contentWrapper = {
@@ -73,6 +85,7 @@ export default class TestPage extends React.Component {
             height: '100%',
             padding: '0 30px 0 20px',
             marginTop: '10px',
+            marginBottom: '10px',
             display: 'flex',
             lineHeight: '65px',
             alignItems: 'center',
@@ -104,9 +117,8 @@ export default class TestPage extends React.Component {
         }
 
         var sdk = {
-            width: '41px',
-            height: '40px',
-            backgroundSize: '41px 40px',
+            width: '80px',
+            height: '80px',
 
             padding: '0',
             margin: '0',
@@ -124,7 +136,17 @@ export default class TestPage extends React.Component {
             }
         }
 
+        var sdkActive = {
+            opacity: '1',
+            border: '2px solid #F9F9FB',
+            outline: '2px solid' + Styles.colorPrimary,
+        }
+
         var bar = {
+            position: 'fixed',
+            bottom: '0',
+            left: '0',
+            right: '0',
             margin: '1.5em 0 0',
             padding: '1em',
             background: '#F9F9FB',
@@ -132,34 +154,38 @@ export default class TestPage extends React.Component {
         }
 
         var node = {
-            backgroundImage: 'url(/sdk_icons/node.png)',
+            backgroundImage: 'url(/demo_photos/1.jpg)',
+            backgroundSize: 'auto 80px',
         }
 
         var swift = {
-            backgroundImage: 'url(/sdk_icons/swift.png)',
+            backgroundImage: 'url(/demo_photos/2.jpg)',
+            backgroundSize: 'auto 80px',
         }
 
         var android = {
-            backgroundImage: 'url(/sdk_icons/android.png)',
+            backgroundImage: 'url(/demo_photos/3.jpg)',
+            backgroundSize: '80px auto',
         }
 
         var python = {
-            backgroundImage: 'url(/sdk_icons/python.png)',
+            backgroundImage: 'url(/demo_photos/4.jpg)',
+            backgroundSize: '80px auto',
         }
 
         var java = {
-            backgroundImage: 'url(/sdk_icons/java.png)',
+            backgroundImage: 'url(/demo_photos/5.jpg)',
+            backgroundSize: 'auto 80px',
         }
 
         var unity = {
-            backgroundImage: 'url(/sdk_icons/unity.png)',
+            backgroundImage: 'url(/demo_photos/6.jpg)',
+            backgroundSize: '80px auto',
         }
 
         var net = {
-            backgroundImage: 'url(/sdk_icons/dot-net-standard.png)',
-            width: '48px',
-            height: '40px',
-            backgroundSize: '48px 40px',
+            backgroundImage: 'url(/demo_photos/7.jpg)',
+            backgroundSize: 'auto 80px',
         }
 
         return (
@@ -169,7 +195,7 @@ export default class TestPage extends React.Component {
                         <Link to='/' style={logo}><img src={'/watson_color.png'} style={logo}></img></Link>
                         <Link to='/' style={titleLink}>Watson Vision</Link>
 
-                        <a href='/demo' key='a' style={link}>Demo</a>
+                        <a href='/demo' key='a' style={[link, active]}>Demo</a>
                         <a href='/' key='b' style={link}>Pricing</a>
                         <a href='/' key='c' style={[link, last]}>Documentation</a>
 
@@ -184,60 +210,41 @@ export default class TestPage extends React.Component {
                         </a>
                     </div>
                 </div>
+
                 <div style={section}>
-                    <div style={{flex: '1.31803398875'}}>
-                        <img src={'/test.png'} style={{
-                            width: '100%',
-                            height: '100%'
-                        }}></img>
-                    </div>
-                    <div style={{flex: '1'}}>
-                        <div style={{
-                            font: Styles.fontTitle,
-                            fontWeight: '200',
-                            textAlign: 'center',
-                            marginBottom: '35px'}}>
-                            Understand images in 5 lines of code
-                        </div>
-                        <div style={{textAlign: 'center'}}>
-                            <a style={{textDecoration: 'none'}} href='https://console.ng.bluemix.net/catalog/services/visual-recognition/' target='_blank'>
-                                <Button
-                                    style={[apibutton]}
-                                    onClick={null}
-                                    kind={'bold'}
-                                    text={'Get a free API key'}/>
-                            </a>
-                        </div>
-                    </div>
+                    <img src={'/demo_photos/1.jpg'} style={{
+                        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
+                        borderRadius: '5px'
+                    }}/>
                 </div>
-                <div style={section2}>
-                    <div style={bar}>
-                        <ul style={{textAlign: 'center', padding: '0', margin: '0'}}>
-                            <li style={{display: 'inline-block'}}>
-                                <a key='node' style={[sdk, node]} title="Node.js" href="#">Node.js</a>
-                            </li>
-                            <li style={{display: 'inline-block'}}>
-                                <a key='swift' style={[sdk, swift]} title="Swift" href="#">Swift</a>
-                            </li>
-                            <li style={{display: 'inline-block'}}>
-                                <a key='android' style={[sdk, android]} title="Android" href="#">Android</a>
-                            </li>
-                            <li style={{display: 'inline-block'}}>
-                                <a key='python' style={[sdk, python]} title="Python" href="#">Python</a>
-                            </li>
-                            <li style={{display: 'inline-block'}}>
-                                <a key='java' style={[sdk, java]} title="Java" href="#">Java</a>
-                            </li>
-                            <li style={{display: 'inline-block'}}>
-                                <a key='unity' style={[sdk, unity]} title="Unity" href="#">Unity</a>
-                            </li>
-                            <li style={{display: 'inline-block'}}>
-                                <a key='net' style={[sdk, net]} title=".NET Standard" href="#">.NET Standard</a>
-                            </li>
-                        </ul>
-                    </div>
+
+                <div style={results}>
                 </div>
-                <div style={section}>
+
+                <div style={bar}>
+                    <ul style={{textAlign: 'center', padding: '0', margin: '0'}}>
+                        <li style={{display: 'inline-block'}}>
+                            <a key='node' style={[sdk, node, sdkActive]} title="Node.js" href="#">Node.js</a>
+                        </li>
+                        <li style={{display: 'inline-block'}}>
+                            <a key='swift' style={[sdk, swift]} title="Swift" href="#">Swift</a>
+                        </li>
+                        <li style={{display: 'inline-block'}}>
+                            <a key='android' style={[sdk, android]} title="Android" href="#">Android</a>
+                        </li>
+                        <li style={{display: 'inline-block'}}>
+                            <a key='python' style={[sdk, python]} title="Python" href="#">Python</a>
+                        </li>
+                        <li style={{display: 'inline-block'}}>
+                            <a key='java' style={[sdk, java]} title="Java" href="#">Java</a>
+                        </li>
+                        <li style={{display: 'inline-block'}}>
+                            <a key='unity' style={[sdk, unity]} title="Unity" href="#">Unity</a>
+                        </li>
+                        <li style={{display: 'inline-block'}}>
+                            <a key='net' style={[sdk, net]} title=".NET Standard" href="#">.NET Standard</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         )

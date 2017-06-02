@@ -9,6 +9,7 @@ import UpdateClassifier from './components/UpdateClassifier'
 import CredentialsModal from './components/CredentialsModal'
 import LandingPage from './components/LandingPage'
 import TestPage from './components/TestPage'
+import Demo from './components/Demo'
 
 
 // This is the base of the App
@@ -47,6 +48,7 @@ class App extends React.Component {
             <BrowserRouter>
                 <div>
                     <Route exact path='/' component={TestPage}/>
+                    <Route exact path='/demo' component={Demo}/>
 
                     <Route exact path='/tool' render={(props) => (
                         <div>
