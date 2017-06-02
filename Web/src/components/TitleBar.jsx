@@ -90,8 +90,8 @@ export default class TitleBar extends React.Component {
         return (
             <div style={shadow}>
                 <div style={contentWrapper}>
-                    <Link to='/' style={logo}><img src={'/watson_color.png'} style={logo}></img></Link>
-                    <Link to='/' style={title}>{Strings.visual_recognition_tool}</Link>
+                    <Link to='/tool' style={logo}><img src={'/watson_color.png'} style={logo}></img></Link>
+                    <Link to='/tool' style={title}>{Strings.visual_recognition_tool}</Link>
 
                     <div style={right}>
                         <div style={user}>

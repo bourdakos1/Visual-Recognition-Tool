@@ -165,8 +165,8 @@ export default class TestPage extends React.Component {
             <div>
                 <div style={shadow}>
                     <div style={contentWrapper}>
-                        <Link to='/test_page' style={logo}><img src={'/watson_color.png'} style={logo}></img></Link>
-                        <Link to='/test_page' style={titleLink}>Watson Vision</Link>
+                        <Link to='/' style={logo}><img src={'/watson_color.png'} style={logo}></img></Link>
+                        <Link to='/' style={titleLink}>Watson Vision</Link>
 
                         <div key='a' style={link}>Demo</div>
                         <div key='b' style={link}>Pricing</div>
