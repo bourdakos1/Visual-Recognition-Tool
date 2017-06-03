@@ -3,11 +3,36 @@ import Radium from 'radium'
 import { Link } from 'react-router-dom'
 
 import Button from './Button'
+import DropButton from './DropButton'
 import Styles from './Styles'
+import Strings from './Strings'
 
 @Radium
 export default class Demo extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            images: [
+                '/demo_photos/1.jpg',
+                '/demo_photos/2.jpg',
+                '/demo_photos/3.jpg',
+                '/demo_photos/4.jpg',
+                '/demo_photos/5.jpg',
+                '/demo_photos/6.jpg',
+                '/demo_photos/7.jpg',
+            ],
+            activeImage: 0
+        }
+    }
+
+    chooseImage = (i) => {
+        this.setState({
+            activeImage: i.target.id
+        })
+    }
+
     render() {
+        var testdata = [{class: "charcoal color", score: 0.834}, {class: "person", score: 0.647}, {class: "ash grey color", score: 0.589}, {class: "suit of clothes", score: 0.584}, {class: "garment", score: 0.584}, {class: "official", score: 0.573, type_hierarchy: "/person/official"}, {class: "business suit", score: 0.556, type_hierarchy: "/garment/suit of clothes/business suit"}, {class: "hotel setting", score: 0.53, type_hierarchy: "/person/hotel setting"}]
         var logo = {
             height: '60px',
             float: 'left',
@@ -116,9 +141,10 @@ export default class Demo extends React.Component {
             margin: 'auto',
         }
 
-        var sdk = {
+        var image = {
             width: '80px',
             height: '80px',
+            cursor: 'pointer',
 
             padding: '0',
             margin: '0',
@@ -131,12 +157,13 @@ export default class Demo extends React.Component {
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
             opacity: '.8',
+            backgroundSize: 'cover',
             ':hover': {
                 opacity: '1',
             }
         }
 
-        var sdkActive = {
+        var imageActive = {
             opacity: '1',
             border: '2px solid #F9F9FB',
             outline: '2px solid' + Styles.colorPrimary,
@@ -151,41 +178,6 @@ export default class Demo extends React.Component {
             padding: '1em',
             background: '#F9F9FB',
             borderTop: '1px solid #d3d3d3',
-        }
-
-        var node = {
-            backgroundImage: 'url(/demo_photos/1.jpg)',
-            backgroundSize: 'auto 80px',
-        }
-
-        var swift = {
-            backgroundImage: 'url(/demo_photos/2.jpg)',
-            backgroundSize: 'auto 80px',
-        }
-
-        var android = {
-            backgroundImage: 'url(/demo_photos/3.jpg)',
-            backgroundSize: '80px auto',
-        }
-
-        var python = {
-            backgroundImage: 'url(/demo_photos/4.jpg)',
-            backgroundSize: '80px auto',
-        }
-
-        var java = {
-            backgroundImage: 'url(/demo_photos/5.jpg)',
-            backgroundSize: 'auto 80px',
-        }
-
-        var unity = {
-            backgroundImage: 'url(/demo_photos/6.jpg)',
-            backgroundSize: '80px auto',
-        }
-
-        var net = {
-            backgroundImage: 'url(/demo_photos/7.jpg)',
-            backgroundSize: 'auto 80px',
         }
 
         return (
@@ -212,9 +204,13 @@ export default class Demo extends React.Component {
                 </div>
 
                 <div style={section}>
-                    <img src={'/demo_photos/1.jpg'} style={{
+                    <img src={this.state.images[this.state.activeImage]} style={{
                         boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        display: 'inline-flex',
+                        margin: 'auto',
+                        maxHeight: '80%',
+                        maxWidth: '80%'
                     }}/>
                 </div>
 
@@ -223,27 +219,21 @@ export default class Demo extends React.Component {
 
                 <div style={bar}>
                     <ul style={{textAlign: 'center', padding: '0', margin: '0'}}>
-                        <li style={{display: 'inline-block'}}>
-                            <a key='node' style={[sdk, node, sdkActive]} title="Node.js" href="#">Node.js</a>
-                        </li>
-                        <li style={{display: 'inline-block'}}>
-                            <a key='swift' style={[sdk, swift]} title="Swift" href="#">Swift</a>
-                        </li>
-                        <li style={{display: 'inline-block'}}>
-                            <a key='android' style={[sdk, android]} title="Android" href="#">Android</a>
-                        </li>
-                        <li style={{display: 'inline-block'}}>
-                            <a key='python' style={[sdk, python]} title="Python" href="#">Python</a>
-                        </li>
-                        <li style={{display: 'inline-block'}}>
-                            <a key='java' style={[sdk, java]} title="Java" href="#">Java</a>
-                        </li>
-                        <li style={{display: 'inline-block'}}>
-                            <a key='unity' style={[sdk, unity]} title="Unity" href="#">Unity</a>
-                        </li>
-                        <li style={{display: 'inline-block'}}>
-                            <a key='net' style={[sdk, net]} title=".NET Standard" href="#">.NET Standard</a>
-                        </li>
+                        {
+                            this.state.images.map((url, i) => {
+                                return (
+                                    <li style={{display: 'inline-block'}}>
+                                        <div key={i} id={i} style={[
+                                            image,
+                                            {backgroundImage: 'url(' + url + ')'},
+                                            this.state.activeImage == i ? imageActive : null
+                                        ]} onClick={this.chooseImage}>
+                                            Image
+                                        </div>
+                                    </li>
+                                )
+                            })
+                        }
                     </ul>
                 </div>
             </div>
