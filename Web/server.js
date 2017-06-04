@@ -162,18 +162,16 @@ app.post('/api/classify', function(req, res) {
 
         var params = req.query;
 
-        params.images_file = fs.createReadStream(req.file.path);
-
-        console.log(req.file.path)
-
-        fs.readdir('.tmp/uploads/', (err, files) => {
-            files.forEach(file => {
-                console.log(file);
-            });
-        })
+        if (req.file != null) {
+            params.images_file = fs.createReadStream(req.file.path);
+        } else if (req.query.fileUrl != null) {
+            params.images_file = fs.createReadStream(path.join('.small', req.query.fileUrl));
+        }
 
         visual_recognition.classify(params, function(err, data) {
-            fs.unlinkSync(req.file.path);
+            if (req.file != null) {
+                fs.unlinkSync(req.file.path);
+            }
             if (err) {
                 res.send(err);
                 return;

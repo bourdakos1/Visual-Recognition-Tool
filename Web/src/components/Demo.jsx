@@ -1,5 +1,6 @@
 import React from 'react'
 import Radium from 'radium'
+import request from 'superagent'
 import { Link } from 'react-router-dom'
 
 import Button from './Button'
@@ -29,10 +30,49 @@ export default class Demo extends React.Component {
         this.setState({
             activeImage: i.target.id
         })
+
+        var self = this
+        var req
+
+        self.setState({ error: null })
+
+        req = request.post('/api/classify')
+        req.query({classifier_ids: ['default', 'food']})
+        req.query({threshold: 0.0})
+
+        // Just send the url of the image, we have the file on the server.
+        req.query({fileUrl: this.state.images[i.target.id]})
+
+        req.query({api_key: localStorage.getItem('api_key')})
+
+        req.end(function(err, res) {
+            var general
+            var food
+            if (res.body != null && res.body.images != null) {
+                console.log(res.body.images[0].classifiers)
+                if (res.body.images[0].classifiers != null && res.body.images[0].classifiers.length > 0 ) {
+                    res.body.images[0].classifiers.map((classifier) => {
+                        if (classifier.name == 'food') {
+                            food = classifier.classes.filter((item) => {
+                                return item.class != 'non-food'
+                            })
+                            food.sort(function(a, b) {
+                                return b.score - a.score
+                            })
+                        } else if (classifier.name == 'default') {
+                            general = classifier.classes
+                            general.sort(function(a, b) {
+                                return b.score - a.score
+                            })
+                        }
+                    })
+                }
+            }
+            self.setState({ general: general, food: food })
+        })
     }
 
     render() {
-        var testdata = [{class: "charcoal color", score: 0.834}, {class: "person", score: 0.647}, {class: "ash grey color", score: 0.589}, {class: "suit of clothes", score: 0.584}, {class: "garment", score: 0.584}, {class: "official", score: 0.573, type_hierarchy: "/person/official"}, {class: "business suit", score: 0.556, type_hierarchy: "/garment/suit of clothes/business suit"}, {class: "hotel setting", score: 0.53, type_hierarchy: "/person/hotel setting"}]
         var logo = {
             height: '60px',
             float: 'left',
@@ -215,6 +255,26 @@ export default class Demo extends React.Component {
                 </div>
 
                 <div style={results}>
+                    <div style={{overflowY: 'auto', height: '100%'}}>
+                        {this.state.food && this.state.food.length > 0?
+                            <div>{this.state.food.map((item) => {
+                                return (
+                                    <div>{item.class}</div>
+                                )
+                            })}
+                            <br/></div>:
+                            null
+                        }
+
+                        {this.state.general?
+                            this.state.general.map((item) => {
+                                return (
+                                    <div>{item.class}</div>
+                                )
+                            }):
+                            null
+                        }
+                    </div>
                 </div>
 
                 <div style={bar}>
