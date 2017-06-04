@@ -1,5 +1,5 @@
 import React from 'react'
-import Radium from 'radium'
+import Radium, { StyleRoot } from 'radium'
 import request from 'superagent'
 import { Link } from 'react-router-dom'
 
@@ -72,7 +72,8 @@ export default class Demo extends React.Component {
                 {width: 0, height: 0},
             ],
             faceBoxes: [],
-            activeImage: 0
+            activeImage: 0,
+            loading: true
         }
     }
 
@@ -135,7 +136,7 @@ export default class Demo extends React.Component {
         var self = this
         var req
 
-        self.setState({ error: null, faceBoxes: [] })
+        self.setState({ loading: true, error: null, faceBoxes: [] })
 
         req = request.post('/api/classify')
         req.query({classifier_ids: ['default', 'food']})
@@ -196,7 +197,7 @@ export default class Demo extends React.Component {
                     }
                 })
             }
-            self.setState({ general: general, food: food, colors: colors, faces: faces })
+            self.setState({ general: general, food: food, colors: colors, faces: faces, loading: false})
         })
     }
 
@@ -408,6 +409,22 @@ export default class Demo extends React.Component {
             listStyle: 'none',
         }
 
+        var rotateKeyframes = Radium.keyframes({
+            '0%': {transform: 'rotate(0deg)'},
+            '100%': {transform: 'rotate(360deg)'},
+        }, 'rotate');
+
+        var loader = {
+            margin: '40px auto',
+            border: '4px solid rgba(' + hexToR(Styles.colorPrimary) + ',' + hexToG(Styles.colorPrimary) + ',' + hexToB(Styles.colorPrimary) + ',0.25)',
+            borderRadius: '50%',
+            borderTop: '4px solid ' + Styles.colorPrimary,
+            width: '32px',
+            height: '32px',
+            animation: 'x .6s linear infinite',
+            animationName: rotateKeyframes,
+        }
+
         return (
             <div>
                 <div style={shadow}>
@@ -459,89 +476,65 @@ export default class Demo extends React.Component {
                 </div>
 
                 <div style={results}>
-                    <div style={{overflowY: 'auto', height: '100%'}}>
+                    {this.state.loading?
+                        <StyleRoot>
+                            <div style={loader}/>
+                        </StyleRoot>:
+                        <div style={{overflowY: 'auto', height: '100%'}}>
 
-                        {this.state.faces && this.state.faces.length > 0?
-                            <div>
-                                <div style={[classSection, {border: 'none'}]}>Face Detection</div>
-                                <ul style={list}>
-                                    {this.state.faces.map(function(face, index){
-                                        var color = '#64dd17'
-                                         if (face.gender.score <= .50) {
-                                            color = '#F44336'
-                                        } else if (face.gender.score <= .75) {
-                                            color = '#ffab00'
-                                        }
-
-                                        var color2 = '#64dd17'
-                                         if (face.age.score <= .50) {
-                                            color2 = '#F44336'
-                                        } else if (face.age.score <= .75) {
-                                            color2 = '#ffab00'
-                                        }
-                                        return (
-                                            <li key={index}>
-                                                <div style={resultStyle, {display: 'flex', alignItems: 'center', marginBottom: '14px'}}>
-                                                    <div style={[textStyles.base, textStyles.dark, {display: 'flex', marginRight: 'auto'}]}><b>{capitalizeFirstLetter(face.gender.gender)}</b></div>
-                                                    <div style={[progressWrapSmall, progressSmall, {display: 'flex', marginRight: '10px'}]}>
-                                                        <div style={[progressBarSmall, progressSmall, {width: ~~(face.gender.score * 100) + '%', background: color}]}></div>
-                                                    </div>
-                                                    <div style={[textStyles.base, {display: 'flex'}]}>{Number(face.gender.score).toFixed(2)}</div>
-                                                </div>
-
-                                                <div style={resultStyle, {display: 'flex', alignItems: 'center', marginBottom: '14px'}}>
-                                                    <div style={[textStyles.base, textStyles.dark, {display: 'flex', marginRight: 'auto'}]}>
-                                                        {face.age.min == null || face.age.max == null ?
-                                                            <b>age {face.age.min || face.age.max}</b> :
-                                                            <b>age {face.age.min} - {face.age.max}</b>
-                                                        }
-                                                    </div>
-                                                    <div style={[progressWrapSmall, progressSmall, {display: 'flex', marginRight: '10px'}]}>
-                                                        <div style={[progressBarSmall, progressSmall, {width: ~~(face.age.score * 100) + '%', background: color2}]}></div>
-                                                    </div>
-                                                    <div style={[textStyles.base, {display: 'flex'}]}>{Number(face.age.score).toFixed(2)}</div>
-                                                </div>
-                                            </li>
-                                        )
-                                    })}
-                                </ul>
-                            </div>:
-                            null
-                        }
-
-                        {this.state.food && this.state.food.length > 0?
-                            <div>
-                                <div style={[classSection, this.state.faces && this.state.faces.length > 0 ? {null}:{borderTop: '0px solid #d3d3d3'}]}>Food</div>
-                                <ul style={list}>
-                                    {this.state.food.map(function(result, index){
-                                        var color = '#64dd17'
-                                         if (result.score <= .50) {
-                                            color = '#F44336'
-                                        } else if (result.score <= .75) {
-                                            color = '#ffab00'
-                                        }
-                                        return (
-                                            <li key={result.class}>
-                                                <div style={resultStyle, {display: 'flex', alignItems: 'center', marginBottom: '14px'}}>
-                                                    <div style={[textStyles.base, textStyles.dark, {display: 'flex', marginRight: 'auto'}]}><b>{result.class}</b></div>
-                                                    <div style={[progressWrapSmall, progressSmall, {display: 'flex', marginRight: '10px'}]}>
-                                                        <div style={[progressBarSmall, progressSmall, {width: ~~(result.score * 100) + '%', background: color}]}></div>
-                                                    </div>
-                                                    <div style={[textStyles.base, {display: 'flex'}]}>{Number(result.score).toFixed(2)}</div>
-                                                </div>
-                                            </li>
-                                        )
-                                    })}
-                                </ul>
-                            </div>:
-                            null
-                        }
-
-                        {this.state.general && this.state.general.length > 0?
-                            <div>
-                                <div style={[classSection, this.state.food && this.state.food.length > 0 || this.state.faces && this.state.faces.length > 0 ? {null}:{borderTop: '0px solid #d3d3d3'}]}>General</div>
+                            {this.state.faces && this.state.faces.length > 0?
+                                <div>
+                                    <div style={[classSection, {border: 'none'}]}>Face Detection</div>
                                     <ul style={list}>
-                                        {this.state.general.map(function(result, index){
+                                        {this.state.faces.map(function(face, index){
+                                            var color = '#64dd17'
+                                             if (face.gender.score <= .50) {
+                                                color = '#F44336'
+                                            } else if (face.gender.score <= .75) {
+                                                color = '#ffab00'
+                                            }
+
+                                            var color2 = '#64dd17'
+                                             if (face.age.score <= .50) {
+                                                color2 = '#F44336'
+                                            } else if (face.age.score <= .75) {
+                                                color2 = '#ffab00'
+                                            }
+                                            return (
+                                                <li key={index}>
+                                                    <div style={resultStyle, {display: 'flex', alignItems: 'center', marginBottom: '14px'}}>
+                                                        <div style={[textStyles.base, textStyles.dark, {display: 'flex', marginRight: 'auto'}]}><b>{capitalizeFirstLetter(face.gender.gender)}</b></div>
+                                                        <div style={[progressWrapSmall, progressSmall, {display: 'flex', marginRight: '10px'}]}>
+                                                            <div style={[progressBarSmall, progressSmall, {width: ~~(face.gender.score * 100) + '%', background: color}]}></div>
+                                                        </div>
+                                                        <div style={[textStyles.base, {display: 'flex'}]}>{Number(face.gender.score).toFixed(2)}</div>
+                                                    </div>
+
+                                                    <div style={resultStyle, {display: 'flex', alignItems: 'center', marginBottom: '14px'}}>
+                                                        <div style={[textStyles.base, textStyles.dark, {display: 'flex', marginRight: 'auto'}]}>
+                                                            {face.age.min == null || face.age.max == null ?
+                                                                <b>age {face.age.min || face.age.max}</b> :
+                                                                <b>age {face.age.min} - {face.age.max}</b>
+                                                            }
+                                                        </div>
+                                                        <div style={[progressWrapSmall, progressSmall, {display: 'flex', marginRight: '10px'}]}>
+                                                            <div style={[progressBarSmall, progressSmall, {width: ~~(face.age.score * 100) + '%', background: color2}]}></div>
+                                                        </div>
+                                                        <div style={[textStyles.base, {display: 'flex'}]}>{Number(face.age.score).toFixed(2)}</div>
+                                                    </div>
+                                                </li>
+                                            )
+                                        })}
+                                    </ul>
+                                </div>:
+                                null
+                            }
+
+                            {this.state.food && this.state.food.length > 0?
+                                <div>
+                                    <div style={[classSection, this.state.faces && this.state.faces.length > 0 ? {null}:{borderTop: '0px solid #d3d3d3'}]}>Food</div>
+                                    <ul style={list}>
+                                        {this.state.food.map(function(result, index){
                                             var color = '#64dd17'
                                              if (result.score <= .50) {
                                                 color = '#F44336'
@@ -561,34 +554,63 @@ export default class Demo extends React.Component {
                                             )
                                         })}
                                     </ul>
-                            </div>:
-                            null
-                        }
+                                </div>:
+                                null
+                            }
 
-                        {this.state.colors && this.state.colors.length > 0?
-                            <div>
-                                <div style={classSection}>Colors</div>
-                                {this.state.colors.map((item) => {
-                                    return (
-                                        <div style={{
-                                            border: this.computeBorder(this.findColor(item.class)[0][0])? '1px solid ' + this.borderColor(this.findColor(item.class)[0][0]): '0px solid black',
-                                            color: this.computeTextColor(this.findColor(item.class)[0][0]),
-                                            font: Styles.fontDefault,
-                                            borderRadius: '5px',
-                                            margin: '14px',
-                                            marginTop: '0px',
-                                            padding: 15 * item.score + 'px',
-                                            paddingLeft: '14px',
-                                            paddingRight: '14px',
-                                            width: 'auto',
-                                            backgroundColor: '#' + this.findColor(item.class)[0][0]
-                                        }}><b>{item.class}</b></div>
-                                    )
-                                })}
-                            </div>:
-                            null
-                        }
-                    </div>
+                            {this.state.general && this.state.general.length > 0?
+                                <div>
+                                    <div style={[classSection, this.state.food && this.state.food.length > 0 || this.state.faces && this.state.faces.length > 0 ? {null}:{borderTop: '0px solid #d3d3d3'}]}>General</div>
+                                        <ul style={list}>
+                                            {this.state.general.map(function(result, index){
+                                                var color = '#64dd17'
+                                                 if (result.score <= .50) {
+                                                    color = '#F44336'
+                                                } else if (result.score <= .75) {
+                                                    color = '#ffab00'
+                                                }
+                                                return (
+                                                    <li key={result.class}>
+                                                        <div style={resultStyle, {display: 'flex', alignItems: 'center', marginBottom: '14px'}}>
+                                                            <div style={[textStyles.base, textStyles.dark, {display: 'flex', marginRight: 'auto'}]}><b>{result.class}</b></div>
+                                                            <div style={[progressWrapSmall, progressSmall, {display: 'flex', marginRight: '10px'}]}>
+                                                                <div style={[progressBarSmall, progressSmall, {width: ~~(result.score * 100) + '%', background: color}]}></div>
+                                                            </div>
+                                                            <div style={[textStyles.base, {display: 'flex'}]}>{Number(result.score).toFixed(2)}</div>
+                                                        </div>
+                                                    </li>
+                                                )
+                                            })}
+                                        </ul>
+                                </div>:
+                                null
+                            }
+
+                            {this.state.colors && this.state.colors.length > 0?
+                                <div>
+                                    <div style={classSection}>Colors</div>
+                                    {this.state.colors.map((item) => {
+                                        return (
+                                            <div style={{
+                                                border: this.computeBorder(this.findColor(item.class)[0][0])? '1px solid ' + this.borderColor(this.findColor(item.class)[0][0]): '0px solid black',
+                                                color: this.computeTextColor(this.findColor(item.class)[0][0]),
+                                                font: Styles.fontDefault,
+                                                borderRadius: '5px',
+                                                margin: '14px',
+                                                marginTop: '0px',
+                                                padding: 15 * item.score + 'px',
+                                                paddingLeft: '14px',
+                                                paddingRight: '14px',
+                                                width: 'auto',
+                                                backgroundColor: '#' + this.findColor(item.class)[0][0]
+                                            }}><b>{item.class}</b></div>
+                                        )
+                                    })}
+                                </div>:
+                                null
+                            }
+                        </div>
+                    }
                 </div>
 
                 <div style={bar}>
