@@ -27,6 +27,60 @@ export default class Demo extends React.Component {
         }
     }
 
+    lumanance = (color) => {
+        var r = this.hexToR(color)
+        var g = this.hexToG(color)
+        var b = this.hexToB(color)
+
+        var uicolors = [r / 255, g / 255, b / 255]
+
+        var c = uicolors.map((c) => {
+            if (c <= 0.03928) {
+                return c / 12.92
+            } else {
+                return Math.pow((c + 0.055) / 1.055, 2.4)
+            }
+        })
+
+        return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+    }
+
+    computeTextColor = (color) => {
+        var L = this.lumanance(color)
+
+        return (L > 0.27403703492) ? 'rgba(0, 0, 0, .75)' : '#ffffff'
+    }
+
+    computeBorder = (color) => {
+        var L = this.lumanance(color)
+
+        return (L > 1 - 0.27403703492)
+    }
+
+    borderColor = (color) => {
+        var r = this.hexToR(color) - 20
+        var g = this.hexToG(color) - 20
+        var b = this.hexToB(color) - 20
+
+        return 'rgb(' + r + ', ' + g + ', ' + b + ')'
+    }
+
+    cutHex = (h) => {
+        return (h.charAt(0) == "#") ? h.substring(1, 7) : h
+    }
+
+    hexToR = (h) => {
+        return parseInt((this.cutHex(h)).substring(0, 2), 16)
+    }
+
+    hexToG = (h) => {
+        return parseInt((this.cutHex(h)).substring(2, 4), 16)
+    }
+
+    hexToB = (h) => {
+        return parseInt((this.cutHex(h)).substring(4, 6), 16)
+    }
+
     findColor = (name) => {
         return ColorFinder.filter((color) => {
             return color[1].toLowerCase() == name.slice(0, -6).toLowerCase()
@@ -162,7 +216,7 @@ export default class Demo extends React.Component {
 
         var results = {
             borderLeft: '1px solid #d3d3d3',
-            width: '300px',
+            width: '360px',
             position: 'fixed',
             bottom: '120px',
             right: '0',
@@ -404,6 +458,9 @@ export default class Demo extends React.Component {
                                 {this.state.colors.map((item) => {
                                     return (
                                         <div style={{
+                                            border: this.computeBorder(this.findColor(item.class)[0][0])? '1px solid ' + this.borderColor(this.findColor(item.class)[0][0]): '0px solid black',
+                                            color: this.computeTextColor(this.findColor(item.class)[0][0]),
+                                            font: Styles.fontDefault,
                                             borderRadius: '5px',
                                             margin: '14px',
                                             marginTop: '0px',
@@ -412,7 +469,7 @@ export default class Demo extends React.Component {
                                             paddingRight: '14px',
                                             width: 'auto',
                                             backgroundColor: '#' + this.findColor(item.class)[0][0]
-                                        }}>{item.class}</div>
+                                        }}><b>{item.class}</b></div>
                                     )
                                 })}
                             </div>:
