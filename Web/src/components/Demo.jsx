@@ -9,6 +9,44 @@ import Styles from './Styles'
 import Strings from './Strings'
 import ColorFinder from './ColorFinder'
 
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
+function lumanance(color) {
+    var r = hexToR(color)
+    var g = hexToG(color)
+    var b = hexToB(color)
+
+    var uicolors = [r / 255, g / 255, b / 255]
+
+    var c = uicolors.map((c) => {
+        if (c <= 0.03928) {
+            return c / 12.92
+        } else {
+            return Math.pow((c + 0.055) / 1.055, 2.4)
+        }
+    })
+
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+}
+
+function cutHex(h) {
+    return (h.charAt(0) == "#") ? h.substring(1, 7) : h
+}
+
+function hexToR(h) {
+    return parseInt((cutHex(h)).substring(0, 2), 16)
+}
+
+function hexToG(h) {
+    return parseInt((cutHex(h)).substring(2, 4), 16)
+}
+
+function hexToB(h) {
+    return parseInt((cutHex(h)).substring(4, 6), 16)
+}
+
 @Radium
 export default class Demo extends React.Component {
     constructor(props) {
@@ -23,62 +61,56 @@ export default class Demo extends React.Component {
                 '/demo_photos/6.jpg',
                 '/demo_photos/7.jpg',
             ],
+            // This is pretty lazy
+            imageSizes: [
+                {width: 0, height: 0},
+                {width: 0, height:0},
+                {width: 450, height: 300},
+                {width: 0, height: 0},
+                {width: 0, height: 0},
+                {width: 490, height: 400},
+                {width: 0, height: 0},
+            ],
+            faceBoxes: [],
             activeImage: 0
         }
     }
 
-    lumanance = (color) => {
-        var r = this.hexToR(color)
-        var g = this.hexToG(color)
-        var b = this.hexToB(color)
-
-        var uicolors = [r / 255, g / 255, b / 255]
-
-        var c = uicolors.map((c) => {
-            if (c <= 0.03928) {
-                return c / 12.92
-            } else {
-                return Math.pow((c + 0.055) / 1.055, 2.4)
-            }
+    findFace = (face, size) => {
+        var faceBox = {
+            display: 'block',
+            position: 'absolute',
+            zIndex: '2',
+            left: (face.face_location.left/size.width) * 100 + '%',
+            top: (face.face_location.top/size.height) * 100 + '%',
+            width: (face.face_location.width/size.width) * 100 + '%',
+            height: (face.face_location.height/(size.height)) * 100 + '%',
+            border: '2px solid ' + Styles.colorPrimary,
+            boxShadow: '0px 0px 1px 1px rgba(255,255,255,.6)',
+        }
+        this.setState({
+            faceBoxes: [...this.state.faceBoxes, faceBox]
         })
-
-        return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
     }
 
     computeTextColor = (color) => {
-        var L = this.lumanance(color)
+        var L = lumanance(color)
 
         return (L > 0.27403703492) ? 'rgba(0, 0, 0, .75)' : '#ffffff'
     }
 
     computeBorder = (color) => {
-        var L = this.lumanance(color)
+        var L = lumanance(color)
 
         return (L > 1 - 0.27403703492)
     }
 
     borderColor = (color) => {
-        var r = this.hexToR(color) - 20
-        var g = this.hexToG(color) - 20
-        var b = this.hexToB(color) - 20
+        var r = hexToR(color) - 20
+        var g = hexToG(color) - 20
+        var b = hexToB(color) - 20
 
         return 'rgb(' + r + ', ' + g + ', ' + b + ')'
-    }
-
-    cutHex = (h) => {
-        return (h.charAt(0) == "#") ? h.substring(1, 7) : h
-    }
-
-    hexToR = (h) => {
-        return parseInt((this.cutHex(h)).substring(0, 2), 16)
-    }
-
-    hexToG = (h) => {
-        return parseInt((this.cutHex(h)).substring(2, 4), 16)
-    }
-
-    hexToB = (h) => {
-        return parseInt((this.cutHex(h)).substring(4, 6), 16)
     }
 
     findColor = (name) => {
@@ -103,7 +135,7 @@ export default class Demo extends React.Component {
         var self = this
         var req
 
-        self.setState({ error: null })
+        self.setState({ error: null, faceBoxes: [] })
 
         req = request.post('/api/classify')
         req.query({classifier_ids: ['default', 'food']})
@@ -115,40 +147,56 @@ export default class Demo extends React.Component {
         req.query({api_key: localStorage.getItem('api_key')})
 
         req.end(function(err, res) {
+            console.log(res)
             var general
             var food
             var colors
-            if (res.body != null && res.body.images != null) {
-                console.log(res.body.images[0].classifiers)
-                if (res.body.images[0].classifiers != null && res.body.images[0].classifiers.length > 0 ) {
-                    res.body.images[0].classifiers.map((classifier) => {
-                        if (classifier.name == 'food') {
-                            food = classifier.classes.filter((item) => {
-                                return item.class != 'non-food'
+            var faces
+            if (res.body != null) {
+                res.body.map((classification) => {
+                    if (classification.images != null) {
+                        if (classification.images[0].classifiers != null && classification.images[0].classifiers.length > 0 ) {
+                            classification.images[0].classifiers.map((classifier) => {
+                                if (classifier.name == 'food') {
+                                    food = classifier.classes.filter((item) => {
+                                        return item.class != 'non-food'
+                                    })
+                                    food.sort(function(a, b) {
+                                        return b.score - a.score
+                                    })
+                                } else if (classifier.name == 'default') {
+                                    general = classifier.classes.filter((item) => {
+                                        // Check if its negitive one first, otherwise if the world is 4 letters it won't show
+                                        return item.class.toLowerCase().indexOf("color") == -1 || item.class.toLowerCase().indexOf("color") != item.class.length - 5
+                                    })
+                                    colors = classifier.classes.filter((item) => {
+                                        // We could do >= 0 zero but the first word shouldn't ever be color...
+                                        return item.class.toLowerCase().indexOf("color") > 0 && item.class.toLowerCase().indexOf("color") == item.class.length - 5
+                                    })
+                                    general.sort(function(a, b) {
+                                        return b.score - a.score
+                                    })
+                                    colors.sort(function(a, b) {
+                                        return b.score - a.score
+                                    })
+                                }
                             })
-                            food.sort(function(a, b) {
-                                return b.score - a.score
+                        }
+
+                        if (classification.images[0].faces != null && classification.images[0].faces.length > 0 ) {
+                            classification.images[0].faces.map((face) => {
+                                self.findFace(face, self.state.imageSizes[self.state.activeImage])
                             })
-                        } else if (classifier.name == 'default') {
-                            general = classifier.classes.filter((item) => {
-                                // Check if its negitive one first, otherwise if the world is 4 letters it won't show
-                                return item.class.toLowerCase().indexOf("color") == -1 || item.class.toLowerCase().indexOf("color") != item.class.length - 5
-                            })
-                            colors = classifier.classes.filter((item) => {
-                                // We could do >= 0 zero but the first word shouldn't ever be color...
-                                return item.class.toLowerCase().indexOf("color") > 0 && item.class.toLowerCase().indexOf("color") == item.class.length - 5
-                            })
-                            general.sort(function(a, b) {
-                                return b.score - a.score
-                            })
-                            colors.sort(function(a, b) {
+
+                            faces = classification.images[0].faces
+                            faces.sort(function(a, b) {
                                 return b.score - a.score
                             })
                         }
-                    })
-                }
+                    }
+                })
             }
-            self.setState({ general: general, food: food, colors: colors })
+            self.setState({ general: general, food: food, colors: colors, faces: faces })
         })
     }
 
@@ -384,21 +432,86 @@ export default class Demo extends React.Component {
                 </div>
 
                 <div style={section}>
-                    <img src={this.state.images[this.state.activeImage]} style={{
+                    <div style={{
                         boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
                         borderRadius: '5px',
+                        position: 'relative',
                         display: 'inline-flex',
                         margin: 'auto',
                         maxHeight: '80%',
-                        maxWidth: '80%'
+                        maxWidth: '80%',
+                    }}>
+                    <img src={this.state.images[this.state.activeImage]} style={{
+                        borderRadius: '5px',
+                        maxHeight: '100%',
+                        maxWidth: '100%'
                     }}/>
+                    {this.state.faceBoxes?
+                        this.state.faceBoxes.map((faceBox) => {
+                            return (
+                                <div style={faceBox}/>
+                            )
+                        }):
+                        null
+                    }
+                    </div>
+
                 </div>
 
                 <div style={results}>
                     <div style={{overflowY: 'auto', height: '100%'}}>
+
+                        {this.state.faces && this.state.faces.length > 0?
+                            <div>
+                                <div style={[classSection, {border: 'none'}]}>Face Detection</div>
+                                <ul style={list}>
+                                    {this.state.faces.map(function(face, index){
+                                        var color = '#64dd17'
+                                         if (face.gender.score <= .50) {
+                                            color = '#F44336'
+                                        } else if (face.gender.score <= .75) {
+                                            color = '#ffab00'
+                                        }
+
+                                        var color2 = '#64dd17'
+                                         if (face.age.score <= .50) {
+                                            color2 = '#F44336'
+                                        } else if (face.age.score <= .75) {
+                                            color2 = '#ffab00'
+                                        }
+                                        return (
+                                            <li key={index}>
+                                                <div style={resultStyle, {display: 'flex', alignItems: 'center', marginBottom: '14px'}}>
+                                                    <div style={[textStyles.base, textStyles.dark, {display: 'flex', marginRight: 'auto'}]}><b>{capitalizeFirstLetter(face.gender.gender)}</b></div>
+                                                    <div style={[progressWrapSmall, progressSmall, {display: 'flex', marginRight: '10px'}]}>
+                                                        <div style={[progressBarSmall, progressSmall, {width: ~~(face.gender.score * 100) + '%', background: color}]}></div>
+                                                    </div>
+                                                    <div style={[textStyles.base, {display: 'flex'}]}>{Number(face.gender.score).toFixed(2)}</div>
+                                                </div>
+
+                                                <div style={resultStyle, {display: 'flex', alignItems: 'center', marginBottom: '14px'}}>
+                                                    <div style={[textStyles.base, textStyles.dark, {display: 'flex', marginRight: 'auto'}]}>
+                                                        {face.age.min == null || face.age.max == null ?
+                                                            <b>age {face.age.min || face.age.max}</b> :
+                                                            <b>age {face.age.min} - {face.age.max}</b>
+                                                        }
+                                                    </div>
+                                                    <div style={[progressWrapSmall, progressSmall, {display: 'flex', marginRight: '10px'}]}>
+                                                        <div style={[progressBarSmall, progressSmall, {width: ~~(face.age.score * 100) + '%', background: color2}]}></div>
+                                                    </div>
+                                                    <div style={[textStyles.base, {display: 'flex'}]}>{Number(face.age.score).toFixed(2)}</div>
+                                                </div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>:
+                            null
+                        }
+
                         {this.state.food && this.state.food.length > 0?
                             <div>
-                                <div style={[classSection, {border: 'none'}]}>Food</div>
+                                <div style={[classSection, this.state.faces && this.state.faces.length > 0 ? {null}:{borderTop: '0px solid #d3d3d3'}]}>Food</div>
                                 <ul style={list}>
                                     {this.state.food.map(function(result, index){
                                         var color = '#64dd17'
@@ -426,7 +539,7 @@ export default class Demo extends React.Component {
 
                         {this.state.general && this.state.general.length > 0?
                             <div>
-                                <div style={[classSection, this.state.food && this.state.food.length > 0 ? {null}:{borderTop: '0px solid #d3d3d3'}]}>General</div>
+                                <div style={[classSection, this.state.food && this.state.food.length > 0 || this.state.faces && this.state.faces.length > 0 ? {null}:{borderTop: '0px solid #d3d3d3'}]}>General</div>
                                     <ul style={list}>
                                         {this.state.general.map(function(result, index){
                                             var color = '#64dd17'

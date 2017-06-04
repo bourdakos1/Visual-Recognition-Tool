@@ -312,7 +312,7 @@ export default class ResultList extends React.Component {
                             <div style={[textStyles.topClass, {display: 'inline-block'}]}>{capitalizeFirstLetter(self.props.results[index].gender.gender)}</div>
 
                             {self.props.results[index].age.min == null || self.props.results[index].age.max == null ?
-                                <div style={[textStyles.topScore, {float: 'right', display: 'inline-block'}]}>{self.props.results[index].age.min || self.props.results[index].age.max}</div> :
+                                <div style={[textStyles.topScore, {float: 'right', display: 'inline-block'}]}>age {self.props.results[index].age.min || self.props.results[index].age.max}</div> :
                                 <div style={[textStyles.topScore, {float: 'right', display: 'inline-block'}]}>age {self.props.results[index].age.min} - {self.props.results[index].age.max}</div>
                             }
                         </div>

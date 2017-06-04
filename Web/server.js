@@ -6,7 +6,7 @@ var request = require('superagent');
 var multer = require('multer');
 var fs = require('fs');
 var crypto = require('crypto');
-var mime = require('mime-types')
+var mime = require('mime-types');
 var app = express();
 
 var PORT = process.env.VCAP_APP_PORT || 8080; //bluemix
@@ -164,21 +164,47 @@ app.post('/api/classify', function(req, res) {
 
         if (req.file != null) {
             params.images_file = fs.createReadStream(req.file.path);
+
+            visual_recognition.classify(params, function(err, data) {
+                fs.unlinkSync(req.file.path);
+                if (err) {
+                    res.send(err);
+                    return;
+                }
+                res.send(data);
+            });
         } else if (req.query.fileUrl != null) {
             params.images_file = fs.createReadStream(path.join('.small', req.query.fileUrl));
+
+            function asyncClassify(params) {
+                return new Promise(function(resolve, reject) {
+                    visual_recognition.classify(params, function(err, data) {
+                        if (err) {
+                            return reject(err);
+                        }
+                        return resolve(data);
+                    });
+                });
+            }
+
+            function asyncDetectFaces(params) {
+                return new Promise(function(resolve, reject) {
+                    visual_recognition.detectFaces(params, function(err, data) {
+                        if (err) {
+                            return reject(err);
+                        }
+                        return resolve(data);
+                    });
+                });
+            }
+
+            Promise.all([asyncClassify(params), asyncDetectFaces(params)])
+            .then(function(allData) {
+                return res.send(allData);
+            }).catch(function(err) {
+                return res.send(err);
+            });
         }
-
-        visual_recognition.classify(params, function(err, data) {
-            if (req.file != null) {
-                fs.unlinkSync(req.file.path);
-            }
-            if (err) {
-                res.send(err);
-                return;
-            }
-            res.send(data);
-        });
-
     });
 });
 
