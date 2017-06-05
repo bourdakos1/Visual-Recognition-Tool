@@ -2,11 +2,12 @@ import React from 'react'
 import Radium, {Style} from 'radium'
 
 import Styles from './Styles'
-import Strings from './Strings'
+import i18next from 'i18next'
 
 @Radium
 export default class TitleCard extends React.Component {
     render() {
+    	var bidi = this.context.bidi;
         var cardStyle = {
             width: '100%',
             marginBottom:'40px',
@@ -29,7 +30,6 @@ export default class TitleCard extends React.Component {
                 outline: 'none',
                 width: '100%',
                 padding: '10px',
-                paddingRight: '45px',
                 ':focus': {
                     borderBottom: `1px solid ${Styles.colorPrimary}`,
                 }
@@ -38,6 +38,11 @@ export default class TitleCard extends React.Component {
                 borderBottom: '2px solid #F44336',
             }
         }
+        
+        if (bidi.guiDir === "rtl")
+        	text.base.paddingLeft = '45px'
+        else
+        	text.base.paddingRight = '45px'
 
         var optional = {
             font: Styles.fontDefault,
@@ -56,16 +61,18 @@ export default class TitleCard extends React.Component {
                 {this.props.negative || this.props.fixedTitle ?
                     this.props.negative ?
                         <div style={[text.base, this.props.inputStyle]}>
-                            {Strings.negative_class}&nbsp;&nbsp;<div style={[optional, {display: 'inline-block'}]}>{Strings.optional}</div>
+                            {i18next.t('negative_class')}&nbsp;&nbsp;<div style={[optional, {display: 'inline-block'}]}>{i18next.t('optional')}</div>
                         </div> :
                         <div style={[text.base, this.props.inputStyle, {wordWrap: 'break-word'}]}>
-                            {this.props.title}
+                            {bidi.convert(this.props.title)}
                         </div>
                     :
                     <input type='text' style={[text.base, this.props.inputStyle, this.props.errors && this.props.title == '' ? text.error : null]}
                         id={this.props.inputId}
                         className={this.props.inputClassName}
                         placeholder={this.props.placeholder}
+                        dir={bidi.getDirection(this.props.title)}
+                        value = {this.props.title}
                         onChange={this.props.onChange} />
                 }
                 <div style={container}>
@@ -74,4 +81,8 @@ export default class TitleCard extends React.Component {
             </div>
         )
     }
+}
+
+TitleCard.contextTypes = {
+  bidi: React.PropTypes.object
 }

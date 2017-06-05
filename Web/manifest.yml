@@ -1,6 +1,6 @@
 ---
 applications:
-- name: vr-tool-test
+- name: vr-test-lang
   buildpack: sdk-for-nodejs
   path: .
   memory: 512M

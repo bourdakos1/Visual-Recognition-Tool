@@ -5,11 +5,11 @@ import StackGrid from 'react-stack-grid'
 import { Link, Redirect } from 'react-router-dom'
 
 import Styles from './Styles'
-import Strings from './Strings'
 import TitleCard from './TitleCard'
 import Button from './Button'
 import Class from './Class'
 import ProgressModal from './ProgressModal'
+import i18next from 'i18next'
 
 @Radium
 export default class WorkSpace extends React.Component {
@@ -35,9 +35,10 @@ export default class WorkSpace extends React.Component {
     }
 
     onTextChange = (text) => {
+    	var bidi = this.context.bidi;
         this.setState({
             classifier: {
-                name: text.target.value
+                name: bidi.convert(text.target.value,{formElement: true})
             }
         })
     }
@@ -50,7 +51,7 @@ export default class WorkSpace extends React.Component {
 
     setClassName = (text, key) => {
         var newClasses = $.extend([], this.state.classes)
-        newClasses[key].name = text.target.value
+        newClasses[key].name = this.context.bidi.convert(text.target.value,{formElement: true});
         this.setState({ classes: newClasses })
     }
 
@@ -69,12 +70,12 @@ export default class WorkSpace extends React.Component {
             var errors = this.state.errors
             if (this.state.classifier.name == null || this.state.classifier.name == '') {
                 errors = true
-                titleError = Strings.classifier_name_required_error
+                titleError = i18next.t('classifier_name_required_error')
                 this.setState({errors: errors, titleError: titleError})
             } else if (/[*\\|{}$/'`"\-]/.test(this.state.classifier.name)) {
                 errors = true
                 var invalidChars = this.state.classifier.name.match(/[*\\|{}$/'`"\-]/g)
-                titleError = Strings.invalid_chars_error + invalidChars.join(' ')
+                titleError = i18next.t('invalid_chars_error') + invalidChars.join(' ')
                 this.setState({errors: errors, titleError: titleError})
             }
 
@@ -119,7 +120,7 @@ export default class WorkSpace extends React.Component {
                     if (/[*\\|{}$/'`"\-]/.test(c.name)) {
                         errors = true
                         var invalidChars = c.name.match(/[*\\|{}$/'`"\-]/g)
-                        error = Strings.invalid_chars_error + invalidChars.join(' ')
+                        error = i18next.t('invalid_chars_error') + invalidChars.join(' ')
                         self.setState({errors: errors, error: error})
                     }
                 }
@@ -127,7 +128,7 @@ export default class WorkSpace extends React.Component {
             console.log(Object.keys(dupes).length + ' / ' + classCount)
             if (Object.keys(dupes).length < classCount) {
                 errors = true
-                error = Strings.conflicting_class_name_error
+                error = i18next.t('conflicting_class_name_error')
                 self.setState({errors: errors, error: error})
                 return
             }
@@ -137,7 +138,7 @@ export default class WorkSpace extends React.Component {
 
             if (totalbytes / (1000 * 1000) > 256) {
                 errors = true
-                error = Strings.mb250_error
+                error = i18next.t('mb250_error')
                 self.setState({errors: errors, error: error})
                 return
             }
@@ -148,7 +149,7 @@ export default class WorkSpace extends React.Component {
                 // THIS IS FOR UPDATE
                 if (validClasses < 1) {
                     errors = true
-                    error = Strings.modify_class
+                    error = i18next.t('modify_class')
                     this.setState({errors: errors})
                     return
                 }
@@ -157,11 +158,11 @@ export default class WorkSpace extends React.Component {
                 if (validClasses < 2) {
                     errors = true
                     if (hasNeg) {
-                        error = Strings.add_class_error
+                        error = i18next.t('add_class_error')
                     } else if (validClasses == 1) {
-                        error = Strings.add_neg_or_class_error
+                        error = i18next.t('add_neg_or_class_error')
                     } else {
-                        error = Strings.no_classes_error
+                        error = i18next.t('no_classes_error')
                     }
                     this.setState({errors: errors, error: error})
                     return
@@ -194,9 +195,11 @@ export default class WorkSpace extends React.Component {
             }
         })
 
-        req.query({ api_key: localStorage.getItem('api_key') })
+        req.query({username: localStorage.getItem('username')})
+        req.query({password: localStorage.getItem('password')})
 
         req.query({ name: this.state.classifier.name })
+        req.query({lang: i18next.languages[0]})
 
         req.on('progress', function(e) {
             if (e.direction == 'upload') {
@@ -208,9 +211,9 @@ export default class WorkSpace extends React.Component {
         req.then(function(res, err) {
             console.log(res)
             if (res.body == null) {
-                alert(Strings.generic_error);
+                alert(i18next.t('generic_error'))
             } else if (res.body.error != null) {
-                alert(res.body.error);
+                alert(res.body.error)
             }
             onFinished()
             self.setState({upload: false, finished: true})
@@ -233,6 +236,7 @@ export default class WorkSpace extends React.Component {
     }
 
     render() {
+    	var isRtl = this.context.bidi.guiDir === "rtl"
         var textStyles = {
             base: {
                 color: Styles.colorTextDark,
@@ -251,7 +255,6 @@ export default class WorkSpace extends React.Component {
                 fontWeight: '700',
                 fontStyle: 'normal',
                 fontSize: '32px',
-                marginLeft: '-2.5px',
                 lineHeight: '1.04',
                 letterSpacing: '-.028em',
             },
@@ -262,7 +265,6 @@ export default class WorkSpace extends React.Component {
                 fontWeight: '700',
                 fontStyle: 'normal',
                 fontSize: '24px',
-                marginLeft: '-1.5px',
                 lineHeight: '1.22',
                 letterSpacing: '-.018em',
             },
@@ -273,11 +275,9 @@ export default class WorkSpace extends React.Component {
                 fontWeight: '700',
                 fontStyle: 'normal',
                 fontSize: '24px',
-                marginLeft: '-1.5px',
                 lineHeight: '1.22',
                 letterSpacing: '-.018em',
                 padding: '12px',
-                paddingLeft: '20px',
             }
         }
 
@@ -298,7 +298,6 @@ export default class WorkSpace extends React.Component {
 
         var error = {
             paddingTop: '5px',
-            paddingLeft: '10px',
             textDecoration:'none',
             display:'block',
             whiteSpace:'nowrap',
@@ -308,6 +307,21 @@ export default class WorkSpace extends React.Component {
             font: Styles.fontDefault,
         }
 
+		if (isRtl) {
+			textStyles.header.marginRight = '-2.5px'
+			textStyles.header2.marginRight = '-1.5px'
+			textStyles.title.marginRight = '-1.5px'
+			textStyles.title.paddingRight = '20px'
+			error.paddingRight = '10px'
+		}
+		else {
+			textStyles.header.marginLeft = '-2.5px'
+			textStyles.header2.marginLeft = '-1.5px'
+			textStyles.title.marginLeft = '-1.5px'
+			textStyles.title.paddingLeft = '20px'
+			error.paddingLeft = '10px'
+        }
+        
         const RGB=Styles.colorPrimary
         const A='0.1'
         const RGBA='rgba('+parseInt(RGB.substring(1,3),16)+','+parseInt(RGB.substring(3,5),16)+','+parseInt(RGB.substring(5,7),16)+','+A+')'
@@ -335,7 +349,7 @@ export default class WorkSpace extends React.Component {
                     inputId='input--create-classifier--classifier-name'
                     maxlength='30'
                     errors={self.state.errors}
-                    placeholder={Strings.classifier_name}
+                    placeholder={i18next.t('classifier_name')}
                     title={self.state.classifier.name}
                     fixedTitle={self.state.classifier.fixed}
                     onChange={this.onTextChange}
@@ -350,10 +364,10 @@ export default class WorkSpace extends React.Component {
                                 border: 'none',
                             }}>
                             <div style={[textStyles.header2, {marginBottom: '5px'}]}>
-                                {Strings.classes}
+                                {i18next.t('classes')}
                             </div>
                             <div style={[textStyles.base]}>
-                                {Strings.classifier_requirements}
+                                {i18next.t('classifier_requirements')}
                             </div>
                         </div> :
                         null
@@ -389,17 +403,17 @@ export default class WorkSpace extends React.Component {
                             )
                         })}
                     </StackGrid>
-                    <div style={{textAlign: 'right'}}>
+                    <div style={{textAlign: isRtl? 'left' : 'right'}}>
                         <Button
                             id='button--create-classifier--add-class'
                             onClick={this.addClass}
-                            text={Strings.add_class}
-                            style={{float: 'left'}}/>
+                            text={i18next.t('add_class')}
+                            style={{float: isRtl? 'right' : 'left'}}/>
                         <Link to='/'>
                             <Button
                                 id='button--create-classifier--cancel'
-                                text={Strings.cancel}
-                                style={{marginRight: '20px'}}/>
+                                text={i18next.t('cancel')}
+                                style={ isRtl? {marginLeft: '20px'} : {marginRight: '20px'}}/>
                         </Link>
                         <Button
                             id='button--create-classifier--create'
@@ -416,4 +430,7 @@ export default class WorkSpace extends React.Component {
             </div>
         )
     }
+}
+WorkSpace.contextTypes = {
+  bidi: React.PropTypes.object
 }

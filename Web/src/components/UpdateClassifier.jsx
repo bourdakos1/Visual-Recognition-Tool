@@ -4,8 +4,8 @@ import nocache from 'superagent-no-cache'
 import Radium from 'radium'
 
 import Styles from './Styles'
-import Strings from './Strings'
 import WorkSpace from './WorkSpace'
+import i18next from 'i18next'
 
 var myNum = 0
 
@@ -29,7 +29,9 @@ export default class UpdateClassifier extends React.Component {
         var req = request.get('/api/classifiers/' + this.props.match.params.classifierID)
         req.use(nocache)
 
-        req.query({ api_key: localStorage.getItem('api_key') })
+        req.query({username: localStorage.getItem('username')})
+        req.query({password: localStorage.getItem('password')})
+        req.query({lang: i18next.languages[0]})
 
         req.end(function(err, res) {
             if (err != null) {
@@ -65,10 +67,10 @@ export default class UpdateClassifier extends React.Component {
         return (
             <WorkSpace
                 match = {this.props.match}
-                progressModalText={Strings.updating_classifier}
-                titleText={Strings.update_classifier}
-                subTitleText={Strings.update_classifier_description}
-                submitText={Strings.update}
+                progressModalText={i18next.t('updating_classifier')}
+                titleText={i18next.t('update_classifier')}
+                subTitleText={i18next.t('update_classifier_description')}
+                submitText={i18next.t('update')}
                 classesInfo={false}
                 classifier={this.state.classifier}
                 classes={this.state.classes} />

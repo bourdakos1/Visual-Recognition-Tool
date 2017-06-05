@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import Button from './Button'
 import QRModal from './QRModal'
 import Styles from './Styles'
-import Strings from './Strings'
+import i18next from 'i18next'
 
 @Radium
 export default class TitleBar extends React.Component {
@@ -30,9 +30,10 @@ export default class TitleBar extends React.Component {
     }
 
     render() {
+    	var isRtl = this.context.bidi.guiDir === "rtl"
         var logo = {
             height: '60px',
-            float: 'left',
+            float: isRtl? 'right' : 'left',
             cursor: 'pointer',
         }
 
@@ -40,7 +41,6 @@ export default class TitleBar extends React.Component {
             font: Styles.fontTitle,
             color: Styles.colorTextDark,
             flex: 'none',
-            marginRight: 'auto',
             cursor: 'pointer',
             textDecoration: 'none',
         }
@@ -49,8 +49,16 @@ export default class TitleBar extends React.Component {
             font: Styles.fontDefault,
             color: Styles.colorTextLight,
             minWidth: '0px',
-            marginLeft: '20px',
             display: 'flex',
+        }
+
+        if (isRtl) {
+        	title.marginLeft = 'auto'
+        	right.marginRight = '20px'
+        }
+        else {
+        	title.marginRight = 'auto'
+        	right.marginLeft = '20px'
         }
 
         var shadow = {
@@ -85,17 +93,18 @@ export default class TitleBar extends React.Component {
             flex: 'none'
         }
 
-        var key = localStorage.getItem('api_key')
+        var username = localStorage.getItem('username')
+        var password = localStorage.getItem('password')
 
         return (
             <div style={shadow}>
                 <div style={contentWrapper}>
                     <Link to='/' style={logo}><img src={'/watson_color.png'} style={logo}></img></Link>
-                    <Link to='/' style={title}>{Strings.visual_recognition_tool}</Link>
+                    <Link to='/' style={title}>{i18next.t('visual_recognition_tool')}</Link>
 
                     <div style={right}>
                         <div style={user}>
-                            <span style={{cursor: 'pointer'}} onClick={this.showQR}>{Strings.key} </span>{key.slice(0, 1)}<span id='key' style={{fontSize: '0em'}}>{key.slice(1, -3)}</span>{key.slice(-3)} &nbsp;&nbsp;
+                            <span style={{cursor: 'pointer'}} >{i18next.t('key')} </span>{username} &nbsp;&nbsp;
                         </div>
                     </div>
 
@@ -103,7 +112,7 @@ export default class TitleBar extends React.Component {
                         style={button}
                         id={'button--base--update-api-key'}
                         onClick={this.props.showModal}
-                        text={Strings.update_key_button}/>
+                        text={i18next.t('update_key_button')}/>
                 </div>
                 <QRModal
                     visible={this.state.showQR}
@@ -111,4 +120,8 @@ export default class TitleBar extends React.Component {
             </div>
         )
     }
+}
+
+TitleBar.contextTypes = {
+  bidi: React.PropTypes.object
 }

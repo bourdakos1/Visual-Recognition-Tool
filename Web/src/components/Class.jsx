@@ -3,9 +3,9 @@ import Radium from 'radium'
 import { Tooltip } from 'reactstrap'
 
 import Styles from './Styles'
-import Strings from './Strings'
 import DropButton from './DropButton'
 import TitleCard from './TitleCard'
+import i18next from 'i18next'
 
 @Radium
 export default class Class extends React.Component {
@@ -34,11 +34,11 @@ export default class Class extends React.Component {
         this.props.setClassFile(file, this.props.id)
         if (file == null || file.length <= 0) {
             if (rejects != null && rejects[0].size > 100 * 1024 * 1024 && (rejects[0].type == 'application/zip')) {
-                this.setState({ error: Strings.mb100_error }, this.stateChanged)
+                this.setState({ error: i18next.t('mb100_error') }, this.stateChanged)
                 return
             }
             if (rejects != null) {
-                this.setState({ error: Strings.invalid_file_error }, this.stateChanged)
+                this.setState({ error: i18next.t('invalid_file_error') }, this.stateChanged)
                 return
             }
         }
@@ -53,6 +53,7 @@ export default class Class extends React.Component {
     }
 
     render() {
+    	var isRtl = this.context.bidi.guiDir === "rtl"
         var textStyles = {
             header: {
                 color: Styles.colorTextDark,
@@ -110,11 +111,11 @@ export default class Class extends React.Component {
                         negative={this.props.negative}
                         fixedTitle={this.props.fixedTitle}
                         inputStyle={textStyles.header}
-                        placeholder={Strings.class_name}
+                        placeholder={i18next.t('class_name')}
                         onChange={this.onTextChange}>
                         {this.props.negative || this.props.fixedTitle ? null :
                             <div style={{position: 'relative', width: '100%', minWidth: '100%'}}>
-                                <div style={{position: 'absolute', top: '-43px', right: '0'}}>
+                                <div style={isRtl? {position: 'absolute', top: '-43px', left: '0'} : {position: 'absolute', top: '-43px', right: '0'}}>
                                     <button className="delete-class" key={this.props.id} style={deleteStyle}
                                         onClick={this.delete}>
                                     </button>
@@ -129,17 +130,17 @@ export default class Class extends React.Component {
 
                             style={extraPadding}
                             errors={this.props.negative ? false : this.props.errors}
-                            text={Strings.drag_zip}
-                            subtext={Strings.choose_file}
+                            text={i18next.t('drag_zip')}
+                            subtext={i18next.t('choose_file')}
                             onDrop={this.onDrop}
                             clear={true}/>
                         {this.props.negative ?
                             <Tooltip placement='top' isOpen={this.state.tooltipOpen} delay={{show: 200, hide: 100}} autohide={false} target='neg' toggle={this.toggle}>
                                 <div style={{textAlign: 'left'}}>
-                                    {Strings.negatives_tooltip}
+                                    {i18next.t('negatives_tooltip')}
                                 </div>
-                                <a style={{color: 'white'}} href='https://www.ibm.com/watson/developercloud/doc/visual-recognition/customizing.html#structure' target='_blank'>
-                                    <u>{Strings.documention}</u>
+                                <a style={{color: 'white'}} href='https://console.ng.bluemix.net/docs/services/visual-recognition-dedicated/customizing.html#structure' target='_blank'>
+                                    <u>{i18next.t('documention')}</u>
                                 </a>
                             </Tooltip> :
                         null}
@@ -148,4 +149,8 @@ export default class Class extends React.Component {
             </div>
         )
     }
+}
+
+Class.contextTypes = {
+  bidi: React.PropTypes.object
 }

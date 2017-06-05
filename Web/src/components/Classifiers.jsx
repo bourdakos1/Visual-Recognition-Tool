@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 
 import ClassifierDetail from './ClassifierDetail'
 import Button from './Button'
-import Strings from './Strings'
+import i18next from 'i18next'
 
 @Radium
 export default class Classifiers extends React.Component {
@@ -38,15 +38,17 @@ export default class Classifiers extends React.Component {
         var req = request.get('/api/classifiers/' + classifier_id)
         req.use(nocache)
 
-        req.query({ api_key: localStorage.getItem('api_key') })
+        req.query({username: localStorage.getItem('username')})
+        req.query({password: localStorage.getItem('password')})
+        req.query({lang: i18next.languages[0]})
 
         req.end(function(err, res) {
             if (res.body == null) {
-                alert(Strings.generic_error)
+                alert(i18next.t('generic_error'))
             } else if (res.body.error != null) {
                 alert(res.body.error)
             } else {
-                if (res.body.status == Strings.status_ready) {
+                if (res.body.status == 'ready') {
                     var newClassifiers = $.extend([], self.state.classifiers)
                     for (var i in newClassifiers) {
                         if (newClassifiers[i].classifier_id == classifier_id) {
@@ -63,38 +65,38 @@ export default class Classifiers extends React.Component {
 
     loadClassifiers = () => {
         var self = this
-        console.log(localStorage.getItem('api_key'))
-
         var req = request.get('/api/classifiers')
         req.use(nocache)
 
-        req.query({ api_key: localStorage.getItem('api_key') })
+        req.query({username: localStorage.getItem('username')})
+        req.query({password: localStorage.getItem('password')})
+        req.query({lang: i18next.languages[0]})
         req.query({ verbose: true })
 
         req.end((err, res) => {
-            console.log('loaded')
+            console.log(res)
             var training = []
             var classifiers = []
 
             if (res.body == null) {
-                alert(Strings.generic_error)
+                alert(i18next.t('generic_error'))
             } else if (res.body.error != null) {
                 alert(res.body.error)
             } else {
                 classifiers = res.body.classifiers
-                classifiers.sort((a, b) => {
-                    return new Date(b.created) - new Date(a.created)
-                })
+                if (classifiers != null) {
+                    classifiers.sort((a, b) => {
+                        return new Date(b.created) - new Date(a.created)
+                    })
+                }
 
                 classifiers.push(
-                    {name: Strings.classifier_general, status: Strings.status_ready},
-                    {name: Strings.classifier_food, status: Strings.status_ready},
-                    {name: Strings.classifier_face, status: Strings.status_ready}
+                    {name: 'default', status: 'ready'}
                 )
             }
 
             for (var i in classifiers) {
-                if (classifiers[i].status == Strings.status_training) {
+                if (classifiers[i].status == 'training') {
                     training.push(classifiers[i].classifier_id)
                 }
             }
@@ -109,14 +111,17 @@ export default class Classifiers extends React.Component {
 
     componentDidMount() {
         this.setState({
-            tmpKey: localStorage.getItem('api_key')
+            tmpUsr: localStorage.getItem('username'),
+            tmpPswrd: localStorage.getItem('password')
         }, this.loadClassifiers())
     }
 
     componentWillReceiveProps(newProps) {
-        if (this.state.tmpKey != localStorage.getItem('api_key')) {
+        if ((this.state.tmpUsr != localStorage.getItem('username')) &&
+            (this.state.tmpPswrd != localStorage.getItem('password'))) {
             this.setState({
-                tmpKey: localStorage.getItem('api_key')
+                tmpUsr: localStorage.getItem('username'),
+                tmpPswrd: localStorage.getItem('password')
             }, this.loadClassifiers())
         }
     }
@@ -137,7 +142,7 @@ export default class Classifiers extends React.Component {
                     <Button
                         style={{margin: '21px 0px'}}
                         id="button--classifiers--create"
-                        text={Strings.create_classifier}
+                        text={i18next.t('create_classifier')}
                         kind={"bold"}
                         icon={"/btn_create.png"}/>
                 </Link>

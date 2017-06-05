@@ -4,7 +4,7 @@ import request from 'superagent'
 import nocache from 'superagent-no-cache'
 
 import Styles from './Styles'
-import Strings from './Strings'
+import i18next from 'i18next'
 
 @Radium
 export default class LandingPage extends React.Component {
@@ -19,22 +19,31 @@ export default class LandingPage extends React.Component {
     setApiKey = (e) => {
         e.preventDefault()
         var self = this
-        var apiKey = this.apiKey.value
-
         var req = request.get('/api/validate')
+
+        //var apiKey = this.apiKey.value
+        var username = self.state.key.split(":")[0]
+        var password = self.state.key.split(":")[1]
+
         req.use(nocache)
 
         req.query({
-            api_key: apiKey
+            //var apiKey = this.apiKey.value
+            username: username,
+            password: password
          })
 
         req.end((err, res) => {
             if (res.body.valid) {
-                self.props.setCredentials(apiKey)
+                self.props.setCredentials(username, password)
             } else {
-                self.setState({error: Strings.invalid_key})
+                self.setState({error: i18next.t('invalid_key')})
             }
         })
+    }
+
+    onTextChange = (e) => {
+        this.setState({key: e.target.value})
     }
 
     render() {
@@ -242,7 +251,7 @@ export default class LandingPage extends React.Component {
         return(
             <div id='landing-page' style={background}>
                 <img src='/watson_color_landing.png' style={logo}></img>
-                <div style={title}>{Strings.visual_recognition_tool}</div>
+                <div style={title}>{i18next.t('visual_recognition_tool')}</div>
 
                 <div style={this.state.focus ? skrim : skrimNone}/>
 
@@ -281,7 +290,7 @@ export default class LandingPage extends React.Component {
 
                 {this.state.error && this.state.focus ?
                     <div id='error--landing-page--api-key' style={error}>
-                        {Strings.invalid_key}
+                        {i18next.t('invalid_key')}
                     </div> :
                     null
                 }
@@ -290,11 +299,11 @@ export default class LandingPage extends React.Component {
                     <input type='text'
                         id='input--landing-page--api-key'
                         className='myInputs'
-                        ref={(apiKey) => { this.apiKey = apiKey }}
                         onFocus={this.onFocus}
                         onBlur={this.onBlur}
                         style={buttonStyle.base}
-                        placeholder={Strings.api_key}/>
+                        placeholder={'username:password'}
+                        onChange={this.onTextChange}/>
                     <button
                         style={this.state.focus ? pics : picsNone}
                         id='button--landing-page--api-key'
@@ -304,10 +313,10 @@ export default class LandingPage extends React.Component {
                 <div style={getKey}>
                     <a
                         id='link--landing-page--api-key'
-                        href='https://console.ng.bluemix.net/catalog/services/visual-recognition/'
+                        href='https://console.dys0.bluemix.net/catalog/services/visual-recognition-dedicatedsoftbankdev/'
                         target='_blank'
                         style={link}>
-                        {Strings.sign_up}
+                        {i18next.t('sign_up')}
                     </a>
                 </div>
             </div>

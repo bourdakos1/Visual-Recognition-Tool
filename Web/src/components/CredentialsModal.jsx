@@ -6,7 +6,7 @@ import { Modal, ModalBody, ModalFooter } from 'reactstrap'
 
 import Button from './Button'
 import Styles from './Styles'
-import Strings from './Strings'
+import i18next from 'i18next'
 
 @Radium
 export default class CredentialsModal extends React.Component {
@@ -26,21 +26,23 @@ export default class CredentialsModal extends React.Component {
     saveApiKey = (e) => {
         e.preventDefault()
         var self = this
-        var apiKey = this.apiKey.value
+        var username = this.username.value
+        var password = this.password.value
 
         var req = request.get('/api/validate')
         req.use(nocache)
 
         req.query({
-            api_key: apiKey
+            username: username,
+            password: password
          })
 
         req.end((err, res) => {
             if (res.body.valid) {
                 self.toggle()
-                self.props.setCredentials(apiKey)
+                self.props.setCredentials(username, password)
             } else {
-                self.setState({error: Strings.invalid_key})
+                self.setState({error: i18next.t('invalid_key')})
             }
         })
     }
@@ -48,7 +50,7 @@ export default class CredentialsModal extends React.Component {
     logout = (e) => {
         e.preventDefault()
         this.toggle()
-        this.props.setCredentials('')
+        this.props.setCredentials('', '')
     }
 
     toggle = () => {
@@ -95,22 +97,27 @@ export default class CredentialsModal extends React.Component {
         return (
             <Modal id={'credentials-modal'} isOpen={this.state.modal} toggle={this.toggle}>
                 <div className={'modal-header'}>
-                    <div style={title}>{Strings.update_key}</div>
+                    <div style={title}>{i18next.t('update_key')}</div>
                     <button onClick={this.toggle} style={deleteStyle} />
                 </div>
                 <ModalBody>
-                    <p>{Strings.key_modal_description}</p>
-                    <p><a href={'https://console.ng.bluemix.net/catalog/services/visual-recognition/'} target={'_blank'}>{Strings.sign_up}</a></p>
+                    <p>{i18next.t('key_modal_description')}</p>
+                    <p><a href={'https://console.dys0.bluemix.net/catalog/services/visual-recognition-dedicatedsoftbankdev/'} target={'_blank'}>{i18next.t('sign_up')}</a></p>
                     {this.state.error ? <p id={'error--api-key-modal--api-key'} style={error}>{this.state.error}</p> : null}
                     <form id={'api-key-form'} role={'form'} action={'#'}>
                         <div className={this.state.error ? 'form-group has-danger' : 'form-group'}>
-                            <input
-                                style={{marginBottom: '12px'}}
-                                id={'input--api-key-modal--api-key'}
-                                ref={(apiKey) => { this.apiKey = apiKey }}
-                                className={'form-control'}
-                                type={'text'}
-                                placeholder={''}/>
+                              <input
+                                  style={{marginBottom: '12px'}}
+                                  id={'input--api-key-modal--api-key'}
+                                  ref={(username) => { this.username = username }}
+                                  className={'form-control'}
+                                  type={'text'}
+                                  placeholder={'username'}/>
+                              <input
+                                  ref={(password) => { this.password = password }}
+                                  className={'form-control'}
+                                  type={'text'}
+                                  placeholder={'password'}/>
                         </div>
                     </form>
                 </ModalBody>
@@ -118,13 +125,13 @@ export default class CredentialsModal extends React.Component {
                     <Button
                         id={'button--api-key-modal--logout'}
                         onClick={this.logout}
-                        text={Strings.log_out}
+                        text={i18next.t('log_out')}
                         style={{marginRight: '20px'}}/>
                     <Button
                         id={'button--api-key-modal--submit'}
                         onClick={this.saveApiKey}
                         kind={'bold'}
-                        text={Strings.save_key}/>
+                        text={i18next.t('save_key')}/>
                 </ModalFooter>
             </Modal>
         )

@@ -3,8 +3,7 @@ import Dropzone from 'react-dropzone'
 import Radium, { StyleRoot } from 'radium'
 
 import Styles from './Styles'
-import Strings from './Strings'
-
+import i18next from 'i18next'
 
 @Radium
 export default class DropButton extends React.Component {
@@ -191,6 +190,8 @@ export default class DropButton extends React.Component {
     }
 
     render() {
+        var bidi = this.context.bidi
+    	var isRtl = bidi.guiDir === "rtl"
         var textStyles = {
             base: {
                 color: Styles.colorTextLight,
@@ -311,9 +312,14 @@ export default class DropButton extends React.Component {
                 width: '45px',
                 height: '45px',
                 border: '1px solid #dedede',
-                marginRight: '10px',
             }
         }
+        
+        if (isRtl)
+        	containerStyles.image.marginLeft = '10px'
+        else
+        	containerStyles.image.marginRight = '10px'
+        
         var cover = {
             position: 'absolute',
             top: '0',
@@ -379,7 +385,7 @@ export default class DropButton extends React.Component {
                             {this.props.text}
                         </div>
                         <div style={[textStyles.base, textStyles.subheader]}>
-                            Or <span style={[textStyles.base, textStyles.link]}>{this.props.subtext}</span>
+                            {i18next.t('or')} <span style={[textStyles.base, textStyles.link]}>{this.props.subtext}</span>
                         </div>
                     </div>
                     :
@@ -425,7 +431,7 @@ export default class DropButton extends React.Component {
                                 {this.state.files.map((file) => <div key={file.name} style={[containerStyles.base, containerStyles.image]}><img style={imgStyle} src={file.preview}/></div> )}
                                 {this.props.upload ?
                                     <div id="loading-ellipsis" style={[textStyles.base, textStyles.uploading]}>
-                                        <div style={textStyles.clip}>{Strings.uploading + this.state.files[this.state.files.length - 1].name}</div>
+                                        <div style={textStyles.clip}>{i18next.t('uploading') + bidi.convert(this.state.files[this.state.files.length - 1].name, {sttType: bidi.FILE_NAME, isolate: true})}</div>
                                         <StyleRoot>
                                             <span style={dot}>.</span>
                                             <span style={[dot, two]}>.</span>
@@ -433,7 +439,7 @@ export default class DropButton extends React.Component {
                                         </StyleRoot>
                                     </div> :
                                     <div id="loading-ellipsis" style={[textStyles.base, textStyles.uploading]}>
-                                        <div style={textStyles.ellipsis}>{this.state.files[this.state.files.length - 1].name}</div>
+                                        <div style={textStyles.ellipsis}>{bidi.convert(this.state.files[this.state.files.length - 1].name, {sttType: bidi.FILE_NAME})}</div>
                                     </div>
                                 }
                             </div> :
@@ -442,7 +448,7 @@ export default class DropButton extends React.Component {
                                     {this.props.text}
                                 </div>
                                 <div style={[textStyles.base, textStyles.subheader]}>
-                                    {Strings.or} <span style={[textStyles.base, textStyles.link]}>{this.props.subtext}</span>
+                                    {i18next.t('or')} <span style={[textStyles.base, textStyles.link]}>{this.props.subtext}</span>
                                 </div>
                             </div>
                         }
@@ -483,4 +489,8 @@ export default class DropButton extends React.Component {
             </div>
         )
     }
+}
+
+DropButton.contextTypes = {
+  bidi: React.PropTypes.object
 }

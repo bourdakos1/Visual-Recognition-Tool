@@ -3,7 +3,7 @@ import Radium from 'radium'
 import { Link } from 'react-router-dom'
 
 import Styles from './Styles'
-import Strings from './Strings'
+import i18next from 'i18next'
 
 @Radium
 export default class DropDown extends React.Component {
@@ -16,6 +16,7 @@ export default class DropDown extends React.Component {
     }
 
     render() {
+       	var isRtl = this.context.bidi.guiDir === "rtl"
         var dropbtn = {
             backgroundImage: `url(${'/btn_dropdown.png'})`,
             backgroundColor: 'transparent',
@@ -25,7 +26,6 @@ export default class DropDown extends React.Component {
             width: '25px',
             height: '25px',
             padding: '0px',
-            marginRight: '-5px',
             border: 'none',
             cursor: 'pointer',
             ':hover': {
@@ -43,13 +43,21 @@ export default class DropDown extends React.Component {
             display: 'none',
             position: 'absolute',
             top: '-5px',
-            right: '-5px',
             backgroundColor: 'white',
             minWidth: '160px',
             boxShadow: '0 0 0 1pt rgba(0,0,0,0.08), 0px 8px 16px 0px rgba(0,0,0,0.2)',
             zIndex: '1',
         }
 
+		if (isRtl) {
+			dropbtn.marginLeft = '-5px'
+			dropdownContent.left = '-5px'
+		}
+		else {
+			dropbtn.marginRight = '-5px'
+			dropdownContent.right = '-5px'
+		}
+			
         var aStyle = {
             font: Styles.fontDefault,
             color: Styles.colorTextDark,
@@ -85,16 +93,20 @@ export default class DropDown extends React.Component {
         }
 
         return (
-            <div style={[dropdown, {float: 'right'}]}
+            <div style={[dropdown, {float: isRtl? 'left' : 'right'}]}
                 onClick={this.onClick}
                 onMouseLeave={this.toggleHover}>
                 <button className={this.props.className} style={dropbtn}></button>
                 <div style={dropdownContent}>
-                    <a className='link--classifiers--api-reference' style={[aStyle, aa]} key='0' href='https://www.ibm.com/watson/developercloud/visual-recognition/api/v3/?node#classify_an_image' target='_blank'>{Strings.api_reference}</a>
-                    <Link style={{textDecoration: 'none'}} to={'/update_classifier/' + this.props.classifierID}><span className='link--classifiers--update' style={[aStyle, ab]} key='1' href="#">{Strings.update}</span></Link>
-                    <a className='link--classifiers--delete' style={[aStyle, ac, {color: '#f44336'}]} key='2' href="#" onClick={this.props.delete}>{Strings.delete}</a>
+                    <a className='link--classifiers--api-reference' style={[aStyle, aa]} key='0' href='https://console.ng.bluemix.net/apidocs/762-visual-recognition-dedicated?&language=node#classify-images' target='_blank'>{i18next.t('api_reference')}</a>
+                    <Link style={{textDecoration: 'none'}} to={'/update_classifier/' + this.props.classifierID}><span className='link--classifiers--update' style={[aStyle, ab]} key='1' href="#">{i18next.t('update')}</span></Link>
+                    <a className='link--classifiers--delete' style={[aStyle, ac, {color: '#f44336'}]} key='2' href="#" onClick={this.props.delete}>{i18next.t('delete')}</a>
                 </div>
             </div>
         )
     }
+}
+
+DropDown.contextTypes = {
+  bidi: React.PropTypes.object
 }
