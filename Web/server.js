@@ -174,7 +174,8 @@ app.post('/api/classify', function(req, res) {
                 res.send(data);
             });
         } else if (req.query.fileUrl != null) {
-            params.images_file = fs.createReadStream(path.join('.small', req.query.fileUrl));
+            var fileUrl = req.query.fileUrl
+            params.images_file = fs.createReadStream(path.join('.small', fileUrl));
 
             function asyncClassify(params) {
                 return new Promise(function(resolve, reject) {
@@ -200,6 +201,7 @@ app.post('/api/classify', function(req, res) {
 
             Promise.all([asyncClassify(params), asyncDetectFaces(params)])
             .then(function(allData) {
+                allData.push({fileUrl: fileUrl});
                 return res.send(allData);
             }).catch(function(err) {
                 return res.send(err);

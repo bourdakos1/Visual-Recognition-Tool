@@ -136,7 +136,7 @@ export default class Demo extends React.Component {
         var self = this
         var req
 
-        self.setState({ loading: true, error: null, faceBoxes: [] })
+        self.setState({ loading: true, error: null, faceBoxes: [], lastReq: this.state.images[i] })
 
         req = request.post('/api/classify')
         req.query({classifier_ids: ['default', 'food']})
@@ -149,6 +149,9 @@ export default class Demo extends React.Component {
 
         req.end(function(err, res) {
             console.log(res)
+            if (res.body[2].fileUrl != self.state.lastReq) {
+                return
+            }
             var general
             var food
             var colors
