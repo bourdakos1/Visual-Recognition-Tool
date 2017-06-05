@@ -2,6 +2,7 @@ import React from 'react'
 import Radium, { StyleRoot } from 'radium'
 import request from 'superagent'
 import { Link } from 'react-router-dom'
+import Dropzone from 'react-dropzone'
 
 import Button from './Button'
 import DropButton from './DropButton'
@@ -131,6 +132,14 @@ export default class Demo extends React.Component {
 
     componentDidMount() {
         this.classify(0)
+    }
+
+    isHover = () => {
+        this.setState({hover: true})
+    }
+
+    notHover = () => {
+        this.setState({hover: false})
     }
 
     chooseImage = (i) => {
@@ -331,10 +340,10 @@ export default class Demo extends React.Component {
             margin: '0',
 
             overflow: 'hidden',
-            textIndent: '101%',
+            // textIndent: '101%',
             whiteSpace: 'nowrap',
             margin: '5px 20px',
-            display: 'block',
+            // display: 'block',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
             opacity: '.8',
@@ -435,6 +444,16 @@ export default class Demo extends React.Component {
             height: '32px',
             animation: 'x .6s linear infinite',
             animationName: rotateKeyframes,
+        }
+
+        var droplink = {
+            textDecoration: 'none'
+        }
+
+        if (this.state.hover) {
+            droplink.textDecoration = 'underline'
+        } else {
+            droplink.textDecoration = 'none'
         }
 
         return (
@@ -626,22 +645,42 @@ export default class Demo extends React.Component {
                 </div>
 
                 <div style={bar}>
-                    <ul style={{textAlign: 'center', padding: '0', margin: '0'}}>
+                    <ul style={{display: 'flex', justifyContent: 'center', alignSelf: 'center', padding: '0', margin: '0', paddingTop: '2px'}}>
                         {
                             this.state.images.map((url, i) => {
                                 return (
-                                    <li style={{display: 'inline-block'}}>
+                                    <li style={{listStyle: 'none'}}>
                                         <div key={i} id={i} style={[
                                             image,
                                             {backgroundImage: 'url(' + url + ')'},
                                             this.state.activeImage == i ? imageActive : null
                                         ]} onClick={this.chooseImage}>
-                                            Image
+
                                         </div>
                                     </li>
                                 )
                             })
                         }
+                        <li style={{cursor: 'pointer', backgroundColor: '#fcfcfc', listStyle: 'none', height: '80px', margin: '5px 20px', overflow: 'hidden', border: '2px dashed #c2c2c2', borderRadius: '0px'}}>
+                            <Dropzone
+                                style={{height: '80px', padding: '0px 32px', display: 'flex'}}
+                                preventDropOnDocument={true}
+                                accept={'image/jpeg, image/png, .jpg, .jpeg, .png'}
+                                maxSize={2 * 1024 * 1024}
+                                onDrop={null}
+                                multiple={false}
+                                onMouseEnter={this.isHover}
+                                onMouseLeave={this.notHover}>
+                                <div style={{alignSelf: 'center'}}>
+                                    <div style={{color: Styles.colorTextLight, font: Styles.fontBold, marginBottom: '7px', textAlign: 'center'}}>
+                                        {Strings.drag_image}
+                                    </div>
+                                    <div style={{color: Styles.colorTextLight, font: Styles.fontDefault, textAlign: 'center', marginBottom: '3px'}}>
+                                        {Strings.or} <span style={[droplink, {color: Styles.colorPrimary}]}>{Strings.choose_image}</span>
+                                    </div>
+                                </div>
+                            </Dropzone>
+                        </li>
                     </ul>
                 </div>
             </div>
