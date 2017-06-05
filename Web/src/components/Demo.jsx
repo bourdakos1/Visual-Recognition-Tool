@@ -450,10 +450,23 @@ export default class Demo extends React.Component {
             textDecoration: 'none'
         }
 
+        var dropButton = {
+            cursor: 'pointer',
+            backgroundColor: '#fcfcfc',
+            listStyle: 'none',
+            height: '80px',
+            margin: '5px 20px',
+            overflow: 'hidden',
+            border: '2px dashed #c2c2c2',
+            borderRadius: '0px'
+        }
+
         if (this.state.hover) {
             droplink.textDecoration = 'underline'
+            dropButton.border = '2px dashed #959595'
         } else {
             droplink.textDecoration = 'none'
+            dropButton.border = '2px dashed #c2c2c2'
         }
 
         return (
@@ -661,7 +674,7 @@ export default class Demo extends React.Component {
                                 )
                             })
                         }
-                        <li style={{cursor: 'pointer', backgroundColor: '#fcfcfc', listStyle: 'none', height: '80px', margin: '5px 20px', overflow: 'hidden', border: '2px dashed #c2c2c2', borderRadius: '0px'}}>
+                        <li style={dropButton}>
                             <Dropzone
                                 style={{height: '80px', padding: '0px 32px', display: 'flex'}}
                                 preventDropOnDocument={true}
