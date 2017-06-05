@@ -35,9 +35,10 @@ export default class WorkSpace extends React.Component {
     }
 
     onTextChange = (text) => {
+    	var bidi = this.context.bidi;
         this.setState({
             classifier: {
-                name: text.target.value
+                name: bidi.convert(text.target.value,{formElement: true})
             }
         })
     }
@@ -50,7 +51,7 @@ export default class WorkSpace extends React.Component {
 
     setClassName = (text, key) => {
         var newClasses = $.extend([], this.state.classes)
-        newClasses[key].name = text.target.value
+        newClasses[key].name = this.context.bidi.convert(text.target.value,{formElement: true});
         this.setState({ classes: newClasses })
     }
 
@@ -229,6 +230,7 @@ export default class WorkSpace extends React.Component {
     }
 
     render() {
+    	var isRtl = this.context.bidi.guiDir === "rtl"
         var textStyles = {
             base: {
                 color: Styles.colorTextDark,
@@ -247,7 +249,6 @@ export default class WorkSpace extends React.Component {
                 fontWeight: '700',
                 fontStyle: 'normal',
                 fontSize: '32px',
-                marginLeft: '-2.5px',
                 lineHeight: '1.04',
                 letterSpacing: '-.028em',
             },
@@ -258,7 +259,6 @@ export default class WorkSpace extends React.Component {
                 fontWeight: '700',
                 fontStyle: 'normal',
                 fontSize: '24px',
-                marginLeft: '-1.5px',
                 lineHeight: '1.22',
                 letterSpacing: '-.018em',
             },
@@ -269,11 +269,9 @@ export default class WorkSpace extends React.Component {
                 fontWeight: '700',
                 fontStyle: 'normal',
                 fontSize: '24px',
-                marginLeft: '-1.5px',
                 lineHeight: '1.22',
                 letterSpacing: '-.018em',
                 padding: '12px',
-                paddingLeft: '20px',
             }
         }
 
@@ -294,7 +292,6 @@ export default class WorkSpace extends React.Component {
 
         var error = {
             paddingTop: '5px',
-            paddingLeft: '10px',
             textDecoration:'none',
             display:'block',
             whiteSpace:'nowrap',
@@ -304,6 +301,21 @@ export default class WorkSpace extends React.Component {
             font: Styles.fontDefault,
         }
 
+		if (isRtl) {
+			textStyles.header.marginRight = '-2.5px'
+			textStyles.header2.marginRight = '-1.5px'
+			textStyles.title.marginRight = '-1.5px'
+			textStyles.title.paddingRight = '20px'
+			error.paddingRight = '10px'
+		}
+		else {
+			textStyles.header.marginLeft = '-2.5px'
+			textStyles.header2.marginLeft = '-1.5px'
+			textStyles.title.marginLeft = '-1.5px'
+			textStyles.title.paddingLeft = '20px'
+			error.paddingLeft = '10px'
+        }
+        
         const RGB=Styles.colorPrimary
         const A='0.1'
         const RGBA='rgba('+parseInt(RGB.substring(1,3),16)+','+parseInt(RGB.substring(3,5),16)+','+parseInt(RGB.substring(5,7),16)+','+A+')'
@@ -385,17 +397,17 @@ export default class WorkSpace extends React.Component {
                             )
                         })}
                     </StackGrid>
-                    <div style={{textAlign: 'right'}}>
+                    <div style={{textAlign: isRtl? 'left' : 'right'}}>
                         <Button
                             id='button--create-classifier--add-class'
                             onClick={this.addClass}
                             text={i18next.t('add_class')}
-                            style={{float: 'left'}}/>
+                            style={{float: isRtl? 'right' : 'left'}}/>
                         <Link to='/'>
                             <Button
                                 id='button--create-classifier--cancel'
                                 text={i18next.t('cancel')}
-                                style={{marginRight: '20px'}}/>
+                                style={ isRtl? {marginLeft: '20px'} : {marginRight: '20px'}}/>
                         </Link>
                         <Button
                             id='button--create-classifier--create'
@@ -412,4 +424,7 @@ export default class WorkSpace extends React.Component {
             </div>
         )
     }
+}
+WorkSpace.contextTypes = {
+  bidi: React.PropTypes.object
 }

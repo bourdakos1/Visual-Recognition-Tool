@@ -16,6 +16,7 @@ export default class DropDown extends React.Component {
     }
 
     render() {
+       	var isRtl = this.context.bidi.guiDir === "rtl"
         var dropbtn = {
             backgroundImage: `url(${'/btn_dropdown.png'})`,
             backgroundColor: 'transparent',
@@ -25,7 +26,6 @@ export default class DropDown extends React.Component {
             width: '25px',
             height: '25px',
             padding: '0px',
-            marginRight: '-5px',
             border: 'none',
             cursor: 'pointer',
             ':hover': {
@@ -43,13 +43,21 @@ export default class DropDown extends React.Component {
             display: 'none',
             position: 'absolute',
             top: '-5px',
-            right: '-5px',
             backgroundColor: 'white',
             minWidth: '160px',
             boxShadow: '0 0 0 1pt rgba(0,0,0,0.08), 0px 8px 16px 0px rgba(0,0,0,0.2)',
             zIndex: '1',
         }
 
+		if (isRtl) {
+			dropbtn.marginLeft = '-5px'
+			dropdownContent.left = '-5px'
+		}
+		else {
+			dropbtn.marginRight = '-5px'
+			dropdownContent.right = '-5px'
+		}
+			
         var aStyle = {
             font: Styles.fontDefault,
             color: Styles.colorTextDark,
@@ -85,7 +93,7 @@ export default class DropDown extends React.Component {
         }
 
         return (
-            <div style={[dropdown, {float: 'right'}]}
+            <div style={[dropdown, {float: isRtl? 'left' : 'right'}]}
                 onClick={this.onClick}
                 onMouseLeave={this.toggleHover}>
                 <button className={this.props.className} style={dropbtn}></button>
@@ -97,4 +105,8 @@ export default class DropDown extends React.Component {
             </div>
         )
     }
+}
+
+DropDown.contextTypes = {
+  bidi: React.PropTypes.object
 }

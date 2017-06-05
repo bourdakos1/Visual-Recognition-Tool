@@ -30,9 +30,10 @@ export default class TitleBar extends React.Component {
     }
 
     render() {
+    	var isRtl = this.context.bidi.guiDir === "rtl"
         var logo = {
             height: '60px',
-            float: 'left',
+            float: isRtl? 'right' : 'left',
             cursor: 'pointer',
         }
 
@@ -40,7 +41,6 @@ export default class TitleBar extends React.Component {
             font: Styles.fontTitle,
             color: Styles.colorTextDark,
             flex: 'none',
-            marginRight: 'auto',
             cursor: 'pointer',
             textDecoration: 'none',
         }
@@ -49,8 +49,16 @@ export default class TitleBar extends React.Component {
             font: Styles.fontDefault,
             color: Styles.colorTextLight,
             minWidth: '0px',
-            marginLeft: '20px',
             display: 'flex',
+        }
+
+        if (isRtl) {
+        	title.marginLeft = 'auto'
+        	right.marginRight = '20px'
+        }
+        else {
+        	title.marginRight = 'auto'
+        	right.marginLeft = '20px'
         }
 
         var shadow = {
@@ -112,4 +120,8 @@ export default class TitleBar extends React.Component {
             </div>
         )
     }
+}
+
+TitleBar.contextTypes = {
+  bidi: React.PropTypes.object
 }

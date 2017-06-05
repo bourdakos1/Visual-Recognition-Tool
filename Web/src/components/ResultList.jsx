@@ -139,6 +139,8 @@ export default class ResultList extends React.Component {
     }
 
     render(){
+    	var bidi = this.context.bidi
+    	var isRtl = bidi.guiDir === "rtl" 
         var textStyles = {
             base: {
                 color: Styles.colorTextLight,
@@ -205,7 +207,6 @@ export default class ResultList extends React.Component {
                 width: '100px',
                 height: '100px',
                 border: '1px solid #dedede',
-                marginRight: '10px',
             }
         }
 
@@ -228,7 +229,6 @@ export default class ResultList extends React.Component {
 
         var progressBarSmall = {
             borderRadius: '2.5px',
-            left: '0',
             position: 'absolute',
             top: '0',
         }
@@ -248,7 +248,6 @@ export default class ResultList extends React.Component {
 
         var progressBar = {
             borderRadius: '5px',
-            left: '0',
             position: 'absolute',
             top: '0',
         }
@@ -256,7 +255,6 @@ export default class ResultList extends React.Component {
         var deleteStyle = {
             position: 'absolute',
             top: '5px',
-            right: '5px',
             backgroundColor: 'transparent',
             backgroundImage: `url(${'/btn_delete.png'})`,
             height: '25px',
@@ -273,6 +271,19 @@ export default class ResultList extends React.Component {
             }
         }
 
+		if (isRtl) {
+			containerStyles.image.marginLeft = '10px'
+			progressBarSmall.right = '0'
+			progressBar.right = '0'
+			deleteStyle.left = '5px'
+		}
+		else {
+			containerStyles.image.marginRight = '10px'
+			progressBarSmall.left = '0'
+			progressBar.left = '0'
+			deleteStyle.right = '5px'
+		}
+		
         var resultList
         var self = this
         if (this.props.results[0].age != null) {
@@ -331,8 +342,8 @@ export default class ResultList extends React.Component {
                     <li key={result.class}>
                         {index == 0 ?
                             <div style={[resultBoxStyle, topResult]}>
-                                <div style={[textStyles.topClass, {display: 'inline-block'}]}>{result.class}</div>
-                                <div style={[textStyles.topScore, {float: 'right', display: 'inline-block'}]}>{Number(result.score).toFixed(2)}</div>
+                                <div style={[textStyles.topClass, {display: 'inline-block'}]}>{bidi.convert(result.class)}</div>
+                                <div style={[textStyles.topScore, isRtl? {float: 'left', display: 'inline-block'} : {float: 'right', display: 'inline-block'}]}>{bidi.convert(Number(result.score).toFixed(2))}</div>
                                 <div style={{display: 'flex', alignItems: 'center'}}>
                                     {/*<div style={{display: 'flex', flex: 'none', paddingRight: '10px'}}>0</div>*/}
                                     <div style={[progressWrap, progress, {display: 'flex', flex: 'auto'}]}>
@@ -343,11 +354,11 @@ export default class ResultList extends React.Component {
                             </div>
                             :
                             <div style={resultStyle, {display: 'flex', alignItems: 'center', marginTop: '20px'}}>
-                                <div style={[textStyles.base, textStyles.dark, {display: 'flex', marginRight: 'auto'}]}><b>{result.class}</b></div>
-                                <div style={[progressWrapSmall, progressSmall, {display: 'flex', marginRight: '10px'}]}>
+                                <div style={[textStyles.base, textStyles.dark, isRtl? {display: 'flex', marginLeft: 'auto'} : {display: 'flex', marginRight: 'auto'}]}><b>{bidi.convert(result.class)}</b></div>
+                                <div style={[progressWrapSmall, progressSmall, isRtl? {display: 'flex', marginLeft: '10px'} : {display: 'flex', marginRight: '10px'}]}>
                                     <div style={[progressBarSmall, progressSmall, {width: ~~(result.score * 100) + '%', background: color}]}></div>
                                 </div>
-                                <div style={[textStyles.base, {display: 'flex'}]}>{Number(result.score).toFixed(2)}</div>
+                                <div style={[textStyles.base, {display: 'flex'}]}>{bidi.convert(Number(result.score).toFixed(2))}</div>
                             </div>
                         }
                     </li>
@@ -397,4 +408,8 @@ export default class ResultList extends React.Component {
             </div>
         )
     }
+}
+
+ResultList.contextTypes = {
+  bidi: React.PropTypes.object
 }

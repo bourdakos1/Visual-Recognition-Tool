@@ -236,6 +236,7 @@ export default class ClassifierDetail extends React.Component {
     }
 
     render() {
+    	var bidi = this.context.bidi;
         var textStyle = {
             paddingTop: '5px',
             textDecoration:'none',
@@ -259,13 +260,17 @@ export default class ClassifierDetail extends React.Component {
 
         var status = {
             marginBottom: '-1px',
-            marginRight: '5px',
             display: 'inline-block',
             width: '10px',
             height: '10px',
             borderRadius: '5px',
         }
 
+		if (bidi.guiDir === "rtl")
+			status.marginLeft = '5px';
+		else
+			status.marginRight = '5px'
+			
         var error = {
             paddingBottom: '10px',
             textDecoration:'none',
@@ -291,8 +296,8 @@ export default class ClassifierDetail extends React.Component {
                     null
                 }
 
-                <div style={titleStyle}>{this.getName()}</div>
-                <div style={textStyle}>{this.props.classifierID}</div>
+                <div style={titleStyle}>{bidi.convert(this.getName())}</div>
+                <div style={textStyle}>{bidi.convert(this.props.classifierID)}</div>
                 <div style={textStyle}><div style={[status, {background: color}]}/>{this.getStatus()}</div>
 
                 {/*To soothe my pain*/}
@@ -352,4 +357,8 @@ export default class ClassifierDetail extends React.Component {
             </Card>
         )
     }
+}
+
+ClassifierDetail.contextTypes = {
+  bidi: React.PropTypes.object
 }

@@ -14,6 +14,7 @@ export default class Button extends React.Component {
     }
 
     render() {
+        var isRtl = this.context.bidi.guiDir === "rtl"
         var buttonStyle = {
             base: {
                 lineHeight: '0px',
@@ -57,10 +58,16 @@ export default class Button extends React.Component {
         var imgStyle = {
             width: '21px',
             height: '21px',
-            marginLeft: '21px',
             verticalAlign: 'middle',
         }
 
+		if (isRtl) {
+			buttonStyle.image.padding = '0px 21px 0px 4px'
+			imgStyle.marginRight = '21px'
+		}
+		else
+			imgStyle.marginLeft = '21px'
+			
         var textStyle = {
             display: 'inline-block',
             verticalAlign: 'middle',
@@ -82,4 +89,8 @@ export default class Button extends React.Component {
             </button>
         )
     }
+}
+
+Button.contextTypes = {
+  bidi: React.PropTypes.object
 }

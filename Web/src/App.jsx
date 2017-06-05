@@ -8,6 +8,8 @@ import CreateClassifier from './components/CreateClassifier'
 import UpdateClassifier from './components/UpdateClassifier'
 import CredentialsModal from './components/CredentialsModal'
 import LandingPage from './components/LandingPage'
+import Radium, {StyleRoot} from 'radium';
+import Bidi from './Bidi';
 
 // Must load strings to get localization
 import Strings from './components/Strings'
@@ -22,8 +24,13 @@ class App extends React.Component {
         this.state = {
             showModal: false
         }
+        this.bidi = new Bidi({enabled: true, textDir: "auto", numShapingType: "national"});
     }
 
+	getChildContext() {
+    	return {bidi: this.bidi};
+	}
+    	
     // Our two points of entry (CredentialsModal/LandingPage) should give us
     // valid credentials or null.
     setCredentials = (username, password) => {
@@ -46,6 +53,7 @@ class App extends React.Component {
 
     render() {
         return (
+          <StyleRoot dir={this.bidi.guiDir}>
             <BrowserRouter>
                 {localStorage.getItem('username') == 'undefined'
                     || localStorage.getItem('username') == null
@@ -62,9 +70,14 @@ class App extends React.Component {
                     </Base>
                 }
             </BrowserRouter>
+          </StyleRoot>
         )
     }
 }
 
+App.childContextTypes = {
+ 	bidi: React.PropTypes.object
+};
+	
 // This takes our app and injects it into the "main" element in index.html
 ReactDOM.render(<App />, document.getElementById('main'))

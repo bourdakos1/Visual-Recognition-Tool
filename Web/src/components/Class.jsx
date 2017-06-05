@@ -53,6 +53,7 @@ export default class Class extends React.Component {
     }
 
     render() {
+    	var isRtl = this.context.bidi.guiDir === "rtl"
         var textStyles = {
             header: {
                 color: Styles.colorTextDark,
@@ -114,7 +115,7 @@ export default class Class extends React.Component {
                         onChange={this.onTextChange}>
                         {this.props.negative || this.props.fixedTitle ? null :
                             <div style={{position: 'relative', width: '100%', minWidth: '100%'}}>
-                                <div style={{position: 'absolute', top: '-43px', right: '0'}}>
+                                <div style={isRtl? {position: 'absolute', top: '-43px', left: '0'} : {position: 'absolute', top: '-43px', right: '0'}}>
                                     <button className="delete-class" key={this.props.id} style={deleteStyle}
                                         onClick={this.delete}>
                                     </button>
@@ -148,4 +149,8 @@ export default class Class extends React.Component {
             </div>
         )
     }
+}
+
+Class.contextTypes = {
+  bidi: React.PropTypes.object
 }
