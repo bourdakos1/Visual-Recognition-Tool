@@ -61,6 +61,15 @@ export default class Demo extends React.Component {
                 '/demo_photos/6.jpg',
                 '/demo_photos/7.jpg',
             ],
+            thumbs: [
+                '/demo_photos/thumbs/1.jpg',
+                '/demo_photos/thumbs/2.jpg',
+                '/demo_photos/thumbs/3.jpg',
+                '/demo_photos/thumbs/4.jpg',
+                '/demo_photos/thumbs/5.jpg',
+                '/demo_photos/thumbs/6.jpg',
+                '/demo_photos/thumbs/7.jpg',
+            ],
             // This is pretty lazy
             imageSizes: [
                 {width: 0, height: 0},

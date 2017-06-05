@@ -65,6 +65,35 @@
     </script>
   </head>
   <body>
+      <div class="hidden">
+    	<script type="text/javascript">
+    		<!--//--><![CDATA[//><!--
+    			var images = new Array()
+    			function preload() {
+    				for (i = 0; i < preload.arguments.length; i++) {
+    					images[i] = new Image()
+    					images[i].src = preload.arguments[i]
+    				}
+    			}
+    			preload(
+    				"/demo_photos/1.jpg",
+    				"/demo_photos/2.jpg",
+    				"/demo_photos/3.jpg",
+                    "/demo_photos/4.jpg",
+                    "/demo_photos/5.jpg",
+                    "/demo_photos/6.jpg",
+                    "/demo_photos/7.jpg",
+                    "/demo_photos/thumbs/1.jpg",
+    				"/demo_photos/thumbs/2.jpg",
+    				"/demo_photos/thumbs/3.jpg",
+                    "/demo_photos/thumbs/4.jpg",
+                    "/demo_photos/thumbs/5.jpg",
+                    "/demo_photos/thumbs/6.jpg",
+                    "/demo_photos/thumbs/7.jpg"
+    			)
+    		//--><!]]>
+    	</script>
+    </div>
     <div id="main"></div>
     <script src="/bundle.js"></script>
     <script>
