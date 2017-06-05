@@ -122,7 +122,9 @@ export default class LandingPage extends React.Component {
             borderRadius: '15px',
             border: 'none',
             height: '30px',
-            width: '150px',
+            width: 'auto',
+            paddingLeft: '7px',
+            paddingRight: '7px',
             paddingTop:'6px',
             textAlign:'center',
             color: 'white',
@@ -302,7 +304,7 @@ export default class LandingPage extends React.Component {
                         onFocus={this.onFocus}
                         onBlur={this.onBlur}
                         style={buttonStyle.base}
-                        placeholder={'username:password'}
+                        placeholder={i18next.t('api_key')}
                         onChange={this.onTextChange}/>
                     <button
                         style={this.state.focus ? pics : picsNone}
