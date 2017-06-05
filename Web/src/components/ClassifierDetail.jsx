@@ -270,9 +270,7 @@ export default class ClassifierDetail extends React.Component {
             paddingBottom: '10px',
             textDecoration:'none',
             display:'block',
-            whiteSpace:'nowrap',
-            overflow:'hidden',
-            textOverflow:'ellipsis',
+            overflow:'wrap',
             color: '#F44336',
             font: Styles.fontDefault,
         }
