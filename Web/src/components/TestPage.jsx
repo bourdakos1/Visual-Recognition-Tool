@@ -62,7 +62,7 @@ export default class TestPage extends React.Component {
         }
 
         var section2 = {
-            height: '500px',
+            height: 'auto',
             // backgroundColor: 'blue',
             backgroundColor: Styles.colorPrimary,
         }
@@ -194,9 +194,11 @@ export default class TestPage extends React.Component {
                     <div style={{flex: '1'}}>
                         <div style={{
                             font: Styles.fontTitle,
+                            color: Styles.colorTextDark,
                             fontWeight: '200',
                             textAlign: 'center',
-                            marginBottom: '35px'}}>
+                            marginBottom: '35px'
+                        }}>
                             Understand images in 5 lines of code
                         </div>
                         <div style={{textAlign: 'center'}}>
@@ -237,7 +239,125 @@ export default class TestPage extends React.Component {
                         </ul>
                     </div>
                 </div>
-                <div style={section}>
+
+                <div style={[section, {height: '550px', padding: '0', backgroundColor: Styles.colorPrimary}]}>
+                    <img src={'/dogs.png'} style={{
+                        width: 'auto',
+                        height: '100%'
+                    }}/>
+
+                <div style={{marginLeft: '80px', marginRight: '80px', marginBottom: '80px'}}>
+                        <div style={{
+                            font: Styles.fontTitle,
+                            fontSize: '2.8em',
+                            color: 'white',
+                            fontWeight: '200',
+                            marginBottom: '12px'
+                        }}>
+                            Upload Photos
+                        </div>
+                        <div style={{
+                            font: Styles.fontDefault,
+                            width: '340px',
+                            fontSize: '1.2em',
+                            lineHeight: '1.4em',
+                            color: 'white',
+                            opacity: '0.6'
+                        }}>
+                            Create and train custom classifiers using your own image collections. Group images into classes and upload them with the tool or one of our SDKs.
+                        </div>
+                    </div>
+                </div>
+
+                <div style={[section, {justifyContent: 'flex-end', marginTop: '-226px', height: 'auto', padding: '0', position: 'absolute'}]}>
+                    <div style={{display: 'flex', flexDirection: 'column'}}>
+                        <img src={'/white_arrow.png'} style={{
+                            marginLeft: '250px',
+                            marginBottom: '30px',
+                            width: '77.5px',
+                            height: '116px'
+                        }}/>
+                        <div style={{marginLeft: '80px', marginRight: '80px', backgroundColor: 'white', padding: '30px', borderRadius: '5px', boxShadow: '0px 5px 20px rgba(0,0,0,0.1)'}}>
+                            <div style={{
+                                font: Styles.fontTitle,
+                                fontSize: '2.8em',
+                                color: Styles.colorTextDark,
+                                fontWeight: '200',
+                                marginBottom: '12px'
+                            }}>
+                                Train
+                            </div>
+                            <div style={{
+                                font: Styles.fontDefault,
+                                width: '300px',
+                                fontSize: '1.2em',
+                                lineHeight: '1.4em',
+                                color: Styles.colorTextDark,
+                                opacity: '0.6'
+                            }}>
+                                Watson will process your images and create an API endpoint for your classifier.
+                            </div>
+                        </div>
+                        <img src={'/purple_arrow.png'} style={{
+                            marginTop: '30px',
+                            marginLeft: '40px',
+                            width: '252px',
+                            height: '106px'
+                        }}/>
+                    </div>
+                </div>
+
+                <div style={[section, {justifyContent: 'center', height: 'auto', padding: '0', marginTop: '150px'}]}>
+                    <div style={{}}>
+                        <div style={{
+                            font: Styles.fontTitle,
+                            fontSize: '2.8em',
+                            color: Styles.colorTextDark,
+                            fontWeight: '200',
+                            marginBottom: '12px'
+                        }}>
+                            Classify
+                        </div>
+                        <div style={{
+                            font: Styles.fontDefault,
+                            fontSize: '1.2em',
+                            lineHeight: '1.4em',
+                            color: Styles.colorTextDark,
+                            opacity: '0.6'
+                        }}>
+                            Make a call. Get a response.
+                        </div>
+                    </div>
+                </div>
+
+                <div style={[section, {justifyContent: 'center', height: 'auto', padding: '0', marginTop: '100px', marginBottom: '100px'}]}>
+                    <div style={{
+                        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
+                        borderRadius: '5px',
+                        position: 'absolute',
+                        marginTop: '-52px',
+                        marginLeft: '-138px',
+                        backgroundImage: `url('/demo_photos/5.jpg')`,
+                        backgroundPosition: 'center',
+                        backgroundSize: 'cover',
+                        width: '276px',
+                        height: '276px'
+                    }}/>
+                    <div style={{backgroundColor: '#f3f3f3', padding: '30px', paddingLeft: '190px', borderRadius: '5px', boxShadow: '0px 2px 6px rgba(0,0,0,0.2)'}}>
+                        <div style={{
+                            font: Styles.fontDefault,
+                            fontFamily: '"Lucida Console", Monaco, monospace',
+                            width: 'auto',
+                            fontSize: '1.1em',
+                            lineHeight: '1.4em',
+                            color: Styles.colorTextDark,
+                            opacity: '1.0'
+                        }}>
+                        {'{\n\u00a0\u00a0\u00a0\u00a0"custom_classes": 1,\n\u00a0\u00a0\u00a0\u00a0"images": [{\n\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"classifiers": [{\n\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"classes": [\n\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0{"class": "Pug", "score": 0.982177}\n\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0],\n\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"classifier_id": "Dogs_1680254220",\n\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"name": "Dogs"\n\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0}],\n\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0"image": "my_test_photo.jpg"\n\u00a0\u00a0\u00a0\u00a0}],\n\u00a0\u00a0\u00a0\u00a0"images_processed": 1\n}'.split('\n').map((item, key) => {
+                            return <span key={key}>{item}<br/></span>
+                        })}
+                        </div>
+                    </div>
                 </div>
             </div>
         )
