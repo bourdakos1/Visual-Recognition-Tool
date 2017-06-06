@@ -487,7 +487,7 @@ export default class Demo extends React.Component {
                                 onClick={null}
                                 text={localStorage.getItem('api_key') == 'undefined'
                                     || localStorage.getItem('api_key') == null
-                                    || localStorage.getItem('api_key') == '' ? 'Login' : 'Vision Tool'}/>
+                                    || localStorage.getItem('api_key') == '' ? 'Sign In' : 'Vision Tool'}/>
                         </a>
                     </div>
                 </div>
