@@ -7,6 +7,10 @@ import Styles from './Styles'
 
 @Radium
 export default class TestPage extends React.Component {
+    componentDidMount() {
+        Prism.highlightAll()
+    }
+
     render() {
         var logo = {
             height: '60px',
@@ -359,6 +363,227 @@ export default class TestPage extends React.Component {
                         </div>
                     </div>
                 </div>
+
+                <div style={[section, {
+                        height: '1px',
+                        padding: '0',
+                        width: '100%',
+                        backgroundColor: '#d3d3d3'
+                }]}/>
+
+                <div style={[section, {
+                        height: 'auto',
+                        padding: '0',
+                        marginTop: '100px',
+                        maxWidth: '1200px',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        paddingLeft: '20px',
+                        paddingRight: '20px'
+                }]}>
+                    <div style={{
+                        width: '100%',
+                        font: Styles.fontDefault,
+                        fontSize: '1.2em',
+                        lineHeight: '1.4em',
+                        color: Styles.colorTextDark,
+                        opacity: '0.6',
+                        paddingLeft: '40px',
+                        paddingRight: '40px',
+                        textAlign: 'center'
+                    }}>
+                        BUILT-IN MODELS
+                    </div>
+                </div>
+
+                <div style={[section, {
+                        height: 'auto',
+                        padding: '0',
+                        marginTop: '60px',
+                        maxWidth: '1200px',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        paddingLeft: '20px',
+                        paddingRight: '20px',
+                        marginBottom: '150px',
+                }]}>
+                    <div style={{flex: '1', display: 'flex', flexDirection: 'column', alignItems: 'center', marginRight: '40px'}}>
+                        <div style={{
+                            font: Styles.fontTitle,
+                            fontSize: '2.8em',
+                            color: Styles.colorTextDark,
+                            fontWeight: '200',
+                            marginBottom: '12px'
+                        }}>
+                            General
+                        </div>
+                        <div style={{
+                            font: Styles.fontDefault,
+                            fontSize: '1.2em',
+                            lineHeight: '1.4em',
+                            color: Styles.colorTextDark,
+                            opacity: '0.6'
+                        }}>
+                            Understand the contents of images through various keyword tags.
+                        </div>
+                    </div>
+
+                    <div style={{flex: '1', display: 'flex', flexDirection: 'column', alignItems: 'center', marginRight: '40px', marginLeft: '40px' }}>
+                        <div style={{
+                            font: Styles.fontTitle,
+                            fontSize: '2.8em',
+                            color: Styles.colorTextDark,
+                            fontWeight: '200',
+                            marginBottom: '12px'
+                        }}>
+                            Food
+                        </div>
+                        <div style={{
+                            font: Styles.fontDefault,
+                            fontSize: '1.2em',
+                            lineHeight: '1.4em',
+                            color: Styles.colorTextDark,
+                            opacity: '0.6'
+                        }}>
+                            Enhanced specificity and accuracy for food items, based on over 2,000 tags.
+                        </div>
+                    </div>
+
+                    <div style={{flex: '1', display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: '40px'}}>
+                        <div style={{
+                            font: Styles.fontTitle,
+                            fontSize: '2.8em',
+                            color: Styles.colorTextDark,
+                            fontWeight: '200',
+                            marginBottom: '12px'
+                        }}>
+                            Face Detection
+                        </div>
+                        <div style={{
+                            font: Styles.fontDefault,
+                            fontSize: '1.2em',
+                            lineHeight: '1.4em',
+                            color: Styles.colorTextDark,
+                            opacity: '0.6'
+                        }}>
+                            Detect location of faces in a photo, including data such as gender and age.
+                        </div>
+                    </div>
+                </div>
+
+                <div style={[section, {
+                        height: '1px',
+                        padding: '0',
+                        width: '100%',
+                        backgroundColor: '#d3d3d3'
+                }]}/>
+
+                <div style={[section, {
+                        height: 'auto',
+                        padding: '0',
+                        marginTop: '100px',
+                        maxWidth: '1200px',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        paddingLeft: '20px',
+                        paddingRight: '20px'
+                }]}>
+                    <div style={{
+                        width: '100%',
+                        font: Styles.fontDefault,
+                        fontSize: '1.2em',
+                        lineHeight: '1.4em',
+                        color: Styles.colorTextDark,
+                        opacity: '0.6',
+                        paddingLeft: '40px',
+                        paddingRight: '40px',
+                        textAlign: 'center'
+                    }}>
+                        DEVELOPER SDKS
+                    </div>
+                </div>
+
+                <div style={[section, {
+                        height: 'auto',
+                        padding: '0',
+                        marginTop: '60px',
+                        maxWidth: '1200px',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        paddingLeft: '20px',
+                        paddingRight: '20px',
+                        marginBottom: '150px',
+                }]}>
+                    <div style={{}}>
+                        <div style={{
+                            font: Styles.fontTitle,
+                            fontSize: '2.8em',
+                            color: Styles.colorTextDark,
+                            fontWeight: '200',
+                            marginBottom: '12px'
+                        }}>
+                            Easy to integrate with your favorite languages
+                        </div>
+
+                        {/*JavaScript*/}
+                        <pre><code className="language-javascript">{
+'var watson = require(\'watson-developer-cloud\');\n\
+var fs = require(\'fs\');\n\
+\n\
+// Instantiate Visual Recognition passing in your {api_key}.\n\
+var visual_recognition = watson.visual_recognition({\n\
+  api_key: \'{api_key}\',\n\
+  version_date: \'2016-05-20\'\n\
+});\n\
+\n\
+var params = {\n\
+  images_file: fs.createReadStream(\'./resources/car.png\')\n\
+};\n\
+\n\
+// Classify the an image by passing the parameters.\n\
+visual_recognition.classify(params, function(err, res) {\n\
+  if (err)\n\
+    console.log(err);\n\
+  else\n\
+    console.log(res);\n\
+});'
+                        }</code></pre>
+{/*
+
+                        <pre><code className="language-python">{
+'import json\n\
+from os.path import join, dirname\n\
+from os import environ\n\
+from watson_developer_cloud import VisualRecognitionV3\n\
+\n\
+# Instantiate Visual Recognition passing in your {api_key}.\n\
+visual_recognition = VisualRecognitionV3(\'2016-05-20\', api_key=\'{api_key}\')\n\
+\n\
+url = https://www.ibm.com/ibm/ginni/images/ginni_bio_780x981_v4_03162016.jpg)\n\
+\n\
+# Classify the an image by passing the parameters.\n\
+results = visual_recognition.classify(images_url=url)\n\
+print(results)'
+                        }</code></pre>
+
+
+                        <pre><code className="language-java">{
+'// Instantiate Visual Recognition passing in your {api_key}.\n\
+VisualRecognition service = new VisualRecognition(VisualRecognition.VERSION_DATE_2016_05_19);\n\
+service.setApiKey("{api-key}");\n\
+\n\
+ClassifyImagesOptions options = new ClassifyImagesOptions.Builder()\n\
+    .images(new File("src/test/resources/visual_recognition/car.png"))\n\
+    .build();\n\
+\n\
+// Classify the an image by passing the parameters.\n\
+VisualClassification result = service.classify(options).execute();\n\
+System.out.println(result);'
+                        }</code></pre>
+                    */}
+                    </div>
+                </div>
+
             </div>
         )
     }
