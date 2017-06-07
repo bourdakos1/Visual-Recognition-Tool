@@ -71,6 +71,16 @@ export default class Demo extends React.Component {
                 '/demo_photos/thumbs/6.jpg',
                 '/demo_photos/thumbs/7.jpg',
             ],
+            // Let's cache the results, because we aint got time for loadin.
+            cache: [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+            ],
             // This is pretty lazy
             imageSizes: [
                 {width: 0, height: 0},
@@ -99,9 +109,7 @@ export default class Demo extends React.Component {
             border: '2px solid ' + Styles.colorPrimary,
             boxShadow: '0px 0px 1px 1px rgba(255,255,255,.6)',
         }
-        this.setState({
-            faceBoxes: [...this.state.faceBoxes, faceBox]
-        })
+        return faceBox
     }
 
     computeTextColor = (color) => {
@@ -156,6 +164,19 @@ export default class Demo extends React.Component {
 
         self.setState({ loading: true, error: null, faceBoxes: [], lastReq: this.state.images[i] })
 
+        // If it's in cache just show it.
+        if (this.state.cache[i] != null) {
+            this.setState({
+                general: this.state.cache[i].general,
+                food: this.state.cache[i].food,
+                colors: this.state.cache[i].colors,
+                faces: this.state.cache[i].faces,
+                faceBoxes: this.state.cache[i].faceBoxes,
+                loading: false
+            })
+            return
+        }
+
         req = request.post('/api/classify')
         req.query({classifier_ids: ['default', 'food']})
         req.query({threshold: 0.0})
@@ -167,13 +188,12 @@ export default class Demo extends React.Component {
 
         req.end(function(err, res) {
             console.log(res)
-            if (res.body[2].fileUrl != self.state.lastReq) {
-                return
-            }
+
             var general
             var food
             var colors
             var faces
+            var faceBoxes = []
             if (res.body != null) {
                 res.body.map((classification) => {
                     if (classification.images != null) {
@@ -207,7 +227,8 @@ export default class Demo extends React.Component {
 
                         if (classification.images[0].faces != null && classification.images[0].faces.length > 0 ) {
                             classification.images[0].faces.map((face) => {
-                                self.findFace(face, self.state.imageSizes[self.state.activeImage])
+                                var index = self.state.images.indexOf(res.body[2].fileUrl)
+                                faceBoxes.push(self.findFace(face, self.state.imageSizes[index]))
                             })
 
                             faces = classification.images[0].faces
@@ -218,7 +239,33 @@ export default class Demo extends React.Component {
                     }
                 })
             }
-            self.setState({ general: general, food: food, colors: colors, faces: faces, loading: false})
+
+            var newCache = [...self.state.cache]
+
+            newCache[i] = {
+                general: general,
+                food: food,
+                colors: colors,
+                faces: faces,
+                faceBoxes: faceBoxes
+            }
+
+            if (res.body[2].fileUrl != self.state.lastReq) {
+                self.setState({
+                    cache: newCache
+                })
+                return
+            }
+
+            self.setState({
+                general: general,
+                food: food,
+                colors: colors,
+                faces: faces,
+                faceBoxes: faceBoxes,
+                loading: false,
+                cache: newCache
+            })
         })
     }
 
