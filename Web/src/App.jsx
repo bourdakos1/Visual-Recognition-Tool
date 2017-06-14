@@ -10,6 +10,8 @@ import CredentialsModal from './components/CredentialsModal'
 import LandingPage from './components/LandingPage'
 import TestPage from './components/TestPage'
 import Demo from './components/Demo'
+import Devs from './components/Devs'
+import DevsGuide from './components/DevsGuide'
 
 
 // This is the base of the App
@@ -49,8 +51,10 @@ class App extends React.Component {
                 <div>
                     <Route exact path='/' component={TestPage}/>
                     <Route exact path='/demo' component={Demo}/>
+                    <Route exact path='/docs' component={Devs}/>
+                    <Route exact path='/docs2' component={DevsGuide}/>
 
-                    <Route exact path='/tool' render={(props) => (
+                    <Route path='/tool' render={(props) => (
                         <div>
                             {
                                 localStorage.getItem('api_key') == 'undefined'
@@ -60,49 +64,9 @@ class App extends React.Component {
                                 <LandingPage setCredentials={this.setCredentials}/> :
                                 <div>
                                     <Base showModal={this.showModal}>
-                                        <Classifiers {...props}/>
-                                    </Base>
-                                    <CredentialsModal
-                                        visible={this.state.showModal}
-                                        setCredentials={this.setCredentials}
-                                        onHidden={this.hideModal}/>
-                                </div>
-                            }
-                        </div>
-                    )}/>
-
-                    <Route exact path='/tool/create_classifier' render={(props) => (
-                        <div>
-                            {
-                                localStorage.getItem('api_key') == 'undefined'
-                                    || localStorage.getItem('api_key') == null
-                                    || localStorage.getItem('api_key') == '' ?
-
-                                <LandingPage setCredentials={this.setCredentials}/> :
-                                <div>
-                                    <Base showModal={this.showModal}>
-                                        <CreateClassifier {...props}/>
-                                    </Base>
-                                    <CredentialsModal
-                                        visible={this.state.showModal}
-                                        setCredentials={this.setCredentials}
-                                        onHidden={this.hideModal}/>
-                                </div>
-                            }
-                        </div>
-                    )}/>
-
-                    <Route exact path='/tool/update_classifier/:classifierID' render={(props) => (
-                        <div>
-                            {
-                                localStorage.getItem('api_key') == 'undefined'
-                                    || localStorage.getItem('api_key') == null
-                                    || localStorage.getItem('api_key') == '' ?
-
-                                <LandingPage setCredentials={this.setCredentials}/> :
-                                <div>
-                                    <Base showModal={this.showModal}>
-                                        <UpdateClassifier {...props}/>
+                                        <Route exact path='/tool' component={Classifiers}/>
+                                        <Route exact path='/tool/create_classifier' component={CreateClassifier}/>
+                                        <Route exact path='/tool/update_classifier/:classifierID' component={UpdateClassifier}/>
                                     </Base>
                                     <CredentialsModal
                                         visible={this.state.showModal}
