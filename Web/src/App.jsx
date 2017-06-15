@@ -14,7 +14,7 @@ import TestPage from './components/developers/TestPage'
 import Demo from './components/developers/Demo'
 import Devs from './components/developers/Devs'
 import DevsGuide from './components/developers/DevsGuide'
-
+import Strings from './components/Strings'
 
 // This is the base of the App
 // It holds our "Base" component which is just a TitleBar and content
@@ -52,11 +52,11 @@ class App extends React.Component {
             <BrowserRouter>
                 <div>
                     <Route path='/docs' render={(props) => (
-                        <DevBase>
-                            <Route exact path='/docs/demo' component={Demo}/>
-                            <Route exact path='/docs/guide' component={Devs}/>
-                            <Route exact path='/docs/guide2' component={DevsGuide}/>
-                            <Route exact path='/docs' component={TestPage}/>
+                        <DevBase {...props}>
+                            <Route exact path={Strings.DEMO_PATH} component={Demo}/>
+                            <Route exact path={Strings.GUIDE_PATH} component={DevsGuide}/>
+                            <Route exact path={Strings.API_PATH} component={DevsGuide}/>
+                            <Route exact path={Strings.DEVELOPER_PATH} component={Devs}/>
                         </DevBase>
                     )}/>
 

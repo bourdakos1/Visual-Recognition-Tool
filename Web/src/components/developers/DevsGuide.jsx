@@ -2,6 +2,7 @@ import React from 'react'
 import Radium from 'radium'
 import { Link } from 'react-router-dom'
 import MarkdownIt from 'markdown-it'
+import markdownItAttrs from 'markdown-it-attrs'
 
 import Button from '../Button'
 import Styles from '../Styles'
@@ -10,6 +11,7 @@ import Styles from '../Styles'
 export default class DevsGuide extends React.Component {
     componentWillMount() {
         var md = new MarkdownIt()
+        md.use(markdownItAttrs)
 
         fetch('../README.md').then((response) => {
             return response.text()
@@ -24,7 +26,7 @@ export default class DevsGuide extends React.Component {
 
     render() {
         return (
-            <div dangerouslySetInnerHTML={{__html: this.state.markdown}} />
+            <div className='docs-body' style={{ maxWidth: '840px', margin: 'auto'}} dangerouslySetInnerHTML={{__html: this.state.markdown}} />
         )
     }
 }

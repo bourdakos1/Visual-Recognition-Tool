@@ -1,123 +1,142 @@
-/* http://prismjs.com/download.html?themes=prism-okaidia&languages=clike+javascript+java+python+swift */
-/**
- * okaidia theme for JavaScript, CSS and HTML
- * Loosely based on Monokai textmate theme by http://www.monokai.nl/
- * @author ocodia
- */
-
-code[class*="language-"],
-pre[class*="language-"] {
-	color: #f8f8f2;
-	background: none;
-	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
-	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-	text-align: left;
-	white-space: pre;
-	word-spacing: normal;
-	word-break: normal;
-	word-wrap: normal;
-	line-height: 1.5;
-
-	-moz-tab-size: 4;
-	-o-tab-size: 4;
-	tab-size: 4;
-
-	-webkit-hyphens: none;
-	-moz-hyphens: none;
-	-ms-hyphens: none;
-	hyphens: none;
+pre .highlighted-line {
+    background: hsla(0, 0%, 100%, .8)
 }
 
-/* Code blocks */
-pre[class*="language-"] {
-	padding: 1em;
-	margin: .5em 0;
-	overflow: auto;
-	border-radius: 0.3em;
+code .token {
+    padding: 0;
+    margin: 0
 }
 
-:not(pre) > code[class*="language-"],
-pre[class*="language-"] {
-	background: #272822;
+code .token:not(.script) {
+    font-weight: 400
 }
 
-/* Inline code */
-:not(pre) > code[class*="language-"] {
-	padding: .1em;
-	border-radius: .3em;
-	white-space: normal;
+code .token.property {
+    font-weight: 500
 }
 
-.token.comment,
-.token.prolog,
-.token.doctype,
-.token.cdata {
-	color: slategray;
+.language-php .token.operator, code .token.atrule, code .token.keyword {
+    color: #6772e5
 }
 
-.token.punctuation {
-	color: #f8f8f2;
+code.language-markup .token.namespace, code .token.attr-name, code .token.selector,
+code .token.tag, code .token.tag * {
+    color: #0075d6
 }
 
-.namespace {
-	opacity: .7;
+.language-php .token.operator, code .token.atrule, code .token.keyword,
+code .token.tag {
+    font-weight: 600
 }
 
-.token.property,
-.token.tag,
-.token.constant,
-.token.symbol,
-.token.deleted {
-	color: #f92672;
+code .token.attr-name {
+    font-style: italic
 }
 
-.token.boolean,
-.token.number {
-	color: #ae81ff;
+code .token.comment {
+    font-weight: 400;
+    color: #91a2b0
 }
 
-.token.selector,
-.token.attr-name,
-.token.string,
-.token.char,
-.token.builtin,
-.token.inserted {
-	color: #a6e22e;
+code.language-url, code .token.function, code .token.url {
+    font-weight: 600;
+    color: #3297d3
 }
 
-.token.operator,
-.token.entity,
-.token.url,
-.language-css .token.string,
-.style .token.string,
-.token.variable {
-	color: #f8f8f2;
+.language-ruby .token.constant + .token.punctuation, .language-ruby .token.constant + .token.punctuation + .token.symbol,
+code .token.boolean, code .token.builtin, code .token.class-name, code .token.constant,
+code .token.namespace {
+    font-weight: 600;
+    color: #2191ef
 }
 
-.token.atrule,
-.token.attr-value,
-.token.function {
-	color: #e6db74;
+code .token.number {
+    color: #fa755a
 }
 
-.token.keyword {
-	color: #66d9ef;
+code .token.header {
+    font-weight: 700
 }
 
-.token.regex,
-.token.important {
-	color: #fd971f;
+.language-bash .token.function, code .token.curl, code .token.option,
+code .token.variable {
+    color: teal;
+    font-weight: 600
 }
 
-.token.important,
-.token.bold {
-	font-weight: bold;
-}
-.token.italic {
-	font-style: italic;
+.language-bash .token.function, code .token.curl, code .token.option {
+    font-weight: 500
 }
 
-.token.entity {
-	cursor: help;
+.language-bash .token.option, code.language-css .property, code .token.parameter,
+code .token.symbol {
+    font-weight: 500;
+    color: #d14
 }
 
+code.language-html .token.attr-value > .punctuation:not(:first-child),
+code.language-markup .token.attr-value > .punctuation:not(:first-child),
+code .token.attr-value, code .token.macro, code .token.string, code .token.stripe,
+code .token.value {
+    font-weight: 400;
+    color: #159570
+}
+
+code .token.macro .keyword {
+    color: #064508
+}
+
+code .token.publishable-key, code .token.secret-key {
+    background: #eceff1;
+    border-radius: 3px;
+    padding: 2px;
+    margin: -2px
+}
+
+code .token.publishable-key.enabled, code .token.secret-key.enabled {
+    background: #dfe3e6
+}
+
+pre {
+    position: relative;
+    color: #424770
+}
+
+pre .line-numbers {
+    position: absolute;
+    pointer-events: none;
+    top: 11px;
+    left: 29px;
+    width: 16px;
+    counter-reset: a;
+    line-height: 19px;
+    font-family: Source Code Pro, monospace
+}
+
+pre .line-numbers > span {
+    pointer-events: none;
+    display: block;
+    counter-increment: a
+}
+
+pre .line-numbers > span:before {
+    content: counter(a);
+    color: #bec5ca;
+    display: block;
+    font-size: 13px;
+    text-align: right;
+    user-select: none
+}
+
+pre .line-numbers > span.highlighted:before {
+    color: #858c90;
+    font-weight: 500
+}
+
+pre.language-bash .line-numbers > span:before, pre.language-curl .line-numbers > span:before {
+    content: '>'
+}
+
+pre.language-bash .line-numbers > span:first-child:before, pre.language-curl .line-numbers > span:first-child:before {
+    content: '$'
+}

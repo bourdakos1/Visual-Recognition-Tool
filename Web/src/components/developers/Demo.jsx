@@ -318,7 +318,7 @@ export default class Demo extends React.Component {
         }
 
         var section = {
-            borderTop: '1px solid #d3d3d3',
+            // borderTop: '1px solid #d3d3d3',
             display: 'flex',
             justifyContent: 'center', /* align horizontal */
             alignItems: 'center', /* align vertical */
@@ -326,7 +326,7 @@ export default class Demo extends React.Component {
             bottom: '120px',
             left: '0',
             right: '0',
-            top: '85px',
+            top: '115px',
             paddingRight: '300px',
             // backgroundColor: Styles.colorPrimary,
         }
@@ -337,7 +337,7 @@ export default class Demo extends React.Component {
             position: 'fixed',
             bottom: '120px',
             right: '0',
-            top: '85px',
+            top: '115px',
             // backgroundColor: Styles.colorPrimary,
         }
 
