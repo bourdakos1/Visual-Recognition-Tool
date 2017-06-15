@@ -2,8 +2,8 @@ import React from 'react'
 import Radium from 'radium'
 import { Link } from 'react-router-dom'
 
-import Button from './Button'
-import Styles from './Styles'
+import Button from '../Button'
+import Styles from '../Styles'
 
 @Radium
 export default class TestPage extends React.Component {
@@ -168,26 +168,6 @@ export default class TestPage extends React.Component {
 
         return (
             <div>
-                <div style={shadow}>
-                    <div style={contentWrapper}>
-                        <Link to='/' style={logo}><img src={'/watson_color.png'} style={logo}></img></Link>
-                        <Link to='/' style={titleLink}>Watson Vision</Link>
-
-                        <a href='/demo' key='a' style={link}>Demo</a>
-                        <a href='/' key='b' style={link}>Pricing</a>
-                        <a href='/' key='c' style={[link, last]}>Documentation</a>
-
-                        <a style={{textDecoration: 'none'}} href='/tool'>
-                            <Button
-                                style={[button, {padding: '0 35px'}]}
-                                id={'button--base--update-api-key'}
-                                onClick={null}
-                                text={localStorage.getItem('api_key') == 'undefined'
-                                    || localStorage.getItem('api_key') == null
-                                    || localStorage.getItem('api_key') == '' ? 'Sign In' : 'Vision Tool'}/>
-                        </a>
-                    </div>
-                </div>
                 <div style={section}>
                     <div style={{flex: '1.31803398875'}}>
                         <img src={'/test.png'} style={{

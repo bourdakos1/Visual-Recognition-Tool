@@ -2,8 +2,8 @@ import React from 'react'
 import Radium from 'radium'
 import { Link } from 'react-router-dom'
 
-import Button from './Button'
-import Styles from './Styles'
+import Button from '../Button'
+import Styles from '../Styles'
 
 @Radium
 export default class Devs extends React.Component {
@@ -135,21 +135,6 @@ export default class Devs extends React.Component {
 
         return (
             <div>
-                <div style={shadow}>
-                    <div style={contentWrapper}>
-                        <Link to='/' style={logo}><img src={'/watson_white.png'} style={logo}></img></Link>
-                        <a href='/' style={[titleLink, last]}>Developers</a>
-
-                        {/*<a href='/demo' key='a' style={link}>Demo</a>
-                        <a href='/' key='b' style={link}>Pricing</a>
-                        <a href='/' key='c' style={[link, last]}>Documentation</a>*/}
-
-                        <a style={{textDecoration: 'none'}} href='/tool' style={[link, {color: 'white'}]}>
-                            Sign In
-                        </a>
-                    </div>
-                </div>
-
                 <div style={[section, {
                         height: '600px',
                         margin: '0',

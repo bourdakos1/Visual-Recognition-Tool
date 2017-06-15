@@ -8,10 +8,12 @@ import CreateClassifier from './components/CreateClassifier'
 import UpdateClassifier from './components/UpdateClassifier'
 import CredentialsModal from './components/CredentialsModal'
 import LandingPage from './components/LandingPage'
-import TestPage from './components/TestPage'
-import Demo from './components/Demo'
-import Devs from './components/Devs'
-import DevsGuide from './components/DevsGuide'
+
+import DevBase from './components/developers/Base'
+import TestPage from './components/developers/TestPage'
+import Demo from './components/developers/Demo'
+import Devs from './components/developers/Devs'
+import DevsGuide from './components/developers/DevsGuide'
 
 
 // This is the base of the App
@@ -49,10 +51,14 @@ class App extends React.Component {
         return (
             <BrowserRouter>
                 <div>
-                    <Route exact path='/' component={TestPage}/>
-                    <Route exact path='/demo' component={Demo}/>
-                    <Route exact path='/docs' component={Devs}/>
-                    <Route exact path='/docs2' component={DevsGuide}/>
+                    <Route path='/docs' render={(props) => (
+                        <DevBase>
+                            <Route exact path='/docs/demo' component={Demo}/>
+                            <Route exact path='/docs/guide' component={Devs}/>
+                            <Route exact path='/docs/guide2' component={DevsGuide}/>
+                            <Route exact path='/docs' component={TestPage}/>
+                        </DevBase>
+                    )}/>
 
                     <Route path='/tool' render={(props) => (
                         <div>

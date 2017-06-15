@@ -3,16 +3,15 @@ import Radium from 'radium'
 import { Link } from 'react-router-dom'
 import MarkdownIt from 'markdown-it'
 
-import Button from './Button'
-import Styles from './Styles'
+import Button from '../Button'
+import Styles from '../Styles'
 
 @Radium
 export default class DevsGuide extends React.Component {
     componentWillMount() {
-
         var md = new MarkdownIt()
 
-        fetch('./README.md').then((response) => {
+        fetch('../README.md').then((response) => {
             return response.text()
         }).then((text) => {
             this.setState({
@@ -25,9 +24,7 @@ export default class DevsGuide extends React.Component {
 
     render() {
         return (
-            <div>
-                <div dangerouslySetInnerHTML={{__html: this.state.markdown}} />
-            </div>
+            <div dangerouslySetInnerHTML={{__html: this.state.markdown}} />
         )
     }
 }
