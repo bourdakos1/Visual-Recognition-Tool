@@ -13,9 +13,11 @@ export default class DevsGuide extends React.Component {
         var md = new MarkdownIt()
         md.use(markdownItAttrs)
 
-        fetch('../README.md').then((response) => {
+        fetch('./../getting-started.md').then((response) => {
             return response.text()
         }).then((text) => {
+            text = text.replace(/\{API_KEY\}/g, localStorage.getItem('api_key') ? localStorage.getItem('api_key') : '{api-key}')
+            text = text.replace(/\{REPLACE_API_KEY\}/g, localStorage.getItem('api_key') ? '> **Note:** For your convenience, we inserted your credentials.' : '* Replace `{api-key}` with the service credentials from earlier.')
             this.setState({
                 markdown: md.render(text)
             }, () => {

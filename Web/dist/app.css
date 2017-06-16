@@ -13,6 +13,10 @@ body {
     font-size: 16px;
 }
 
+img.full-width {
+    margin: 24px 0;
+    width: 100%;
+}
 
 *:focus {
     outline: none !important

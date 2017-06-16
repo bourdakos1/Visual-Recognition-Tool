@@ -1811,53 +1811,6 @@ div.desc {
 .message.inverted {
   background: #fff; }
 
-.modal-box {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  z-index: 200; }
-
-.modal {
-  position: relative;
-  margin: auto;
-  margin-top: 16px;
-  padding: 0;
-  background: #fff;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  border-radius: 8px;
-  color: #000; }
-  @media (max-width: 768px) {
-    .modal input,
-    .modal textarea {
-      font-size: 16px; } }
-  .modal .close {
-    position: absolute;
-    top: 18px;
-    right: 16px;
-    opacity: .3; }
-    .modal .close:hover {
-      opacity: 1; }
-
-.modal-header {
-  padding: 24px 32px;
-  font-size: 18px;
-  font-weight: bold;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
-  .modal-header:empty {
-    display: none; }
-
-.modal-body {
-  padding: 36px 56px; }
-
-@media (max-width: 768px) {
-  .modal-header,
-  .modal-body {
-    padding: 24px; } }
-
 .offcanvas {
   background: #fff;
   position: fixed;
