@@ -12,8 +12,10 @@ import LandingPage from './components/LandingPage'
 import DevBase from './components/developers/Base'
 import TestPage from './components/developers/TestPage'
 import Demo from './components/developers/Demo'
+import ConversationDemo from './components/developers/ConversationDemo'
 import Devs from './components/developers/Devs'
 import DevsGuide from './components/developers/DevsGuide'
+import ConversationDevsGuide from './components/developers/ConversationDevsGuide'
 import Strings from './components/Strings'
 
 // This is the base of the App
@@ -53,9 +55,15 @@ class App extends React.Component {
                 <div>
                     <Route path='/docs' render={(props) => (
                         <DevBase {...props}>
-                            <Route exact path={Strings.DEMO_PATH} component={Demo}/>
-                            <Route exact path={Strings.GUIDE_PATH} component={DevsGuide}/>
-                            <Route exact path={Strings.API_PATH} component={DevsGuide}/>
+                            <Route exact path={Strings.DEMO_PATH + '/vision'} component={Demo}/>
+                            <Route exact path={Strings.DEMO_PATH + '/conversation'} component={ConversationDemo}/>
+
+                            <Route exact path={Strings.GUIDE_PATH + '/vision'} component={DevsGuide}/>
+                            <Route exact path={Strings.GUIDE_PATH + '/conversation'} component={ConversationDevsGuide}/>
+
+                            <Route exact path={Strings.API_PATH + '/vision'} component={DevsGuide}/>
+                            <Route exact path={Strings.API_PATH + '/conversation'} component={DevsGuide}/>
+
                             <Route exact path={Strings.DEVELOPER_PATH} component={Devs}/>
                         </DevBase>
                     )}/>

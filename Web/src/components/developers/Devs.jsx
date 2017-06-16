@@ -7,15 +7,6 @@ import Styles from '../Styles'
 
 @Radium
 export default class Devs extends React.Component {
-    componentDidMount() {
-        Prism.highlightAll()
-
-        // var width = this.centerText.offsetWidth
-        //
-        // this.centerTextParent.style.width = width
-        // this.centerText.style.width = width
-    }
-
     render() {
         var logo = {
             height: '60px',
@@ -140,8 +131,10 @@ export default class Devs extends React.Component {
                         margin: '0',
                         padding: '0',
                         backgroundColor: '#282c34',
-                        marginTop: '-110px'
-                }]}></div>
+                        marginTop: '-115px'
+                }]}>
+                    <div style={{color: 'white', fontSize: '30px'}}>Blah Blah Watson Blah</div>
+                </div>
 
 
                 <div style={[section, {
@@ -180,7 +173,7 @@ export default class Devs extends React.Component {
                         paddingRight: '20px',
                         marginBottom: '150px',
                 }]}>
-                    <a href='https://www.ibm.com/watson/developercloud/doc/conversation/index.html'
+                    <a href='/docs/guide/conversation'
                         style={{
                         flex: '1',
                         display: 'flex',
@@ -251,7 +244,7 @@ export default class Devs extends React.Component {
                         </div>
                     </a>
 
-                    <a href='https://www.ibm.com/watson/developercloud/doc/visual-recognition/index.html'
+                    <a href='/docs/guide/vision'
                         style={{
                         flex: '1',
                         display: 'flex',

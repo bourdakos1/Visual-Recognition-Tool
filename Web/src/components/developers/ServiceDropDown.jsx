@@ -82,9 +82,21 @@ export default class DropDown extends React.Component {
                 onMouseLeave={this.toggleHover}>
                 {this.props.children}<i style={{float: 'right', color: 'rgba(0, 0, 0, 0.54)'}} className="material-icons">arrow_drop_down</i>
                 <div style={dropdownContent}>
-                    <a style={[aStyle, aa]} key='0' href="#">Conversation</a>
+                    <a style={[aStyle, aa, this.props.service == '/conversation' ? aSelected : null]} key='0' href={this.props.basePath + "/conversation"}>
+                        Conversation
+                        {this.props.service == '/conversation' ?
+                            <i style={{float: 'right', color: Styles.colorPrimary, fontSize: '14px'}} className="material-icons">check</i> :
+                            null
+                        }
+                    </a>
                     <a style={[aStyle, ab]} key='1' href="#">Discovery</a>
-                    <a style={[aStyle, ab, aSelected]} key='2' href="#">Vision<i style={{float: 'right', color: Styles.colorPrimary}} className="material-icons">check</i></a>
+                    <a style={[aStyle, ab, this.props.service == '/vision' ? aSelected : null]} key='2' href={this.props.basePath + "/vision"}>
+                        Vision
+                        {this.props.service == '/vision' ?
+                            <i style={{float: 'right', color: Styles.colorPrimary, fontSize: '14px'}} className="material-icons">check</i> :
+                            null
+                        }
+                    </a>
                     <a style={[aStyle, ab]} key='3' href="#">Speech To Text</a>
                     <a style={[aStyle, ab]} key='4' href="#">Translation</a>
                     <a style={[aStyle, ab]} key='5' href="#">Text To Speech</a>

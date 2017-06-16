@@ -7,6 +7,10 @@ import Styles from '../Styles'
 import Strings from '../Strings'
 import ServiceDropDown from './ServiceDropDown'
 
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
 @Radium
 export default class Base extends React.Component {
     render() {
@@ -90,35 +94,54 @@ export default class Base extends React.Component {
             flex: 'none'
         }
 
-        var demo = this.props.location.pathname == Strings.DEMO_PATH
-        var guide = this.props.location.pathname == Strings.GUIDE_PATH
+        var whiteTheme = this.props.location.pathname == Strings.DEVELOPER_PATH
+        var demo = this.props.location.pathname.indexOf(Strings.DEMO_PATH) == 0
+        var guide = this.props.location.pathname.indexOf(Strings.GUIDE_PATH) == 0
         var api = false
         var tutorials = false
         var sdk = false
+
+        var basePath = demo ? Strings.DEMO_PATH : guide ? Strings.GUIDE_PATH : '/'
+
+        var service = this.props.location.pathname.replace(basePath, '')
 
         return (
             <div>
                 <div style={shadow}>
                     <div style={contentWrapper}>
-                        <Link to='/docs' style={logo}><img src={'/watson_color.png'} style={logo}></img></Link>
-                        <Link to='/docs' style={titleLink}>Developers</Link>
-                        <span style={[titleStrangeBug, {fontWeight: 'normal', color: Styles.colorTextLight}]}>/</span>
-                        <ServiceDropDown style={[titleLink, {fontWeight: 'normal'}, last]}>Vision</ServiceDropDown>
+                        <Link to='/docs' style={logo}><img src={whiteTheme ? '/watson_white.png' : '/watson_color.png'} style={logo}></img></Link>
+                        <a href='/docs' style={[titleLink, whiteTheme ? last : null, whiteTheme ? {color: 'white'} : null]}>Developers</a>
+                        {!whiteTheme ?
+                            <span style={[titleStrangeBug, {fontWeight: 'normal', color: Styles.colorTextLight}]}>/</span> :
+                            null
+                        }
+                        {!whiteTheme ?
+                            <ServiceDropDown service={service} basePath={basePath} style={[titleLink, {fontWeight: 'normal'}, last]}>{capitalizeFirstLetter(service.replace('/',''))}</ServiceDropDown> :
+                            null
+                        }
+                        {!whiteTheme ?
+                            <a style={{textDecoration: 'none'}} href='/tool' target='_blank'>
+                                <Button
+                                    style={[button, {padding: '0 35px'}]}
+                                    onClick={null}
+                                    text={'Launch Tool'}/>
+                            </a> :
+                            <a style={{textDecoration: 'none', color: 'white', ':hover': {textDecoration: 'underline'}}} href='/tool' target='_blank'>
+                                Sign In
+                            </a>
+                        }
 
-                        <a style={{textDecoration: 'none'}} href='/tool' target='_blank'>
-                            <Button
-                                style={[button, {padding: '0 35px'}]}
-                                onClick={null}
-                                text={'Launch Tool'}/>
-                        </a>
                     </div>
-                    <div style={navWrapper}>
-                        <a href='/docs/demo' key='0' style={[link, demo ? linkActive : null]}>Demo</a>
-                        <a href='/docs/guide' key='1' style={[link, guide ? linkActive : null]}>Guide</a>
-                        <a href='/docs/guide2' key='2' style={[link, api ? linkActive : null]}>API Reference</a>
-                        <a href='/docs/guide2' key='3' style={[link, tutorials ? linkActive : null]}>Tutorials</a>
-                        <a href='/docs/guide2' key='4' style={[link, sdk ? linkActive : null]}>SDK</a>
-                    </div>
+                    {!whiteTheme ?
+                        <div style={navWrapper}>
+                            <a href={Strings.DEMO_PATH + service} key='0' style={[link, demo ? linkActive : null]}>Demo</a>
+                            <a href={Strings.GUIDE_PATH + service} key='1' style={[link, guide ? linkActive : null]}>Guide</a>
+                            <a href={Strings.GUIDE_PATH + service} key='2' style={[link, api ? linkActive : null]}>API Reference</a>
+                            <a href={Strings.GUIDE_PATH + service} key='3' style={[link, tutorials ? linkActive : null]}>Tutorials</a>
+                            <a href={Strings.GUIDE_PATH + service} key='4' style={[link, sdk ? linkActive : null]}>SDK</a>
+                        </div> :
+                        null
+                    }
                 </div>
                 {this.props.children}
             </div>

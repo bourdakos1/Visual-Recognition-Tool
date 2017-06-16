@@ -8,12 +8,12 @@ import Button from '../Button'
 import Styles from '../Styles'
 
 @Radium
-export default class DevsGuide extends React.Component {
+export default class ConversationDevsGuide extends React.Component {
     componentWillMount() {
         var md = new MarkdownIt()
         md.use(markdownItAttrs)
 
-        fetch('./../../getting-started.md').then((response) => {
+        fetch('./../../overview.md').then((response) => {
             return response.text()
         }).then((text) => {
             text = text.replace(/\{API_KEY\}/g, localStorage.getItem('api_key') ? localStorage.getItem('api_key') : '{api-key}')
