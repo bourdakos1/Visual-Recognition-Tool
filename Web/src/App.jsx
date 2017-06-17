@@ -14,6 +14,7 @@ import TestPage from './components/developers/TestPage'
 import Demo from './components/developers/Demo'
 import ConversationDemo from './components/developers/ConversationDemo'
 import Devs from './components/developers/Devs'
+import DevsTest from './components/developers/DevsTest'
 import DevsGuide from './components/developers/DevsGuide'
 import ConversationDevsGuide from './components/developers/ConversationDevsGuide'
 import Strings from './components/Strings'
@@ -64,7 +65,7 @@ class App extends React.Component {
                             <Route exact path={Strings.API_PATH + '/vision'} component={DevsGuide}/>
                             <Route exact path={Strings.API_PATH + '/conversation'} component={DevsGuide}/>
 
-                            <Route exact path={Strings.DEVELOPER_PATH} component={Devs}/>
+                            <Route exact path={Strings.DEVELOPER_PATH} component={DevsTest}/>
                         </DevBase>
                     )}/>
 
