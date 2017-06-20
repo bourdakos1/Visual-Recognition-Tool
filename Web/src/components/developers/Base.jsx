@@ -16,7 +16,6 @@ export default class Base extends React.Component {
     render() {
         var logo = {
             height: '60px',
-            float: 'left',
             cursor: 'pointer',
         }
 
@@ -109,8 +108,8 @@ export default class Base extends React.Component {
             <div>
                 <div style={whiteTheme ? last : shadow}>
                     <div style={contentWrapper}>
-                        <div style={ whiteTheme ? {flex: '1'} : null}>
-                        <Link to='/docs' style={logo}><img src={'/watson_color.png'} style={logo}></img></Link>
+                        <div style={ whiteTheme ? {flex: '1',  display: 'flex', alignItems: 'center'} : { display: 'flex', alignItems: 'center'}}>
+                        <Link to='/docs'><img src={'/watson_color.png'} style={logo}></img></Link>
                         <Link to='/docs' style={titleLink}>Developers</Link>
                         </div>
                         {!whiteTheme ?

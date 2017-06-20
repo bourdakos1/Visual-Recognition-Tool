@@ -126,6 +126,8 @@ export default class DevsTest extends React.Component {
 
         return (
             <div>
+                {/* START OF SERVICES */}
+
                 <div style={[section, {
                         height: 'auto',
                         padding: '0',
@@ -133,10 +135,9 @@ export default class DevsTest extends React.Component {
                         maxWidth: '1000px',
                         marginLeft: 'auto',
                         marginRight: 'auto',
-                        paddingLeft: '20px',
-                        paddingRight: '20px',
-                        // marginBottom: '150px',
                 }]}>
+
+                {/* ROW 1 */}
                 <div style={[section, {
                     height: 'auto',
                     padding: '0',
@@ -144,9 +145,11 @@ export default class DevsTest extends React.Component {
                     maxWidth: '1000px',
                     marginLeft: 'auto',
                     marginRight: 'auto',
-                    paddingLeft: '20px',
-                    paddingRight: '20px',
+                    border: '1px solid #f3f3f3',
+                    borderRadius: '5px'
                 }]}>
+
+                {/* CONVERSATION */}
                     <a href='/docs/guide/conversation'
                         style={{
                         flex: '1',
@@ -154,8 +157,9 @@ export default class DevsTest extends React.Component {
                         flexDirection: 'column',
                         alignItems: 'center',
                         alignSelf: 'flex-start',
-                        marginRight: '20px',
-                        textDecoration: 'none'
+                        textDecoration: 'none',
+                        borderRight: '1px solid #f3f3f3',
+                        paddingBottom: '20px'
                     }}>
                         <img src={'/services/conversation.png'} style={{
                             width: '200px',
@@ -176,12 +180,14 @@ export default class DevsTest extends React.Component {
                             fontSize: '1.2em',
                             lineHeight: '1.4em',
                             color: Styles.colorTextDark,
-                            opacity: '0.6'
+                            opacity: '0.6',
+                            textAlign: 'center'
                         }}>
                             Build chatbots that understand natural language and deploy them anywhere.
                         </div>
                     </a>
 
+                    {/* DISCOVERY */}
                     <a href='https://www.ibm.com/watson/developercloud/doc/discovery/index.html'
                         style={{
                         flex: '1',
@@ -189,9 +195,8 @@ export default class DevsTest extends React.Component {
                         flexDirection: 'column',
                         alignItems: 'center',
                         alignSelf: 'flex-start',
-                        marginRight: '20px',
-                        marginLeft: '20px',
-                        textDecoration: 'none'
+                        textDecoration: 'none',
+                        paddingBottom: '20px'
                     }}>
                         <img src={'/services/discovery.png'} style={{
                             width: '200px',
@@ -212,12 +217,14 @@ export default class DevsTest extends React.Component {
                             fontSize: '1.2em',
                             lineHeight: '1.4em',
                             color: Styles.colorTextDark,
-                            opacity: '0.6'
+                            opacity: '0.6',
+                            textAlign: 'center'
                         }}>
                             Rapidly build a cognitive search and content analytics engine.
                         </div>
                     </a>
 
+                    {/* VISION */}
                     <a href='/docs/guide/vision'
                         style={{
                         flex: '1',
@@ -225,10 +232,11 @@ export default class DevsTest extends React.Component {
                         flexDirection: 'column',
                         alignItems: 'center',
                         alignSelf: 'flex-start',
-                        marginLeft: '20px',
-                        textDecoration: 'none'
+                        textDecoration: 'none',
+                        borderLeft: '1px solid #f3f3f3',
+                        paddingBottom: '20px'
                     }}>
-                        <img src={'/services/vision.png'} style={{
+                        <img src={'/services/vision3.png'} style={{
                             width: '200px',
                             height: '200px'
                         }}/>
@@ -247,249 +255,13 @@ export default class DevsTest extends React.Component {
                             fontSize: '1.2em',
                             lineHeight: '1.4em',
                             color: Styles.colorTextDark,
-                            opacity: '0.6'
+                            opacity: '0.6',
+                            textAlign: 'center'
                         }}>
                             Tag photos, recognize food, locate faces, and find similar images in a collection.
                         </div>
                     </a>
                 </div>
-                </div>
-
-
-                <div style={[section, {
-                        height: 'auto',
-                        padding: '0',
-                        marginTop: '20px',
-                        maxWidth: '1000px',
-                        marginLeft: 'auto',
-                        marginRight: 'auto',
-                        paddingLeft: '20px',
-                        paddingRight: '20px',
-                        // marginBottom: '150px',
-                }]}>
-                    <a href='https://www.ibm.com/watson/developercloud/doc/speech-to-text/index.html'
-                        style={{
-                        flex: '1',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        alignSelf: 'flex-start',
-                        marginRight: '20px',
-                        textDecoration: 'none'
-                    }}>
-                        <img src={'/services/speech-to-text.png'} style={{
-                            width: '200px',
-                            height: '200px'
-                        }}/>
-
-                        <div style={{
-                            font: Styles.fontTitle,
-                            fontSize: '2.8em',
-                            color: Styles.colorTextDark,
-                            fontWeight: '200',
-                            marginBottom: '12px'
-                        }}>
-                            Speech To Text
-                        </div>
-                        <div style={{
-                            font: Styles.fontDefault,
-                            fontSize: '1.2em',
-                            lineHeight: '1.4em',
-                            color: Styles.colorTextDark,
-                            opacity: '0.6'
-                        }}>
-                            Convert human voice into written word and recognize multiple different speakers.
-                        </div>
-                    </a>
-
-                    <a href='https://www.ibm.com/watson/developercloud/doc/language-translator/index.html'
-                        style={{
-                        flex: '1',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        alignSelf: 'flex-start',
-                        marginRight: '20px',
-                        marginLeft: '20px',
-                        textDecoration: 'none'
-                    }}>
-                        <img src={'/services/translation.png'} style={{
-                            width: '200px',
-                            height: '200px'
-                        }}/>
-
-                        <div style={{
-                            font: Styles.fontTitle,
-                            fontSize: '2.8em',
-                            color: Styles.colorTextDark,
-                            fontWeight: '200',
-                            marginBottom: '12px'
-                        }}>
-                            Translation
-                        </div>
-                        <div style={{
-                            font: Styles.fontDefault,
-                            fontSize: '1.2em',
-                            lineHeight: '1.4em',
-                            color: Styles.colorTextDark,
-                            opacity: '0.6',
-                        }}>
-                            Translate text from one language to another.
-                        </div>
-                    </a>
-
-                    <a href='https://www.ibm.com/watson/developercloud/doc/text-to-speech/index.html'
-                        style={{
-                        flex: '1',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        alignSelf: 'flex-start',
-                        marginLeft: '20px',
-                        textDecoration: 'none'
-                    }}>
-                        <img src={'/services/translation.png'} style={{
-                            width: '200px',
-                            height: '200px'
-                        }}/>
-
-                        <div style={{
-                            font: Styles.fontTitle,
-                            fontSize: '2.8em',
-                            color: Styles.colorTextDark,
-                            fontWeight: '200',
-                            marginBottom: '12px'
-                        }}>
-                            Text To Speech
-                        </div>
-                        <div style={{
-                            font: Styles.fontDefault,
-                            fontSize: '1.2em',
-                            lineHeight: '1.4em',
-                            color: Styles.colorTextDark,
-                            opacity: '0.6'
-                        }}>
-                            Detect location of faces in a photo, including data such as gender and age.
-                        </div>
-                    </a>
-                </div>
-
-                <div style={[section, {
-                        height: 'auto',
-                        padding: '0',
-                        marginTop: '20px',
-                        maxWidth: '1000px',
-                        marginLeft: 'auto',
-                        marginRight: 'auto',
-                        paddingLeft: '20px',
-                        paddingRight: '20px',
-                        marginBottom: '60px',
-                }]}>
-                    <a href='https://www.ibm.com/watson/developercloud/doc/document-conversion/index.html'
-                        style={{
-                        flex: '1',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        alignSelf: 'flex-start',
-                        marginRight: '20px',
-                        textDecoration: 'none'
-                    }}>
-                        <img src={'/services/translation.png'} style={{
-                            width: '200px',
-                            height: '200px'
-                        }}/>
-
-                        <div style={{
-                            font: Styles.fontTitle,
-                            fontSize: '2.8em',
-                            color: Styles.colorTextDark,
-                            fontWeight: '200',
-                            marginBottom: '12px'
-                        }}>
-                            Document Conversion
-                        </div>
-                        <div style={{
-                            font: Styles.fontDefault,
-                            fontSize: '1.2em',
-                            lineHeight: '1.4em',
-                            color: Styles.colorTextDark,
-                            opacity: '0.6'
-                        }}>
-                            Understand the contents of images through various keyword tags.
-                        </div>
-                    </a>
-
-                    <a href='https://www.ibm.com/watson/developercloud/doc/tone-analyzer/index.html'
-                        style={{
-                        flex: '1',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        alignSelf: 'flex-start',
-                        marginRight: '20px',
-                        marginLeft: '20px',
-                        textDecoration: 'none'
-                    }}>
-                        <img src={'/services/translation.png'} style={{
-                            width: '200px',
-                            height: '200px'
-                        }}/>
-
-                        <div style={{
-                            font: Styles.fontTitle,
-                            fontSize: '2.8em',
-                            color: Styles.colorTextDark,
-                            fontWeight: '200',
-                            marginBottom: '12px'
-                        }}>
-                            Tone Analyzer
-                        </div>
-                        <div style={{
-                            font: Styles.fontDefault,
-                            fontSize: '1.2em',
-                            lineHeight: '1.4em',
-                            color: Styles.colorTextDark,
-                            opacity: '0.6'
-                        }}>
-                            Enhanced specificity and accuracy for food items, based on over 2,000 tags.
-                        </div>
-                    </a>
-
-                    <a href='https://www.ibm.com/watson/developercloud/doc/personality-insights/index.html'
-                        style={{
-                        flex: '1',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        alignSelf: 'flex-start',
-                        marginLeft: '20px',
-                        textDecoration: 'none'
-                    }}>
-                        <img src={'/services/translation.png'} style={{
-                            width: '200px',
-                            height: '200px'
-                        }}/>
-
-                        <div style={{
-                            font: Styles.fontTitle,
-                            fontSize: '2.8em',
-                            color: Styles.colorTextDark,
-                            fontWeight: '200',
-                            marginBottom: '12px'
-                        }}>
-                            Personality Insights
-                        </div>
-                        <div style={{
-                            font: Styles.fontDefault,
-                            fontSize: '1.2em',
-                            lineHeight: '1.4em',
-                            color: Styles.colorTextDark,
-                            opacity: '0.6'
-                        }}>
-                            Detect location of faces in a photo, including data such as gender and age.
-                        </div>
-                    </a>
                 </div>
 
             </div>

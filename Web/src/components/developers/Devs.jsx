@@ -162,6 +162,8 @@ export default class Devs extends React.Component {
                     </div>
                 </div>
 
+                {/* START OF SERVICES */}
+                {/* ROW 1 */}
                 <div style={[section, {
                         height: 'auto',
                         padding: '0',
@@ -173,6 +175,8 @@ export default class Devs extends React.Component {
                         paddingRight: '20px',
                         marginBottom: '150px',
                 }]}>
+
+                {/* CONVERSATION */}
                     <a href='/docs/guide/conversation'
                         style={{
                         flex: '1',
@@ -208,6 +212,8 @@ export default class Devs extends React.Component {
                         </div>
                     </a>
 
+
+                    {/* DISCOVERY */}
                     <a href='https://www.ibm.com/watson/developercloud/doc/discovery/index.html'
                         style={{
                         flex: '1',
@@ -244,6 +250,7 @@ export default class Devs extends React.Component {
                         </div>
                     </a>
 
+                    {/* VISION */}
                     <a href='/docs/guide/vision'
                         style={{
                         flex: '1',
@@ -280,7 +287,7 @@ export default class Devs extends React.Component {
                     </a>
                 </div>
 
-
+                {/* ROW 2 */}
                 <div style={[section, {
                         height: 'auto',
                         padding: '0',
@@ -292,6 +299,8 @@ export default class Devs extends React.Component {
                         paddingRight: '20px',
                         marginBottom: '150px',
                 }]}>
+
+                    {/* SPEECH TO TEXT */}
                     <a href='https://www.ibm.com/watson/developercloud/doc/speech-to-text/index.html'
                         style={{
                         flex: '1',
@@ -327,6 +336,7 @@ export default class Devs extends React.Component {
                         </div>
                     </a>
 
+                    {/* TRANSLATION */}
                     <a href='https://www.ibm.com/watson/developercloud/doc/language-translator/index.html'
                         style={{
                         flex: '1',
@@ -362,43 +372,9 @@ export default class Devs extends React.Component {
                             Translate text from one language to another.
                         </div>
                     </a>
-
-                    <a href='https://www.ibm.com/watson/developercloud/doc/text-to-speech/index.html'
-                        style={{
-                        flex: '1',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        alignSelf: 'flex-start',
-                        marginLeft: '40px',
-                        textDecoration: 'none'
-                    }}>
-                        <img src={'/services/translation.png'} style={{
-                            width: '300px',
-                            height: '300px'
-                        }}/>
-
-                        <div style={{
-                            font: Styles.fontTitle,
-                            fontSize: '2.8em',
-                            color: Styles.colorTextDark,
-                            fontWeight: '200',
-                            marginBottom: '12px'
-                        }}>
-                            Text To Speech
-                        </div>
-                        <div style={{
-                            font: Styles.fontDefault,
-                            fontSize: '1.2em',
-                            lineHeight: '1.4em',
-                            color: Styles.colorTextDark,
-                            opacity: '0.6'
-                        }}>
-                            Detect location of faces in a photo, including data such as gender and age.
-                        </div>
-                    </a>
                 </div>
 
+                {/* ROW 3 */}
                 <div style={[section, {
                         height: 'auto',
                         padding: '0',
@@ -410,6 +386,43 @@ export default class Devs extends React.Component {
                         paddingRight: '20px',
                         marginBottom: '150px',
                 }]}>
+
+                {/* TEXT TO SPEECH */}
+                <a href='https://www.ibm.com/watson/developercloud/doc/text-to-speech/index.html'
+                    style={{
+                    flex: '1',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    alignSelf: 'flex-start',
+                    marginLeft: '40px',
+                    textDecoration: 'none'
+                }}>
+                    <img src={'/services/translation.png'} style={{
+                        width: '300px',
+                        height: '300px'
+                    }}/>
+
+                    <div style={{
+                        font: Styles.fontTitle,
+                        fontSize: '2.8em',
+                        color: Styles.colorTextDark,
+                        fontWeight: '200',
+                        marginBottom: '12px'
+                    }}>
+                        Text To Speech
+                    </div>
+                    <div style={{
+                        font: Styles.fontDefault,
+                        fontSize: '1.2em',
+                        lineHeight: '1.4em',
+                        color: Styles.colorTextDark,
+                        opacity: '0.6'
+                    }}>
+                        Detect location of faces in a photo, including data such as gender and age.
+                    </div>
+                </a>
+
                     <a href='https://www.ibm.com/watson/developercloud/doc/document-conversion/index.html'
                         style={{
                         flex: '1',
