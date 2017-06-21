@@ -114,37 +114,26 @@ export default class Base extends React.Component {
                         </div>
                         {!whiteTheme ?
                             <span style={[titleStrangeBug, {fontWeight: 'normal', color: Styles.colorTextLight}]}>/</span> :
-                            <div style={{
-                                flex: '2',
-                                font: Styles.fontDefault,
-                                fontSize: '1.2em',
-                                lineHeight: '1.4em',
-                                color: Styles.colorTextDark,
-                                opacity: '0.6',
-                                paddingLeft: '20px',
-                                paddingRight: '20px',
-                                textAlign: 'center'
-                            }}>
-                                CHOOSE A SERVICE TO GET STARTED
-                            </div>
+                            null
                         }
                         {!whiteTheme ?
                             <ServiceDropDown service={service} basePath={basePath} style={[titleLink, {fontWeight: 'normal'}, last]}>{capitalizeFirstLetter(service.replace('/',''))}</ServiceDropDown> :
                             null
                         }
+                        <a style={{textDecoration: 'none', flex: '1'}} href='https://console.bluemix.net/login' target='_blank'>
+                            <Button
+                                style={[button, {padding: '0 35px', float: 'right'}]}
+                                onClick={null}
+                                text={'Sign In'}/>
+                        </a>
                         {!whiteTheme ?
                             <a style={{textDecoration: 'none'}} href='/tool' target='_blank'>
                                 <Button
-                                    style={[button, {padding: '0 35px'}]}
+                                    style={[button, {marginLeft: '20px'}]}
                                     onClick={null}
                                     text={'Launch Tool'}/>
                             </a> :
-                            <a style={{textDecoration: 'none', flex: '1'}} href='/tool' target='_blank'>
-                                <Button
-                                    style={[button, {padding: '0 35px', float: 'right'}]}
-                                    onClick={null}
-                                    text={'Sign In'}/>
-                            </a>
+                            null
                         }
 
                     </div>

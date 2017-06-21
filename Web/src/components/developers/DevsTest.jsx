@@ -128,6 +128,21 @@ export default class DevsTest extends React.Component {
             <div>
                 {/* START OF SERVICES */}
 
+                <div style={{
+                    flex: '2',
+                    font: Styles.fontDefault,
+                    fontSize: '1.2em',
+                    lineHeight: '1.4em',
+                    color: Styles.colorTextDark,
+                    opacity: '0.6',
+                    marginTop: '40px',
+                    paddingLeft: '20px',
+                    paddingRight: '20px',
+                    textAlign: 'center'
+                }}>
+                    CHOOSE A SERVICE TO GET STARTED
+                </div>
+
                 <div style={[section, {
                         height: 'auto',
                         padding: '0',
@@ -146,11 +161,12 @@ export default class DevsTest extends React.Component {
                     marginLeft: 'auto',
                     marginRight: 'auto',
                     border: '1px solid #f3f3f3',
-                    borderRadius: '5px'
+                    borderRadius: '5px',
                 }]}>
 
                 {/* CONVERSATION */}
                     <a href='/docs/guide/conversation'
+                        key={0}
                         style={{
                         flex: '1',
                         display: 'flex',
@@ -159,7 +175,13 @@ export default class DevsTest extends React.Component {
                         alignSelf: 'flex-start',
                         textDecoration: 'none',
                         borderRight: '1px solid #f3f3f3',
-                        paddingBottom: '20px'
+                        paddingBottom: '20px',
+                        transition: 'all 200ms cubic-bezier(0.4, 0.0, 0.2, 1)',
+                        overflow: 'hidden',
+                        borderRadius: '5px 0 0 5px',
+                        ':hover': {
+                            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+                        }
                     }}>
                         <img src={'/services/conversation.png'} style={{
                             width: '200px',
@@ -189,6 +211,7 @@ export default class DevsTest extends React.Component {
 
                     {/* DISCOVERY */}
                     <a href='https://www.ibm.com/watson/developercloud/doc/discovery/index.html'
+                        key={1}
                         style={{
                         flex: '1',
                         display: 'flex',
@@ -196,7 +219,13 @@ export default class DevsTest extends React.Component {
                         alignItems: 'center',
                         alignSelf: 'flex-start',
                         textDecoration: 'none',
-                        paddingBottom: '20px'
+                        paddingBottom: '20px',
+                        transition: 'all 200ms cubic-bezier(0.4, 0.0, 0.2, 1)',
+                        overflow: 'hidden',
+                        borderRadius: '0',
+                        ':hover': {
+                            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+                        }
                     }}>
                         <img src={'/services/discovery.png'} style={{
                             width: '200px',
@@ -226,6 +255,7 @@ export default class DevsTest extends React.Component {
 
                     {/* VISION */}
                     <a href='/docs/guide/vision'
+                        key={2}
                         style={{
                         flex: '1',
                         display: 'flex',
@@ -234,7 +264,13 @@ export default class DevsTest extends React.Component {
                         alignSelf: 'flex-start',
                         textDecoration: 'none',
                         borderLeft: '1px solid #f3f3f3',
-                        paddingBottom: '20px'
+                        paddingBottom: '20px',
+                        transition: 'all 200ms cubic-bezier(0.4, 0.0, 0.2, 1)',
+                        overflow: 'hidden',
+                        borderRadius: '0 5px 5px 0',
+                        ':hover': {
+                            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+                        }
                     }}>
                         <img src={'/services/vision3.png'} style={{
                             width: '200px',
