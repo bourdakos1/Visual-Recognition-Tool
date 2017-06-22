@@ -98,10 +98,18 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
         // Load from Watson
         let apiKey = UserDefaults.standard.string(forKey: "api_key")
         
+        if apiKey == nil {
+            self.classifiers = []
+            self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+            self.pickerView.selectItem(0)
+            self.pickerView.reloadData()
+            return
+        }
+        
         var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers")!)
         
         r.query(params: [
-            "api_key": apiKey!,
+            "api_key": apiKey ?? "none",
             "version": "2016-05-20",
             "verbose": "true"
             ])
@@ -114,6 +122,14 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
                 DispatchQueue.main.async{
+                    if json["classifiers"]! == nil {
+                        self.classifiers = []
+                        self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+                        self.pickerView.selectItem(0)
+                        self.pickerView.reloadData()
+                        return
+                    }
+                    
                     var data = json["classifiers"] as! [[String: AnyObject]]
                     
                     let dateFormatter = DateFormatter()
