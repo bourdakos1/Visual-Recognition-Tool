@@ -70,6 +70,10 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             
             let apiKey2 = UIButton()
             
+            // Set the title to be the size of the navigation bar so we can click anywhere.
+            apiKey2.frame.size.width = (drawer.navigationController?.navigationBar.frame.width)!
+            apiKey2.frame.size.height = (drawer.navigationController?.navigationBar.frame.height)!
+            
             // Style the API text.
             apiKey2.layer.shadowOffset = CGSize(width: 0, height: 1)
             apiKey2.layer.shadowOpacity = 0.2
