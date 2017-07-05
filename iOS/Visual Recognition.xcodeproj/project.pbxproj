@@ -31,7 +31,7 @@
 		2389A7081E7C65A100D7C973 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2389A7061E7C65A100D7C973 /* LaunchScreen.storyboard */; };
 		2389A7131E7C65A100D7C973 /* Visual_RecognitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A7121E7C65A100D7C973 /* Visual_RecognitionTests.swift */; };
 		2389A71E1E7C65A200D7C973 /* Visual_RecognitionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A71D1E7C65A200D7C973 /* Visual_RecognitionUITests.swift */; };
-		2389A72C1E7C668100D7C973 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A72B1E7C668100D7C973 /* CameraViewController.swift */; };
+		2389A72C1E7C668100D7C973 /* MainCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A72B1E7C668100D7C973 /* MainCameraViewController.swift */; };
 		2389A72E1E7C79C100D7C973 /* PulleyPassthroughScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A72D1E7C79C100D7C973 /* PulleyPassthroughScrollView.swift */; };
 		2389A7301E7C79CA00D7C973 /* PulleyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A72F1E7C79CA00D7C973 /* PulleyViewController.swift */; };
 		2389A7321E7C7D4F00D7C973 /* ResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A7311E7C7D4F00D7C973 /* ResultsTableViewController.swift */; };
@@ -43,6 +43,9 @@
 		23C62EC21EDDF5BA002A0311 /* select.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C62EC11EDDF5BA002A0311 /* select.png */; };
 		23C9BE8D1ECB90C900FFD71C /* SnapperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C9BE8C1ECB90C900FFD71C /* SnapperViewController.swift */; };
 		23C9BE8F1ECBF52D00FFD71C /* create.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C9BE8E1ECBF52D00FFD71C /* create.png */; };
+		23DAFC661F0C7C0100216134 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DAFC651F0C7C0100216134 /* PreviewView.swift */; };
+		23DAFC681F0C7CC200216134 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DAFC671F0C7CC200216134 /* CameraViewController.swift */; };
+		23DAFC6A1F0C7D1200216134 /* PhotoCaptureDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DAFC691F0C7D1200216134 /* PhotoCaptureDelegate.swift */; };
 		23E5ED911ED9F84A00E5AF97 /* watson_icon2.png in Resources */ = {isa = PBXBuildFile; fileRef = 23E5ED901ED9F84A00E5AF97 /* watson_icon2.png */; };
 		23E5ED931ED9F90400E5AF97 /* watson_icon2_180.png in Resources */ = {isa = PBXBuildFile; fileRef = 23E5ED921ED9F90400E5AF97 /* watson_icon2_180.png */; };
 		23E5ED951EDBCF1D00E5AF97 /* AKPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E5ED941EDBCF1D00E5AF97 /* AKPickerView.swift */; };
@@ -99,7 +102,7 @@
 		2389A7191E7C65A200D7C973 /* Visual RecognitionUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Visual RecognitionUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2389A71D1E7C65A200D7C973 /* Visual_RecognitionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Visual_RecognitionUITests.swift; sourceTree = "<group>"; };
 		2389A71F1E7C65A200D7C973 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2389A72B1E7C668100D7C973 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		2389A72B1E7C668100D7C973 /* MainCameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainCameraViewController.swift; sourceTree = "<group>"; };
 		2389A72D1E7C79C100D7C973 /* PulleyPassthroughScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PulleyPassthroughScrollView.swift; sourceTree = "<group>"; };
 		2389A72F1E7C79CA00D7C973 /* PulleyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PulleyViewController.swift; sourceTree = "<group>"; };
 		2389A7311E7C7D4F00D7C973 /* ResultsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultsTableViewController.swift; sourceTree = "<group>"; };
@@ -111,6 +114,9 @@
 		23C62EC11EDDF5BA002A0311 /* select.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = select.png; sourceTree = "<group>"; };
 		23C9BE8C1ECB90C900FFD71C /* SnapperViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapperViewController.swift; sourceTree = "<group>"; };
 		23C9BE8E1ECBF52D00FFD71C /* create.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = create.png; sourceTree = "<group>"; };
+		23DAFC651F0C7C0100216134 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
+		23DAFC671F0C7CC200216134 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		23DAFC691F0C7D1200216134 /* PhotoCaptureDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCaptureDelegate.swift; sourceTree = "<group>"; };
 		23E5ED901ED9F84A00E5AF97 /* watson_icon2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = watson_icon2.png; sourceTree = "<group>"; };
 		23E5ED921ED9F90400E5AF97 /* watson_icon2_180.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = watson_icon2_180.png; sourceTree = "<group>"; };
 		23E5ED941EDBCF1D00E5AF97 /* AKPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AKPickerView.swift; sourceTree = "<group>"; };
@@ -197,13 +203,16 @@
 				2389A7011E7C65A100D7C973 /* Main.storyboard */,
 				2389A7311E7C7D4F00D7C973 /* ResultsTableViewController.swift */,
 				2389A7371E7CAA7500D7C973 /* ResultTableViewCell.swift */,
-				2389A72B1E7C668100D7C973 /* CameraViewController.swift */,
+				2389A72B1E7C668100D7C973 /* MainCameraViewController.swift */,
 				232B9F8F1E80A5AD00407BB8 /* ClassifiersTableViewController.swift */,
 				23AA522F1EC0DC550073D4DC /* ClassiferTableViewCell.swift */,
 				235DD00A1EC63F3A00B8432B /* ClassesCollectionViewController.swift */,
 				235DD00E1EC67B0800B8432B /* ClassCollectionViewCell.swift */,
 				235DD00C1EC6702E00B8432B /* ImagesCollectionViewController.swift */,
 				23C9BE8C1ECB90C900FFD71C /* SnapperViewController.swift */,
+				23DAFC651F0C7C0100216134 /* PreviewView.swift */,
+				23DAFC671F0C7CC200216134 /* CameraViewController.swift */,
+				23DAFC691F0C7D1200216134 /* PhotoCaptureDelegate.swift */,
 				2395A02C1EC270BC00C29325 /* res */,
 				23609DBA1EBA727800FD03FC /* Keys.plist */,
 				233D0B9C1EC13101005E5594 /* Classifiers.xcdatamodeld */,
@@ -588,13 +597,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2389A72C1E7C668100D7C973 /* CameraViewController.swift in Sources */,
+				2389A72C1E7C668100D7C973 /* MainCameraViewController.swift in Sources */,
 				2389A7301E7C79CA00D7C973 /* PulleyViewController.swift in Sources */,
 				2389A6FE1E7C65A100D7C973 /* AppDelegate.swift in Sources */,
+				23DAFC681F0C7CC200216134 /* CameraViewController.swift in Sources */,
 				232B9F901E80A5AD00407BB8 /* ClassifiersTableViewController.swift in Sources */,
 				23AA52301EC0DC550073D4DC /* ClassiferTableViewCell.swift in Sources */,
+				23DAFC6A1F0C7D1200216134 /* PhotoCaptureDelegate.swift in Sources */,
 				235DD00F1EC67B0800B8432B /* ClassCollectionViewCell.swift in Sources */,
 				232B9F8E1E808EA500407BB8 /* RoundedButton.swift in Sources */,
+				23DAFC661F0C7C0100216134 /* PreviewView.swift in Sources */,
 				233D0BB91EC22EB6005E5594 /* PendingClass+CoreDataProperties.swift in Sources */,
 				2389A7321E7C7D4F00D7C973 /* ResultsTableViewController.swift in Sources */,
 				233D0BB81EC22EB6005E5594 /* PendingClass+CoreDataClass.swift in Sources */,
@@ -763,6 +775,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = KGK2UJBFUH;
 				INFOPLIST_FILE = "Visual Recognition/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.watson.Visual-Recognition";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -777,6 +790,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = KGK2UJBFUH;
 				INFOPLIST_FILE = "Visual Recognition/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.watson.Visual-Recognition";
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -12,7 +12,25 @@ import CoreData
 import Zip
 import Alamofire
 
-class ClassesCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class ClassesCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate {
+    @available(iOS 9.0, *)
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = collectionView?.indexPathForItem(at: location) else { return nil }
+        
+        guard let detailVC = storyboard?.instantiateViewController(withIdentifier: "images") as? ImagesCollectionViewController else { return nil }
+        
+        detailVC.pendingClass = classes[indexPath.item].pendingClass
+        detailVC.classifier = classifier
+        
+        detailVC.preferredContentSize = CGSize(width: 0.0, height: 500)
+        
+        return detailVC
+    }
+    
+    @available(iOS 9.0, *)
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        show(viewControllerToCommit, sender: self)
+    }
     
     struct ClassObj {
         var pendingClass: PendingClass
@@ -26,6 +44,10 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
     override func viewDidLoad() {
         super.viewDidLoad()
         title = classifier.name!
+        
+        if (traitCollection.forceTouchCapability == .available) {
+            registerForPreviewing(with: self, sourceView: view)
+        }
         
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         
@@ -70,6 +92,7 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
                 cell.classImageImageView.backgroundColor = UIColor(red: 249/255, green: 249/255, blue: 249/255, alpha: 1)
                 cell.classImageImageView.image = nil
             }
+            
             cell.classImageImageView.layer.cornerRadius = 5
             cell.classImageImageView.clipsToBounds = true
             cell.classNameLabel.text = classes[indexPath.item].pendingClass.name

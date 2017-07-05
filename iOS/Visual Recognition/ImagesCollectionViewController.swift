@@ -81,16 +81,30 @@ class ImagesCollectionViewController: UICollectionViewController, UICollectionVi
             print(error.localizedDescription)
         }
     }
-    
+
     @IBAction func unwindToImages(segue: UIStoryboardSegue) {
         // Unwind
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if  segue.identifier == "showSnapper",
-            let destination = segue.destination as? SnapperViewController {
+            let destination = segue.destination as? CameraViewController {
             destination.pendingClass = pendingClass
             destination.classifier = classifier
         }
+    }
+    
+    override var previewActionItems: [UIPreviewActionItem] {
+        
+        let likeAction = UIPreviewAction(title: "Rename", style: .default) { (action, viewController) -> Void in
+            // Rename.
+        }
+        
+        let deleteAction = UIPreviewAction(title: "Delete", style: .destructive) { (action, viewController) -> Void in
+            // Delete.
+        }
+        
+        return [likeAction, deleteAction]
+        
     }
 }

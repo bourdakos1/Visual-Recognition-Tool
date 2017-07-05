@@ -85,7 +85,6 @@ class ClassifiersTableViewController: UITableViewController {
         super.viewDidAppear(animated)
         self.navigationController?.toolbar.isHidden = true
         v.removeFromSuperview()
-        loadClassifiers()
     }
     
     func loadClassifiers() {
@@ -93,8 +92,9 @@ class ClassifiersTableViewController: UITableViewController {
         let apiKey = UserDefaults.standard.string(forKey: "api_key")
         
         if apiKey == nil || apiKey == "" {
+            self.classifiers = []
             self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-            // Don't need to reload, because its synchronous.
+            self.tableView.reloadData()
             return
         }
         
@@ -159,6 +159,8 @@ class ClassifiersTableViewController: UITableViewController {
         
         tableView.estimatedRowHeight = 85.0
         tableView.rowHeight = UITableViewAutomaticDimension
+        
+        loadClassifiers()
     
         let fetchRequest:NSFetchRequest<PendingClassifier> = PendingClassifier.fetchRequest()
         

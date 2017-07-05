@@ -1,674 +1,706 @@
 //
-//  CameraView.swift
+//  CameraViewController.swift
 //  Visual Recognition
 //
-//  Created by Nicholas Bourdakos on 3/17/17.
+//  Created by Nicholas Bourdakos on 7/4/17.
 //  Copyright © 2017 Nicholas Bourdakos. All rights reserved.
 //
 
+
 import UIKit
 import AVFoundation
+import Photos
 
-class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, AVCapturePhotoCaptureDelegate, AKPickerViewDelegate, AKPickerViewDataSource {
+class CameraViewController: UIViewController {
+    var classifier = PendingClassifier()
+    var pendingClass = PendingClass()
     
     // Set the StatusBar color.
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
     
-    // Blurred effect for the API key form.
-    let blurredEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+    @IBOutlet var thumbnail: UIView!
+    @IBOutlet var thumbnailImage: UIImageView!
+    @IBOutlet weak var width: NSLayoutConstraint!
+    @IBOutlet weak var height: NSLayoutConstraint!
     
-    // Demo API key constant.
-    let VISION_API_KEY: String
+    // MARK: View Controller Life Cycle
     
-    // Camera variables.
-    var captureSession: AVCaptureSession?
-    var photoOutput: AVCapturePhotoOutput?
-    var previewLayer: AVCaptureVideoPreviewLayer?
-    @IBOutlet var cameraView: UIView!
-    @IBOutlet var tempImageView: UIImageView!
-    
-    // All the buttons.
-    @IBOutlet var classifiersButton: UIButton!
-    @IBOutlet var captureButton: UIButton!
-    @IBOutlet var retakeButton: UIButton!
-    @IBOutlet var apiKeyDoneButton: UIButton!
-    @IBOutlet var apiKey: UIButton!
-    @IBOutlet var apiKeySubmit: UIButton!
-    @IBOutlet var apiKeyTextField: UITextField!
-    @IBOutlet var hintTextView: UITextView!
-    
-    @IBOutlet var pickerView: AKPickerView!
-    
-    // Init with the demo API key.
-    required init?(coder aDecoder: NSCoder) {
-        var keys: NSDictionary?
-        
-        if let path = Bundle.main.path(forResource: "Keys", ofType: "plist") {
-            keys = NSDictionary(contentsOfFile: path)
-        }
-        
-        VISION_API_KEY = (keys?["VISION_API_KEY"] as? String)!
-        
-        super.init(coder: aDecoder)
-    }
-    
-    override open func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if let drawer = self.parent as? PulleyViewController {
-            // Look in user defaults to see if we have a real key.
-            var apiKeyText = UserDefaults.standard.string(forKey: "api_key")
-            
-            if apiKeyText == nil || apiKeyText == "" {
-                // If we don't have a key set the text of the bar to "API Key".
-                apiKeyText = "🔑 API Key"
-            } else {
-                // If we do have a key, obscure it.
-                apiKeyText = obscureKey(key: apiKeyText!)
-            }
-            
-            let apiKey2 = UIButton()
-            
-            // Set the title to be the size of the navigation bar so we can click anywhere.
-            apiKey2.frame.size.width = (drawer.navigationController?.navigationBar.frame.width)!
-            apiKey2.frame.size.height = (drawer.navigationController?.navigationBar.frame.height)!
-            
-            // Style the API text.
-            apiKey2.layer.shadowOffset = CGSize(width: 0, height: 1)
-            apiKey2.layer.shadowOpacity = 0.2
-            apiKey2.layer.shadowRadius = 5
-            apiKey2.layer.masksToBounds = false
-            apiKey2.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
-            apiKey2.setAttributedTitle(NSAttributedString(string: apiKeyText!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
-            drawer.navigationItem.titleView = apiKey2
-            
-            let recognizer = UITapGestureRecognizer(target: self, action: #selector(addApiKey))
-            drawer.navigationItem.titleView?.isUserInteractionEnabled = true
-            drawer.navigationItem.titleView?.addGestureRecognizer(recognizer)
-        }
+        self.thumbnailImage.layer.cornerRadius = 5.0
         
-        // Set the selection so it's right.
-        // Then reload data incase something changed.
-        
-        for (item, classifier) in classifiers.enumerated() {
-            if classifier["classifier_id"] as? String == UserDefaults.standard.string(forKey: "classifier_id") {
-                select = item
-                pickerView.selectItem(select)
-                break
-            }
-        }
-        
-        // Load from Watson
-        let apiKey = UserDefaults.standard.string(forKey: "api_key")
-        
-        if apiKey == nil {
-            self.classifiers = []
-            self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-            self.pickerView.selectItem(0)
-            self.pickerView.reloadData()
-            return
-        }
-        
-        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers")!)
-        
-        r.query(params: [
-            "api_key": apiKey ?? "none",
-            "version": "2016-05-20",
-            "verbose": "true"
-            ])
-        
-        let task = URLSession.shared.dataTask(with: r) { data, response, error in
-            // Check for fundamental networking error.
-            guard let data = data, error == nil else {
-                return
-            }
-            do {
-                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
-                DispatchQueue.main.async{
-                    if json["classifiers"]! == nil {
-                        self.classifiers = []
-                        self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-                        self.pickerView.selectItem(0)
-                        self.pickerView.reloadData()
-                        return
-                    }
-                    
-                    var data = json["classifiers"] as! [[String: AnyObject]]
-                    
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-                    data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! }).filter({ $0["status"] as? String == "ready" })
-                    
-                    // it should be safe to check the first and last date and the length is the same
-                    // count - 1 to account for no default
-                    if !(self.classifiers.first!["created"] as? String == data.first!["created"] as? String
-                        && self.classifiers[self.classifiers.count - 2]["created"] as? String == data.last!["created"] as? String
-                        && self.classifiers.count - 1 == data.count) {
-                        self.classifiers = data
-                        self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-                        
-                        if self.select >= self.classifiers.count {
-                            self.pickerView.selectItem(self.classifiers.count - 1)
-                        }
-                        
-                        self.pickerView.reloadData()
-                        if self.select >= 0 {
-                            self.pickerView.selectItem(self.select)
-                        }
-                    }
-                }
-            } catch let error as NSError {
-                print("error : \(error)")
-            }
-        }
-        task.resume()
-    }
-    
-    var classifiers = [[String: AnyObject]]()
-    var select = -1
-    
-    func numberOfItemsInPickerView(_ pickerView: AKPickerView) -> Int {
-        return classifiers.count
-    }
-    
-    func pickerView(_ pickerView: AKPickerView, titleForItem item: Int) -> String {
-        if classifiers[item]["classifier_id"] as? String == UserDefaults.standard.string(forKey: "classifier_id") {
-            select = item
-        }
-        return classifiers[item]["name"] as! String
-    }
-    
-    func pickerView(_ pickerView: AKPickerView, didSelectItem item: Int) {
-        UserDefaults.standard.set(classifiers[item]["classifier_id"], forKey: "classifier_id")
+        let border = UIView()
+        let frame = CGRect(x: self.thumbnailImage.frame.origin.x - 1.0, y: self.thumbnailImage.frame.origin.y - 1.0, width: self.thumbnailImage.frame.size.height + 2.0, height: self.thumbnailImage.frame.size.height + 2.0)
+        border.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.25)
+        border.frame = frame
+        border.layer.cornerRadius = 7.0
+        self.view.insertSubview(border, belowSubview: self.thumbnailImage)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        classifiers.append(["name": "Loading..." as AnyObject])
+        // Disable UI. The UI is enabled if and only if the session starts running.
+        cameraButton.isEnabled = false // front vs back
+        photoButton.isEnabled = false // capture
         
-        pickerView.delegate = self
-        pickerView.dataSource = self
+        // Set up the video preview view.
+        previewView.session = session
         
-        pickerView.interitemSpacing = CGFloat(25.0)
-        pickerView.pickerViewStyle = .flat
-        pickerView.maskDisabled = true
-        pickerView.font = UIFont.boldSystemFont(ofSize: 14)
-        pickerView.highlightedFont = UIFont.boldSystemFont(ofSize: 14)
-        pickerView.highlightedTextColor = UIColor.white
-        pickerView.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6)
+        /*
+         Check video authorization status. Video access is required and audio
+         access is optional. If audio access is denied, audio is not recorded
+         during movie recording.
+         */
+        switch AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) {
+        case .authorized:
+            // The user has previously granted access to the camera.
+            break
+            
+        case .notDetermined:
+            /*
+             The user has not yet been presented with the option to grant
+             video access. We suspend the session queue to delay session
+             setup until the access request has completed.
+             
+             Note that audio access will be implicitly requested when we
+             create an AVCaptureDeviceInput for audio during session setup.
+             */
+            sessionQueue.suspend()
+            AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo, completionHandler: { [unowned self] granted in
+                if !granted {
+                    self.setupResult = .notAuthorized
+                }
+                self.sessionQueue.resume()
+            })
+            
+        default:
+            // The user has previously denied access.
+            setupResult = .notAuthorized
+        }
         
-        // Give the API TextField styles and a stroke.
-        apiKeyTextField.attributedPlaceholder = NSAttributedString(string: "API Key", attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 1, blue: 1, alpha: 0.5)])
-        apiKeyTextField.setLeftPaddingPoints(20)
-        apiKeyTextField.setRightPaddingPoints(50)
+        /*
+         Setup the capture session.
+         In general it is not safe to mutate an AVCaptureSession or any of its
+         inputs, outputs, or connections from multiple threads at the same time.
+         
+         Why not do all of this on the main queue?
+         Because AVCaptureSession.startRunning() is a blocking call which can
+         take a long time. We dispatch session setup to the sessionQueue so
+         that the main queue isn't blocked, which keeps the UI responsive.
+         */
+        sessionQueue.async { [unowned self] in
+            self.configureSession()
+        }
         
-        initializeCamera()
-
-        // Retake just resets the UI.
-        retake()
-        view.bringSubview(toFront: captureButton)
-        
-        // Create and hide the blur effect.
-        blurredEffectView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
-        view.addSubview(blurredEffectView)
-        blurredEffectView.isHidden = true
-        
-        // Bring all the API key views to the front
-        view.bringSubview(toFront: apiKeyTextField)
-        view.bringSubview(toFront: apiKeyDoneButton)
-        view.bringSubview(toFront: apiKeySubmit)
-        view.bringSubview(toFront: hintTextView)
+        grabPhoto()
     }
     
-    // Initialize camera.
-    func initializeCamera() {
-        captureSession = AVCaptureSession()
-        captureSession?.sessionPreset = AVCaptureSessionPreset1920x1080
-        let backCamera = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+    func grabPhoto() {
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         
         do {
-            let input = try AVCaptureDeviceInput(device: backCamera)
-            captureSession?.addInput(input)
-            photoOutput = AVCapturePhotoOutput()
-            if (captureSession?.canAddOutput(photoOutput) != nil){
-                captureSession?.addOutput(photoOutput)
-                
-                previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-                previewLayer?.videoGravity = AVLayerVideoGravityResizeAspect
-                previewLayer?.connection.videoOrientation = AVCaptureVideoOrientation.portrait
-                cameraView.layer.addSublayer(previewLayer!)
-                captureSession?.startRunning()
-                
-                // Initialize a AVCaptureMetadataOutput object and set it as the output device to the capture session.
-                let captureMetadataOutput = AVCaptureMetadataOutput()
-                captureSession?.addOutput(captureMetadataOutput)
-                captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-                captureMetadataOutput.metadataObjectTypes = [AVMetadataObjectTypeQRCode]
-            }
+            // Get the directory contents urls (including subfolders urls)
+            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(classifier.name!).appendingPathComponent(pendingClass.name!), includingPropertiesForKeys: nil, options: [])
+            
+            // if you want to filter the directory contents you can do like this:
+            let jpgFile = directoryContents.filter{ $0.pathExtension == "jpg" }
+                .map { url -> (URL, TimeInterval) in
+                    var lastModified = try? url.resourceValues(forKeys: [URLResourceKey.contentModificationDateKey])
+                    return (url, lastModified?.contentModificationDate?.timeIntervalSinceReferenceDate ?? 0)
+                }
+                .sorted(by: { $0.1 > $1.1 }) // sort descending modification dates
+                .map{ $0.0 }.first!
+            
+            thumbnailImage.image = UIImage(contentsOfFile: jpgFile.path)!
+            
         } catch {
-            print("Error: \(error)")
+            print(error.localizedDescription)
         }
-        previewLayer?.frame = view.bounds
     }
     
-    // Delegate for QR Codes.
-    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
-        // Check if the metadataObjects array is not nil and it contains at least one object.
-        if metadataObjects == nil || metadataObjects.count == 0 {
-            print("No QR code is detected")
-            return
-        }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        // Get the metadata object.
-        let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
-        
-        guard let qrCode = metadataObj.stringValue else {
-            return
-        }
-        print(qrCode)
-        testKey(key: qrCode)
-    }
-    
-    // Delegate for Camera.
-    func capture(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhotoSampleBuffer photoSampleBuffer: CMSampleBuffer?, previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
-        
-        var apiKey = UserDefaults.standard.string(forKey: "api_key")
-        
-        if apiKey == nil || apiKey == "" {
-            apiKey = VISION_API_KEY
-        }
-        
-        if photoSampleBuffer != nil {
-            let imageData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(
-                forJPEGSampleBuffer: photoSampleBuffer!,
-                previewPhotoSampleBuffer: previewPhotoSampleBuffer
-            )
-            
-            let dataProvider  = CGDataProvider(data: imageData! as CFData)
-            
-            let cgImageRef = CGImage(
-                jpegDataProviderSource: dataProvider!,
-                decode: nil,
-                shouldInterpolate: true,
-                intent: .defaultIntent
-            )
-            
-            let image = UIImage(
-                cgImage: cgImageRef!,
-                scale: 1.0,
-                orientation: UIImageOrientation.right
-            )
-            
-            let reducedImage = image.resized(toWidth: 300)!
-            
-            let classifierId = UserDefaults.standard.string(forKey: "classifier_id")
-            
-            let url = "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify"
-            
-            var r = URLRequest(url: URL(string: url)!)
-            
-            r.query(params: [
-                "api_key": apiKey!,
-                "version": "2016-05-20",
-                "threshold": "0",
-                "classifier_ids": "\(classifierId ?? "default")"
-            ])
-            
-            // Attach the small image at 40% quality.
-            r.attach(
-                jpeg: UIImageJPEGRepresentation(reducedImage, 0.4)!,
-                filename: "test.jpg"
-            )
-            
-            let task = URLSession.shared.dataTask(with: r) { data, response, error in
-                // Check for fundamental networking error.
-                guard let data = data, error == nil else {
-                    return
+        sessionQueue.async {
+            switch self.setupResult {
+            case .success:
+                // Only setup observers and start the session running if setup succeeded.
+                self.addObservers()
+                self.session.startRunning()
+                self.isSessionRunning = self.session.isRunning
+                
+            case .notAuthorized:
+                DispatchQueue.main.async { [unowned self] in
+                    let changePrivacySetting = "AVCam doesn't have permission to use the camera, please change privacy settings"
+                    let message = NSLocalizedString(changePrivacySetting, comment: "Alert message when the user has denied access to the camera")
+                    let alertController = UIAlertController(title: "AVCam", message: message, preferredStyle: .alert)
+                    
+                    alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"),
+                                                            style: .cancel,
+                                                            handler: nil))
+                    
+                    alertController.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment: "Alert button to open Settings"),
+                                                            style: .`default`,
+                                                            handler: { _ in
+                                                                UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
+                    }))
+                    
+                    self.present(alertController, animated: true, completion: nil)
                 }
                 
-                var json: AnyObject?
-                
-                do {
-                    json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
-                } catch {
-                    print("Error: \(error)")
+            case .configurationFailed:
+                DispatchQueue.main.async { [unowned self] in
+                    let alertMsg = "Alert message when something goes wrong during capture session configuration"
+                    let message = NSLocalizedString("Unable to capture media", comment: alertMsg)
+                    let alertController = UIAlertController(title: "AVCam", message: message, preferredStyle: .alert)
+                    
+                    alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"),
+                                                            style: .cancel,
+                                                            handler: nil))
+                    
+                    self.present(alertController, animated: true, completion: nil)
                 }
-                
-                guard let images = json?["images"] as? [Any],
-                    let image = images.first as? [String: Any],
-                    let classifiers = image["classifiers"] as? [Any],
-                    let classifier = classifiers.first as? [String: Any],
-                    let classes = classifier["classes"] as? [Any] else {
-                        print("Error: No classes returned.")
-                        var myNewData = [[String: Any]]()
-                        
-                        myNewData.append([
-                            "class_name": "No classes found" as Any,
-                            "score": CGFloat(0.0) as Any
-                        ])
-                        self.push(data: myNewData)
-                        return
-                }
-                
-                var myNewData = [[String: Any]]()
-                
-                for case let classObj as [String: Any] in classes {
-                    myNewData.append([
-                        "class_name": classObj["class"] as Any,
-                        "score": classObj["score"] as Any
-                    ])
-                }
-                
-                // Sort data by score and reload table.
-                myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
-                self.push(data: myNewData)
             }
-            task.resume()
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        sessionQueue.async { [unowned self] in
+            if self.setupResult == .success {
+                self.session.stopRunning()
+                self.isSessionRunning = self.session.isRunning
+                self.removeObservers()
+            }
+        }
+        
+        super.viewWillDisappear(animated)
+    }
+    
+    // MARK: Session Management
+    
+    private enum SessionSetupResult {
+        case success
+        case notAuthorized
+        case configurationFailed
+    }
+    
+    private let session = AVCaptureSession()
+    
+    private var isSessionRunning = false
+    
+    private let sessionQueue = DispatchQueue(label: "session queue",
+                                             attributes: [],
+                                             target: nil) // Communicate with the session and other session objects on this queue.
+    
+    private var setupResult: SessionSetupResult = .success
+    
+    var videoDeviceInput: AVCaptureDeviceInput!
+    
+    @IBOutlet private weak var previewView: PreviewView!
+    
+    // Call this on the session queue.
+    private func configureSession() {
+        if setupResult != .success {
+            return
+        }
+        
+        session.beginConfiguration()
+        
+        /*
+         We do not create an AVCaptureMovieFileOutput when setting up the session because the
+         AVCaptureMovieFileOutput does not support movie recording with AVCaptureSessionPresetPhoto.
+         */
+        session.sessionPreset = AVCaptureSessionPresetHigh
+        
+        // Add video input.
+        do {
+            var defaultVideoDevice: AVCaptureDevice?
             
-            // Set the screen to our captured photo.
-            tempImageView.image = image
-            tempImageView.isHidden = false
-        }
-    }
-    
-    // Convenience method for pushing data to the TableView.
-    func push(data: [[String: Any]]) {
-        getTableController { tableController, drawer in
-            tableController.classes = data
-            self.dismiss(animated: false, completion: nil)
-            drawer.setDrawerPosition(position: .partiallyRevealed, animated: true)
-        }
-    }
-    
-    // Convenience method for reloading the TableView.
-    func getTableController(run: @escaping (_ tableController: ResultsTableViewController, _ drawer: PulleyViewController) -> Void) {
-        if let drawer = self.parent as? PulleyViewController {
-            if let tableController = drawer.drawerContentViewController as? ResultsTableViewController {
+            // Choose the back dual camera if available, otherwise default to a wide angle camera.
+            if let dualCameraDevice = AVCaptureDevice.defaultDevice(withDeviceType: .builtInDualCamera, mediaType: AVMediaTypeVideo, position: .back) {
+                defaultVideoDevice = dualCameraDevice
+            } else if let backCameraDevice = AVCaptureDevice.defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .back) {
+                // If the back dual camera is not available, default to the back wide angle camera.
+                defaultVideoDevice = backCameraDevice
+            } else if let frontCameraDevice = AVCaptureDevice.defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .front) {
+                /*
+                 In some cases where users break their phones, the back wide angle camera is not available.
+                 In this case, we should default to the front wide angle camera.
+                 */
+                defaultVideoDevice = frontCameraDevice
+            }
+            
+            let videoDeviceInput = try AVCaptureDeviceInput(device: defaultVideoDevice!)
+            
+            if session.canAddInput(videoDeviceInput) {
+                session.addInput(videoDeviceInput)
+                self.videoDeviceInput = videoDeviceInput
+                
                 DispatchQueue.main.async {
-                    run(tableController, drawer)
-                    tableController.tableView.reloadData()
+                    /*
+                     Why are we dispatching this to the main queue?
+                     Because AVCaptureVideoPreviewLayer is the backing layer for PreviewView and UIView
+                     can only be manipulated on the main thread.
+                     Note: As an exception to the above rule, it is not necessary to serialize video orientation changes
+                     on the AVCaptureVideoPreviewLayer’s connection with other session manipulation.
+                     
+                     Use the status bar orientation as the initial video orientation. Subsequent orientation changes are
+                     handled by CameraViewController.viewWillTransition(to:with:).
+                     */
+                    let statusBarOrientation = UIApplication.shared.statusBarOrientation
+                    var initialVideoOrientation: AVCaptureVideoOrientation = .portrait
+                    if statusBarOrientation != .unknown {
+                        if let videoOrientation = statusBarOrientation.videoOrientation {
+                            initialVideoOrientation = videoOrientation
+                        }
+                    }
+                    
+                    self.previewView.videoPreviewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+                    self.previewView.videoPreviewLayer.connection?.videoOrientation = initialVideoOrientation
                 }
-            }
-        }
-    }
-    
-    // Convenience method for obscuring the API key.
-    func obscureKey(key: String) -> String {
-        let a = key[key.index(key.startIndex, offsetBy: 0)]
-        
-        let start = key.index(key.endIndex, offsetBy: -3)
-        let end = key.index(key.endIndex, offsetBy: 0)
-        let b = key[Range(start ..< end)]
-        
-        return "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
-    }
-    
-    // Verify the API entered or scanned.
-    func testKey(key: String) {
-        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api")!)
-        r.query(params: [
-            "api_key": key,
-            "version": "2016-05-20"
-        ])
-        
-        let task = URLSession.shared.dataTask(with: r) { data, response, error in
-            // Check for fundamental networking error.
-            guard let data = data, error == nil else {
+            } else {
+                print("Could not add video device input to the session")
+                setupResult = .configurationFailed
+                session.commitConfiguration()
                 return
             }
+        } catch {
+            print("Could not create video device input: \(error)")
+            setupResult = .configurationFailed
+            session.commitConfiguration()
+            return
+        }
+        
+        // Add photo output.
+        if session.canAddOutput(photoOutput) {
+            session.addOutput(photoOutput)
             
-            do {
-                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
+            photoOutput.isHighResolutionCaptureEnabled = true
+            
+        } else {
+            print("Could not add photo output to the session")
+            setupResult = .configurationFailed
+            session.commitConfiguration()
+            return
+        }
+        
+        session.commitConfiguration()
+    }
+    
+    @IBAction private func resumeInterruptedSession(_ resumeButton: UIButton) {
+        sessionQueue.async { [unowned self] in
+            /*
+             The session might fail to start running, e.g., if a phone or FaceTime call is still
+             using audio or video. A failure to start the session running will be communicated via
+             a session runtime error notification. To avoid repeatedly failing to start the session
+             running, we only try to restart the session running in the session runtime error handler
+             if we aren't trying to resume the session running.
+             */
+            self.session.startRunning()
+            self.isSessionRunning = self.session.isRunning
+            if !self.session.isRunning {
+                DispatchQueue.main.async { [unowned self] in
+                    let message = NSLocalizedString("Unable to resume", comment: "Alert message when unable to resume the session running")
+                    let alertController = UIAlertController(title: "AVCam", message: message, preferredStyle: .alert)
+                    let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"), style: .cancel, handler: nil)
+                    alertController.addAction(cancelAction)
+                    self.present(alertController, animated: true, completion: nil)
+                }
+            } else {
+                DispatchQueue.main.async { [unowned self] in
+                    self.resumeButton.isHidden = true
+                }
+            }
+        }
+    }
+    
+    // MARK: Device Configuration
+    
+    @IBOutlet private weak var cameraButton: UIButton!
+    
+    @IBOutlet private weak var cameraUnavailableLabel: UILabel!
+    private let videoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera], mediaType: AVMediaTypeVideo, position: .unspecified)
+    
+    @IBAction private func changeCamera(_ cameraButton: UIButton) {
+        cameraButton.isEnabled = false
+        photoButton.isEnabled = false
+        
+        sessionQueue.async { [unowned self] in
+            let currentVideoDevice = self.videoDeviceInput.device!
+            let currentPosition = currentVideoDevice.position
+            
+            let preferredPosition: AVCaptureDevice.Position
+            let preferredDeviceType: AVCaptureDevice.DeviceType
+            
+            switch currentPosition {
+            case .unspecified, .front:
+                preferredPosition = .back
+                preferredDeviceType = .builtInDualCamera
                 
-                if json["statusInfo"] as! String == "invalid-api-key" {
-                    print("Ivalid api key!")
-                    return
+            case .back:
+                preferredPosition = .front
+                preferredDeviceType = .builtInWideAngleCamera
+            }
+            
+            let devices = self.videoDeviceDiscoverySession?.devices
+            var newVideoDevice: AVCaptureDevice? = nil
+            
+            // First, look for a device with both the preferred position and device type. Otherwise, look for a device with only the preferred position.
+            if let device = devices?.first(where: { $0.position == preferredPosition && $0.deviceType == preferredDeviceType }) {
+                newVideoDevice = device
+            } else if let device = devices?.first(where: { $0.position == preferredPosition }) {
+                newVideoDevice = device
+            }
+            
+            if let videoDevice = newVideoDevice {
+                do {
+                    let videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
+                    
+                    self.session.beginConfiguration()
+                    
+                    // Remove the existing device input first, since using the front and back camera simultaneously is not supported.
+                    self.session.removeInput(self.videoDeviceInput)
+                    
+                    if self.session.canAddInput(videoDeviceInput) {
+                        NotificationCenter.default.removeObserver(self, name: .AVCaptureDeviceSubjectAreaDidChange, object: currentVideoDevice)
+                        
+                        NotificationCenter.default.addObserver(self, selector: #selector(self.subjectAreaDidChange), name: .AVCaptureDeviceSubjectAreaDidChange, object: videoDeviceInput.device)
+                        
+                        self.session.addInput(videoDeviceInput)
+                        self.videoDeviceInput = videoDeviceInput
+                    } else {
+                        self.session.addInput(self.videoDeviceInput)
+                    }
+                    
+                    self.session.commitConfiguration()
+                } catch {
+                    print("Error occured while creating video device input: \(error)")
+                }
+            }
+            
+            DispatchQueue.main.async { [unowned self] in
+                self.cameraButton.isEnabled = true
+                self.photoButton.isEnabled = true
+            }
+        }
+    }
+    
+    @IBAction private func focusAndExposeTap(_ gestureRecognizer: UITapGestureRecognizer) {
+        let devicePoint = self.previewView.videoPreviewLayer.captureDevicePointOfInterest(for: gestureRecognizer.location(in: gestureRecognizer.view))
+        focus(with: .autoFocus, exposureMode: .autoExpose, at: devicePoint, monitorSubjectAreaChange: true)
+    }
+    
+    private func focus(with focusMode: AVCaptureDevice.FocusMode, exposureMode: AVCaptureDevice.ExposureMode, at devicePoint: CGPoint, monitorSubjectAreaChange: Bool) {
+        sessionQueue.async { [unowned self] in
+            let device = self.videoDeviceInput.device!
+            do {
+                try device.lockForConfiguration()
+                
+                /*
+                 Setting (focus/exposure)PointOfInterest alone does not initiate a (focus/exposure) operation.
+                 Call set(Focus/Exposure)Mode() to apply the new point of interest.
+                 */
+                if device.isFocusPointOfInterestSupported && device.isFocusModeSupported(focusMode) {
+                    device.focusPointOfInterest = devicePoint
+                    device.focusMode = focusMode
                 }
                 
+                if device.isExposurePointOfInterestSupported && device.isExposureModeSupported(exposureMode) {
+                    device.exposurePointOfInterest = devicePoint
+                    device.exposureMode = exposureMode
+                }
+                
+                device.isSubjectAreaChangeMonitoringEnabled = monitorSubjectAreaChange
+                device.unlockForConfiguration()
             } catch {
-                print("Error: \(error)")
+                print("Could not lock device for configuration: \(error)")
+            }
+        }
+    }
+    
+    // MARK: Capturing Photos
+    
+    private let photoOutput = AVCapturePhotoOutput()
+    
+    private var inProgressPhotoCaptureDelegates = [Int64: PhotoCaptureProcessor]()
+    
+    @IBOutlet private weak var photoButton: UIButton!
+    @IBAction private func capturePhoto(_ photoButton: UIButton) {   
+        // We don't want a million photos queued, lets just queue 2
+        if self.inProgressPhotoCaptureDelegates.count > 1 {
+            return
+        }
+        /*
+         Retrieve the video preview layer's video orientation on the main queue before
+         entering the session queue. We do this to ensure UI elements are accessed on
+         the main thread and session configuration is done on the session queue.
+         */
+        let videoPreviewLayerOrientation = previewView.videoPreviewLayer.connection?.videoOrientation
+        
+        sessionQueue.async {
+            // Update the photo output's connection to match the video orientation of the video preview layer.
+            if let photoOutputConnection = self.photoOutput.connection(withMediaType: AVMediaTypeVideo) {
+                photoOutputConnection.videoOrientation = videoPreviewLayerOrientation!
             }
             
-            DispatchQueue.main.async {
-                print("Key set!")
-                UserDefaults.standard.set(key, forKey: "api_key")
+            let photoSettings = AVCapturePhotoSettings()
+            // Flash set to auto and high resolution photo enabled.
+            if self.videoDeviceInput.device.isFlashAvailable {
+                photoSettings.flashMode = .auto
+            }
+            
+            photoSettings.isHighResolutionPhotoEnabled = true
+            if !photoSettings.availablePreviewPhotoPixelFormatTypes.isEmpty {
+                photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String: photoSettings.availablePreviewPhotoPixelFormatTypes.first!]
+            }
+            
+            // Use a separate object for the photo capture delegate to isolate each capture life cycle.
+            let photoCaptureProcessor = PhotoCaptureProcessor(with: photoSettings, willCapturePhotoAnimation: {
+                DispatchQueue.main.async { [unowned self] in
+                    self.previewView.videoPreviewLayer.opacity = 0
+                    UIView.animate(withDuration: 0.25) { [unowned self] in
+                        self.previewView.videoPreviewLayer.opacity = 1
+                    }
+                }
+            }, completionHandler: { [unowned self] photoCaptureProcessor in
+                if photoCaptureProcessor.photoData == nil {
+                    print("taking photo fucked up")
+                    return
+                }
+                let image = photoCaptureProcessor.photoData!
+                DispatchQueue.main.async { [unowned self] in
+                    self.width.constant = 5
+                    self.height.constant = 5
+                    self.thumbnailImage.image = image
+                    self.view.layoutIfNeeded()
+                    self.width.constant = 60
+                    self.height.constant = 60
+                    UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: { () -> Void in
+                        self.thumbnailImage.alpha = 1.0
+                    }, completion: nil)
+                    UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: { () -> Void in
+                        self.view.layoutIfNeeded()
+                    }, completion: nil)
+                }
                 
-                let key = self.obscureKey(key: key)
+                let reducedImage = image.resized(toWidth: 300)!
                 
-                self.apiKey.setAttributedTitle(NSAttributedString(string: key, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+                let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                
+                let path = documentsUrl.appendingPathComponent(self.classifier.name!).appendingPathComponent(self.pendingClass.name!)
+                
+                do {
+                    try FileManager.default.createDirectory(atPath: path.path, withIntermediateDirectories: true, attributes: nil)
+                } catch {
+                    print(error.localizedDescription)
+                }
+                
+                let filename = path.appendingPathComponent("\(NSUUID().uuidString).jpg")
+                
+                do {
+                    try UIImageJPEGRepresentation(reducedImage, 0.4)!.write(to: filename)
+                } catch {
+                    print(error.localizedDescription)
+                }
+                
+                // When the capture is complete, remove a reference to the photo capture delegate so it can be deallocated.
+                self.sessionQueue.async { [unowned self] in
+                    self.inProgressPhotoCaptureDelegates[photoCaptureProcessor.requestedPhotoSettings.uniqueID] = nil
+                }
+                }
+            )
+            
+            /*
+             The Photo Output keeps a weak reference to the photo capture delegate so
+             we store it in an array to maintain a strong reference to this object
+             until the capture is completed.
+             */
+            self.inProgressPhotoCaptureDelegates[photoCaptureProcessor.requestedPhotoSettings.uniqueID] = photoCaptureProcessor
+            self.photoOutput.capturePhoto(with: photoSettings, delegate: photoCaptureProcessor)
+        }
+    }
+    
+    // MARK: Recording Movies
+    
+    @IBOutlet private weak var resumeButton: UIButton!
+    
+    // MARK: KVO and Notifications
+    
+    private var sessionRunningObserveContext = 0
+    
+    private func addObservers() {
+        session.addObserver(self, forKeyPath: "running", options: .new, context: &sessionRunningObserveContext)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(subjectAreaDidChange), name: .AVCaptureDeviceSubjectAreaDidChange, object: videoDeviceInput.device)
+        NotificationCenter.default.addObserver(self, selector: #selector(sessionRuntimeError), name: .AVCaptureSessionRuntimeError, object: session)
+        
+        /*
+         A session can only run when the app is full screen. It will be interrupted
+         in a multi-app layout, introduced in iOS 9, see also the documentation of
+         AVCaptureSessionInterruptionReason. Add observers to handle these session
+         interruptions and show a preview is paused message. See the documentation
+         of AVCaptureSessionWasInterruptedNotification for other interruption reasons.
+         */
+        NotificationCenter.default.addObserver(self, selector: #selector(sessionWasInterrupted), name: .AVCaptureSessionWasInterrupted, object: session)
+        NotificationCenter.default.addObserver(self, selector: #selector(sessionInterruptionEnded), name: .AVCaptureSessionInterruptionEnded, object: session)
+    }
+    
+    private func removeObservers() {
+        NotificationCenter.default.removeObserver(self)
+        session.removeObserver(self, forKeyPath: "running", context: &sessionRunningObserveContext)
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if context == &sessionRunningObserveContext {
+            let newValue = change?[.newKey] as AnyObject?
+            guard let isSessionRunning = newValue?.boolValue else { return }
+            
+            DispatchQueue.main.async { [unowned self] in
+                // Only enable the ability to change camera if the device has more than one camera.
+                self.cameraButton.isEnabled = isSessionRunning && self.videoDeviceDiscoverySession!.uniqueDevicePositionsCount() > 1
+                self.photoButton.isEnabled = isSessionRunning
+            }
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
+    }
+    
+    @objc
+    func subjectAreaDidChange(notification: NSNotification) {
+        let devicePoint = CGPoint(x: 0.5, y: 0.5)
+        focus(with: .autoFocus, exposureMode: .continuousAutoExposure, at: devicePoint, monitorSubjectAreaChange: false)
+    }
+    
+    @objc
+    func sessionRuntimeError(notification: NSNotification) {
+        guard let errorValue = notification.userInfo?[AVCaptureSessionErrorKey] as? NSError else {
+            return
+        }
+        
+        let error = AVError(_nsError: errorValue)
+        print("Capture session runtime error: \(error)")
+        
+        /*
+         Automatically try to restart the session running if media services were
+         reset and the last start running succeeded. Otherwise, enable the user
+         to try to resume the session running.
+         */
+        if error.code == .mediaServicesWereReset {
+            sessionQueue.async { [unowned self] in
+                if self.isSessionRunning {
+                    self.session.startRunning()
+                    self.isSessionRunning = self.session.isRunning
+                } else {
+                    DispatchQueue.main.async { [unowned self] in
+                        self.resumeButton.isHidden = false
+                    }
+                }
+            }
+        } else {
+            resumeButton.isHidden = false
+        }
+    }
+    
+    @objc
+    func sessionWasInterrupted(notification: NSNotification) {
+        /*
+         In some scenarios we want to enable the user to resume the session running.
+         For example, if music playback is initiated via control center while
+         using AVCam, then the user can let AVCam resume
+         the session running, which will stop music playback. Note that stopping
+         music playback in control center will not automatically resume the session
+         running. Also note that it is not always possible to resume, see `resumeInterruptedSession(_:)`.
+         */
+        if let userInfoValue = notification.userInfo?[AVCaptureSessionInterruptionReasonKey] as AnyObject?, let reasonIntegerValue = userInfoValue.integerValue, let reason = AVCaptureSession.InterruptionReason(rawValue: reasonIntegerValue) {
+            print("Capture session was interrupted with reason \(reason)")
+            
+            var showResumeButton = false
+            
+            if reason == .audioDeviceInUseByAnotherClient || reason == .videoDeviceInUseByAnotherClient {
+                showResumeButton = true
+            } else if reason == .videoDeviceNotAvailableWithMultipleForegroundApps {
+                // Simply fade-in a label to inform the user that the camera is unavailable.
+                cameraUnavailableLabel.alpha = 0
+                cameraUnavailableLabel.isHidden = false
+                UIView.animate(withDuration: 0.25) { [unowned self] in
+                    self.cameraUnavailableLabel.alpha = 1
+                }
+            }
+            
+            if showResumeButton {
+                // Simply fade-in a button to enable the user to try to resume the session running.
+                resumeButton.alpha = 0
+                resumeButton.isHidden = false
+                UIView.animate(withDuration: 0.25) { [unowned self] in
+                    self.resumeButton.alpha = 1
+                }
             }
         }
-        task.resume()
     }
     
-    @IBAction func unwindToVC(segue: UIStoryboardSegue) {
+    @objc
+    func sessionInterruptionEnded(notification: NSNotification) {
+        print("Capture session interruption ended")
         
-    }
-    
-    @IBAction func addApiKey() {
-        if let drawer = self.parent as? PulleyViewController {
-            drawer.navigationController?.navigationBar.isHidden = true
+        if !resumeButton.isHidden {
+            UIView.animate(withDuration: 0.25,
+                           animations: { [unowned self] in
+                            self.resumeButton.alpha = 0
+                }, completion: { [unowned self] _ in
+                    self.resumeButton.isHidden = true
+                }
+            )
         }
-        
-        blurredEffectView.isHidden = false
-        apiKeyTextField.isHidden = false
-        apiKeyDoneButton.isHidden = false
-        apiKeySubmit.isHidden = false
-        hintTextView.isHidden = false
-        
-        apiKeyTextField.becomeFirstResponder()
-    }
-    
-    @IBAction func apiKeyDone() {
-        if let drawer = self.parent as? PulleyViewController {
-            drawer.navigationController?.navigationBar.isHidden = false
-        }
-        
-        apiKeyTextField.isHidden = true
-        apiKeyDoneButton.isHidden = true
-        apiKeySubmit.isHidden = true
-        hintTextView.isHidden = true
-        blurredEffectView.isHidden = true
-
-        view.endEditing(true)
-        apiKeyTextField.text = ""
-    }
-    
-    @IBAction func submitApiKey() {
-        let key = apiKeyTextField.text
-        apiKeyDone()
-        testKey(key: key!)
-    }
-    
-    @IBAction func takePhoto() {
-        photoOutput?.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
-        captureButton.isHidden = true
-        retakeButton.isHidden = false
-        apiKey.isHidden = true
-        classifiersButton.isHidden = true
-        
-        if let drawer = self.parent as? PulleyViewController {
-            drawer.navigationController?.navigationBar.isHidden = true
-        }
-        
-        // Show an activity indicator while its loading.
-        let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
-        
-        alert.view.tintColor = UIColor.black
-        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50)) as UIActivityIndicatorView
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-        loadingIndicator.startAnimating()
-        
-        alert.view.addSubview(loadingIndicator)
-        present(alert, animated: true, completion: nil)
-    }
-    
-    @IBAction func retake() {
-        tempImageView.isHidden = true
-        captureButton.isHidden = false
-        retakeButton.isHidden = true
-        apiKey.isHidden = false
-        classifiersButton.isHidden = false
-        
-        if let drawer = self.parent as? PulleyViewController {
-            drawer.navigationController?.navigationBar.isHidden = false
-        }
-        
-        getTableController { tableController, drawer in
-            drawer.setDrawerPosition(position: .closed, animated: true)
-            tableController.classes = []
+        if !cameraUnavailableLabel.isHidden {
+            UIView.animate(withDuration: 0.25,
+                           animations: { [unowned self] in
+                            self.cameraUnavailableLabel.alpha = 0
+                }, completion: { [unowned self] _ in
+                    self.cameraUnavailableLabel.isHidden = true
+                }
+            )
         }
     }
 }
 
-extension NSMutableData {
-    func appendString(_ string: String) {
-        let data = string.data(using: String.Encoding.utf8, allowLossyConversion: false)
-        append(data!)
+extension UIDeviceOrientation {
+    var videoOrientation: AVCaptureVideoOrientation? {
+        switch self {
+        case .portrait: return .portrait
+        case .portraitUpsideDown: return .portraitUpsideDown
+        case .landscapeLeft: return .landscapeRight
+        case .landscapeRight: return .landscapeLeft
+        default: return nil
+        }
     }
 }
 
-extension Dictionary {
-    func toHttpParameters() -> String {
-        let parameterArray = self.map { (key, value) -> String in
-            let percentEscapedKey = (key as! String).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-            let percentEscapedValue = (value as! String).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-            return "\(percentEscapedKey!)=\(percentEscapedValue!)"
+extension UIInterfaceOrientation {
+    var videoOrientation: AVCaptureVideoOrientation? {
+        switch self {
+        case .portrait: return .portrait
+        case .portraitUpsideDown: return .portraitUpsideDown
+        case .landscapeLeft: return .landscapeLeft
+        case .landscapeRight: return .landscapeRight
+        default: return nil
         }
-        return parameterArray.joined(separator: "&")
     }
 }
 
-extension URLRequest {
-    mutating func attach(jpeg: Data, filename: String) {
-        httpMethod = "POST"
-        let boundary = "Boundary-\(UUID().uuidString)"
-        setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        httpBody = createBody(
-            parameters: [:],
-            boundary: boundary,
-            data: jpeg,
-            mimeType: "image/jpg",
-            filename: filename
-        )
-    }
-    
-    mutating func attach(zip: Data, name: String) {
-        httpMethod = "POST"
-        let boundary = "Boundary-\(UUID().uuidString)"
-        setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        httpBody = createBody(
-            parameters: ["name": "Star Wars"],
-            boundary: boundary,
-            data: zip,
-            mimeType: "application/zip",
-            filename: "\(name).zip",
-            name: name
-        )
-    }
-    
-    private func createBody(parameters: [String: String],
-                            boundary: String,
-                            data: Data,
-                            mimeType: String,
-                            filename: String,
-                            name: String) -> Data {
-        let body = NSMutableData()
+extension AVCaptureDevice.DiscoverySession {
+    func uniqueDevicePositionsCount() -> Int {
+        var uniqueDevicePositions: [AVCaptureDevice.Position] = []
         
-        let boundaryPrefix = "--\(boundary)\r\n"
-        
-        for (key, value) in parameters {
-            body.appendString(boundaryPrefix)
-            body.appendString("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n")
-            body.appendString("\(value)\r\n")
+        for device in devices {
+            if !uniqueDevicePositions.contains(device.position) {
+                uniqueDevicePositions.append(device.position)
+            }
         }
         
-        body.appendString(boundaryPrefix)
-        // Don't worry about negative examples for now
-        body.appendString("Content-Disposition: form-data; name=\"\(name)_positive_examples\"; filename=\"\(filename)\"\r\n")
-        body.appendString("Content-Type: \(mimeType)\r\n\r\n")
-        body.append(data)
-        body.appendString("\r\n")
-        
-        body.appendString(boundaryPrefix)
-        // Don't worry about negative examples for now
-        body.appendString("Content-Disposition: form-data; name=\"\(name)2_positive_examples\"; filename=\"\(filename)\"\r\n")
-        body.appendString("Content-Type: \(mimeType)\r\n\r\n")
-        body.append(data)
-        body.appendString("\r\n")
-        
-        body.appendString("--".appending(boundary.appending("--")))
-        
-        return body as Data
-    }
-    
-    mutating func query(params: [String: String]) {
-        let parameterArray = params.map { (key, value) -> String in
-            let percentEscapedKey = key.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-            let percentEscapedValue = value.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-            return "\(percentEscapedKey!)=\(percentEscapedValue!)"
-        }
-        let baseUrl = (url?.absoluteString)!
-        url = URL(string: "\(baseUrl)?\(parameterArray.joined(separator: "&"))")
-    }
-    
-    private func createBody(parameters: [String: String],
-                    boundary: String,
-                    data: Data,
-                    mimeType: String,
-                    filename: String) -> Data {
-        let body = NSMutableData()
-        
-        let boundaryPrefix = "--\(boundary)\r\n"
-        
-        for (key, value) in parameters {
-            body.appendString(boundaryPrefix)
-            body.appendString("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n")
-            body.appendString("\(value)\r\n")
-        }
-        
-        body.appendString(boundaryPrefix)
-        body.appendString("Content-Disposition: form-data; name=\"file\"; filename=\"\(filename)\"\r\n")
-        body.appendString("Content-Type: \(mimeType)\r\n\r\n")
-        body.append(data)
-        body.appendString("\r\n")
-        body.appendString("--".appending(boundary.appending("--")))
-        
-        return body as Data
+        return uniqueDevicePositions.count
     }
 }
 
-extension UIImage {
-    func resized(withPercentage percentage: CGFloat) -> UIImage? {
-        let canvasSize = CGSize(width: size.width * percentage, height: size.height * percentage)
-        UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
-        defer { UIGraphicsEndImageContext() }
-        draw(in: CGRect(origin: .zero, size: canvasSize))
-        return UIGraphicsGetImageFromCurrentImageContext()
-    }
-    
-    func resized(toWidth width: CGFloat) -> UIImage? {
-        let canvasSize = CGSize(width: width, height: CGFloat(ceil(width/size.width * size.height)))
-        UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
-        defer { UIGraphicsEndImageContext() }
-        draw(in: CGRect(origin: .zero, size: canvasSize))
-        return UIGraphicsGetImageFromCurrentImageContext()
-    }
-}
-
-extension UITextField {
-    func setLeftPaddingPoints(_ amount:CGFloat){
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
-        self.leftView = paddingView
-        self.leftViewMode = .always
-    }
-    
-    func setRightPaddingPoints(_ amount:CGFloat) {
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
-        self.rightView = paddingView
-        self.rightViewMode = .always
-    }
-}

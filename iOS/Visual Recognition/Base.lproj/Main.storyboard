@@ -53,10 +53,10 @@
             </objects>
             <point key="canvasLocation" x="-548" y="-119.1904047976012"/>
         </scene>
-        <!--Camera View Controller-->
+        <!--Main Camera View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="CameraViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MainCameraViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -154,7 +154,7 @@
                                 </constraints>
                                 <state key="normal" image="classifiers.png"/>
                                 <connections>
-                                    <segue destination="c0r-LS-hjU" kind="show" identifier="showClassifiers" id="ODN-GD-YWB"/>
+                                    <segue destination="c0r-LS-hjU" kind="show" identifier="showClassifiers" id="rCg-lw-5Ol"/>
                                 </connections>
                             </button>
                             <textView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Don't want to type out your key? Click 🔑 in the desktop tool and scan the code!" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9WH-Si-Dao">
@@ -578,7 +578,7 @@
                                     <outlet property="classImageCountLabel" destination="bOj-As-DL8" id="8Nv-fY-alO"/>
                                     <outlet property="classImageImageView" destination="KoM-Kb-6G0" id="qnk-Ms-OtE"/>
                                     <outlet property="classNameLabel" destination="tWM-4a-lLO" id="BXi-op-KF5"/>
-                                    <segue destination="4qN-YW-6M6" kind="show" identifier="showImages" id="47K-ib-1XO"/>
+                                    <segue destination="4qN-YW-6M6" kind="show" identifier="showImages" id="54U-gE-hiA"/>
                                 </connections>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="newClassCell" id="Xd9-BC-1cQ">
@@ -653,7 +653,7 @@
         <!--Title-->
         <scene sceneID="xNn-c8-QgK">
             <objects>
-                <collectionViewController id="4qN-YW-6M6" customClass="ImagesCollectionViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="images" id="4qN-YW-6M6" customClass="ImagesCollectionViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="4t5-sP-aGU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -696,7 +696,7 @@
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="tot-2N-KYa"/>
                         <barButtonItem systemItem="camera" id="AFs-8e-qP8">
                             <connections>
-                                <segue destination="zjM-K8-kVZ" kind="presentation" identifier="showSnapper" id="jIv-IG-wuP"/>
+                                <segue destination="zjM-K8-kVZ" kind="presentation" identifier="showSnapper" id="XaE-uh-Nqb"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="rsI-gf-IZi"/>
@@ -707,12 +707,12 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ibe-sp-1Od" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3201" y="-398"/>
+            <point key="canvasLocation" x="3153" y="-398"/>
         </scene>
-        <!--Snapper View Controller-->
+        <!--Camera View Controller-->
         <scene sceneID="iqg-Wg-M9o">
             <objects>
-                <viewController id="zjM-K8-kVZ" customClass="SnapperViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="zjM-K8-kVZ" customClass="CameraViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jfY-j1-ZMq"/>
                         <viewControllerLayoutGuide type="bottom" id="vd9-CM-w7K"/>
@@ -721,9 +721,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U26-ZO-1Um">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U26-ZO-1Um" customClass="PreviewView" customModule="Visual_Recognition" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="-1" width="375" height="668"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="5bX-Sp-W1R" appends="YES" id="cwS-k0-yq3"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="do6-7o-qgl">
                                 <rect key="frame" x="16" y="558.5" width="60" height="60"/>
@@ -732,6 +735,26 @@
                                     <constraint firstAttribute="width" constant="60" id="vAF-cX-HNI"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uf7-W4-7Sg">
+                                <rect key="frame" x="26" y="44" width="51" height="30"/>
+                                <state key="normal" title="camera"/>
+                                <connections>
+                                    <action selector="changeCamera:" destination="zjM-K8-kVZ" eventType="touchUpInside" id="xQ3-9q-Orb"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wcp-Yo-9R5">
+                                <rect key="frame" x="110" y="44" width="51" height="30"/>
+                                <state key="normal" title="resume"/>
+                                <connections>
+                                    <action selector="resumeInterruptedSession:" destination="zjM-K8-kVZ" eventType="touchUpInside" id="mcl-tg-UpJ"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D6b-uU-yYk">
+                                <rect key="frame" x="178" y="44" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xcv-Pf-cMj">
                                 <rect key="frame" x="149" y="550" width="77" height="77"/>
                                 <constraints>
@@ -740,7 +763,7 @@
                                 </constraints>
                                 <state key="normal" image="capture.png"/>
                                 <connections>
-                                    <action selector="takePhoto" destination="zjM-K8-kVZ" eventType="touchUpInside" id="JCY-UV-B4l"/>
+                                    <action selector="capturePhoto:" destination="zjM-K8-kVZ" eventType="touchUpInside" id="6ea-Hn-rEK"/>
                                     <action selector="takePhoto" destination="BYZ-38-t0r" eventType="touchUpInside" id="d6a-An-IhO"/>
                                 </connections>
                             </button>
@@ -758,7 +781,7 @@
                                     <constraint firstAttribute="height" constant="60" id="VEP-xv-Sg2"/>
                                 </constraints>
                                 <connections>
-                                    <segue destination="yNw-u1-LOA" kind="unwind" unwindAction="unwindToImagesWithSegue:" id="Nia-Uz-zb6"/>
+                                    <segue destination="yNw-u1-LOA" kind="unwind" unwindAction="unwindToImagesWithSegue:" id="rrI-ow-TkE"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QUY-H0-coo">
@@ -769,8 +792,7 @@
                                 </constraints>
                                 <state key="normal" image="cancel.png"/>
                                 <connections>
-                                    <action selector="retake" destination="BYZ-38-t0r" eventType="touchUpInside" id="gT1-Kg-HFu"/>
-                                    <segue destination="yNw-u1-LOA" kind="unwind" unwindAction="unwindToImagesWithSegue:" id="nvB-4e-c3v"/>
+                                    <segue destination="yNw-u1-LOA" kind="unwind" unwindAction="unwindToImagesWithSegue:" id="qyb-Jl-May"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="scrim.png" translatesAutoresizingMaskIntoConstraints="NO" id="YWt-BL-vyv">
@@ -780,21 +802,27 @@
                                 </constraints>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="BaX-FG-sQv" firstAttribute="centerY" secondItem="do6-7o-qgl" secondAttribute="centerY" id="5W2-m3-BqM"/>
+                            <constraint firstItem="wcp-Yo-9R5" firstAttribute="leading" secondItem="Uf7-W4-7Sg" secondAttribute="trailing" constant="33" id="7ad-lu-AgH"/>
+                            <constraint firstItem="Uf7-W4-7Sg" firstAttribute="leading" secondItem="98g-Sh-LsG" secondAttribute="leadingMargin" constant="10" id="7gV-bK-tCx"/>
                             <constraint firstItem="vd9-CM-w7K" firstAttribute="top" secondItem="xcv-Pf-cMj" secondAttribute="bottom" constant="40" id="7tC-sn-4L0"/>
                             <constraint firstItem="U26-ZO-1Um" firstAttribute="leading" secondItem="98g-Sh-LsG" secondAttribute="leading" id="AJX-wN-bae"/>
+                            <constraint firstItem="wcp-Yo-9R5" firstAttribute="top" secondItem="YWt-BL-vyv" secondAttribute="bottom" id="Eft-RR-0Nu"/>
+                            <constraint firstItem="D6b-uU-yYk" firstAttribute="leading" secondItem="wcp-Yo-9R5" secondAttribute="trailing" constant="20" id="Eqa-dr-5oN"/>
                             <constraint firstItem="0FB-iI-Bq0" firstAttribute="centerY" secondItem="do6-7o-qgl" secondAttribute="centerY" id="F7I-YJ-K8T"/>
-                            <constraint firstItem="U26-ZO-1Um" firstAttribute="top" secondItem="98g-Sh-LsG" secondAttribute="top" id="K3H-bO-4qU"/>
+                            <constraint firstItem="U26-ZO-1Um" firstAttribute="top" secondItem="98g-Sh-LsG" secondAttribute="top" constant="-0.10000000000000001" id="K3H-bO-4qU"/>
                             <constraint firstAttribute="trailing" secondItem="YWt-BL-vyv" secondAttribute="trailing" id="NYq-G1-DGZ"/>
                             <constraint firstItem="xcv-Pf-cMj" firstAttribute="centerY" secondItem="do6-7o-qgl" secondAttribute="centerY" id="PDK-5m-mmw"/>
                             <constraint firstItem="do6-7o-qgl" firstAttribute="leading" secondItem="98g-Sh-LsG" secondAttribute="leadingMargin" id="TVL-Lo-4Cv"/>
+                            <constraint firstItem="D6b-uU-yYk" firstAttribute="top" secondItem="YWt-BL-vyv" secondAttribute="bottom" id="UMB-4t-VLm"/>
                             <constraint firstItem="YWt-BL-vyv" firstAttribute="top" secondItem="98g-Sh-LsG" secondAttribute="top" id="Ulj-0n-FYp"/>
                             <constraint firstAttribute="trailing" secondItem="U26-ZO-1Um" secondAttribute="trailing" id="Xsm-eG-HvX"/>
                             <constraint firstAttribute="trailingMargin" secondItem="QUY-H0-coo" secondAttribute="trailing" id="bLb-hv-K9h"/>
                             <constraint firstItem="xcv-Pf-cMj" firstAttribute="centerX" secondItem="98g-Sh-LsG" secondAttribute="centerX" id="cCC-FL-xrK"/>
                             <constraint firstItem="BaX-FG-sQv" firstAttribute="centerX" secondItem="do6-7o-qgl" secondAttribute="centerX" id="rBH-DW-9hN"/>
+                            <constraint firstItem="Uf7-W4-7Sg" firstAttribute="top" secondItem="YWt-BL-vyv" secondAttribute="bottom" id="ryq-bs-6Rc"/>
                             <constraint firstItem="YWt-BL-vyv" firstAttribute="leading" secondItem="98g-Sh-LsG" secondAttribute="leading" id="tWu-VE-jON"/>
                             <constraint firstItem="vd9-CM-w7K" firstAttribute="top" secondItem="U26-ZO-1Um" secondAttribute="bottom" id="x1x-RU-2zx"/>
                             <constraint firstItem="0FB-iI-Bq0" firstAttribute="centerX" secondItem="do6-7o-qgl" secondAttribute="centerX" id="ysV-w8-PvB"/>
@@ -802,17 +830,27 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="cameraView" destination="U26-ZO-1Um" id="9vE-Mh-2gv"/>
-                        <outlet property="height" destination="Akk-ig-QyY" id="JCa-ce-oWT"/>
-                        <outlet property="thumbnail" destination="do6-7o-qgl" id="4cf-dX-3Lk"/>
-                        <outlet property="thumbnailImage" destination="0FB-iI-Bq0" id="Qnt-m1-9c6"/>
-                        <outlet property="width" destination="su1-Mh-MY7" id="dPh-DV-7BF"/>
+                        <outlet property="cameraButton" destination="Uf7-W4-7Sg" id="AuG-IL-dkw"/>
+                        <outlet property="cameraUnavailableLabel" destination="D6b-uU-yYk" id="2v3-Yb-rOe"/>
+                        <outlet property="height" destination="Akk-ig-QyY" id="t3L-e8-8J4"/>
+                        <outlet property="photoButton" destination="xcv-Pf-cMj" id="QlS-pX-X5u"/>
+                        <outlet property="previewView" destination="U26-ZO-1Um" id="SXd-BW-c1w"/>
+                        <outlet property="resumeButton" destination="wcp-Yo-9R5" id="izZ-9P-92J"/>
+                        <outlet property="thumbnail" destination="do6-7o-qgl" id="lZw-nf-ii8"/>
+                        <outlet property="thumbnailImage" destination="0FB-iI-Bq0" id="U9q-pc-rvw"/>
+                        <outlet property="width" destination="su1-Mh-MY7" id="L5o-pQ-jnK"/>
+                        <segue destination="yNw-u1-LOA" kind="unwind" identifier="unwindToImages" unwindAction="unwindToImagesWithSegue:" id="GyO-bi-n7g"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eJd-hN-4tU" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="yNw-u1-LOA" userLabel="Exit" sceneMemberID="exit"/>
+                <tapGestureRecognizer id="5bX-Sp-W1R">
+                    <connections>
+                        <action selector="focusAndExposeTap:" destination="zjM-K8-kVZ" id="P3B-Ru-uUA"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="4061.5999999999999" y="-398.05097451274366"/>
+            <point key="canvasLocation" x="3983" y="-398"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Woy-H8-uLq">
