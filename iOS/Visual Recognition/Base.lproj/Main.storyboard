@@ -40,7 +40,9 @@
                             </containerView>
                         </subviews>
                     </view>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" id="V5w-IU-rki"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="initialDrawerPositionFromIB" value="closed"/>
                     </userDefinedRuntimeAttributes>
@@ -633,18 +635,8 @@
                             <outlet property="delegate" destination="0de-JU-aQR" id="dBR-9U-0qh"/>
                         </connections>
                     </collectionView>
-                    <toolbarItems>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="efS-T6-ABd"/>
-                        <barButtonItem title="Train" id="tI9-wn-8CD">
-                            <connections>
-                                <action selector="train" destination="0de-JU-aQR" id="lGv-bf-YdG"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="crT-YW-Frd"/>
-                    </toolbarItems>
-                    <navigationItem key="navigationItem" title="Title" id="USH-pf-klT">
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="N1N-L5-v7S"/>
-                    </navigationItem>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Title" id="I9l-Pq-G73"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hjN-QF-3d9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -693,13 +685,13 @@
                         </connections>
                     </collectionView>
                     <toolbarItems>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="tot-2N-KYa"/>
-                        <barButtonItem systemItem="camera" id="AFs-8e-qP8">
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="bwT-lN-lv3"/>
+                        <barButtonItem image="capture.png" id="uKJ-3h-kxF">
                             <connections>
-                                <segue destination="zjM-K8-kVZ" kind="presentation" identifier="showSnapper" id="XaE-uh-Nqb"/>
+                                <segue destination="zjM-K8-kVZ" kind="presentation" identifier="showSnapper" id="w9t-p1-gJV"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="rsI-gf-IZi"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="zCs-sv-28M"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Title" id="c5Z-Qz-SN9">
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="IPv-zH-bZo"/>
