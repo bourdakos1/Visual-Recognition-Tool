@@ -133,9 +133,16 @@ export default class Demo extends React.Component {
     }
 
     findColor = (name) => {
-        return ColorFinder.filter((color) => {
+        var colors = ColorFinder.filter((color) => {
             return color[1].toLowerCase() == name.slice(0, -6).toLowerCase()
         })
+
+        // If the color isn't in our list just make it white.
+        if (colors.length == 0) {
+            return [['ffffff', name]]
+        }
+
+        return colors
     }
 
     componentDidMount() {

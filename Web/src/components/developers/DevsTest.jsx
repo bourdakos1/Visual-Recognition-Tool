@@ -131,22 +131,24 @@ export default class DevsTest extends React.Component {
                 <div style={{
                     flex: '2',
                     font: Styles.fontDefault,
-                    fontSize: '1.2em',
-                    lineHeight: '1.4em',
+                    fontSize: '18px',
+                    lineHeight: '1.2',
+                    fontWeight: '700',
                     color: Styles.colorTextDark,
-                    opacity: '0.6',
-                    marginTop: '40px',
-                    paddingLeft: '20px',
-                    paddingRight: '20px',
+                    maxWidth: '1000px',
+                    // opacity: '0.6',
+                    marginTop: '80px',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
                     textAlign: 'center'
                 }}>
-                    CHOOSE A SERVICE TO GET STARTED
+                    Choose a service to get started
                 </div>
 
                 <div style={[section, {
                         height: 'auto',
                         padding: '0',
-                        marginTop: '40px',
+                        marginTop: '10px',
                         maxWidth: '1000px',
                         marginLeft: 'auto',
                         marginRight: 'auto',
