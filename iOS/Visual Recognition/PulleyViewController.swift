@@ -457,7 +457,7 @@ open class PulleyViewController: UIViewController {
         setNeedsSupportedDrawerPositionsUpdate()
     }
     
-    let v = UIView(frame: CGRect(x: 0, y: 0, width: 500, height: 64))
+    let v = UIView(frame: CGRect(x: 0, y: 0, width: UIWindow().frame.width, height: 64))
     
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

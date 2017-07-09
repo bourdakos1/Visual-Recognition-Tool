@@ -22,7 +22,9 @@ class ImagesCollectionViewController: UICollectionViewController, UICollectionVi
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         navigationController?.toolbar.isHidden = false
+        
         images = []
         grabPhotos()
     }

@@ -23,6 +23,10 @@
 		235DD00D1EC6702E00B8432B /* ImagesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235DD00C1EC6702E00B8432B /* ImagesCollectionViewController.swift */; };
 		235DD00F1EC67B0800B8432B /* ClassCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235DD00E1EC67B0800B8432B /* ClassCollectionViewCell.swift */; };
 		23609DBB1EBA727800FD03FC /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 23609DBA1EBA727800FD03FC /* Keys.plist */; };
+		236273581F10B03E0090F4F5 /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 236273571F10B0290090F4F5 /* camera.png */; };
+		236273591F10B03E0090F4F5 /* photos.png in Resources */ = {isa = PBXBuildFile; fileRef = 236273561F10B0290090F4F5 /* photos.png */; };
+		2362735B1F10B80E0090F4F5 /* train.png in Resources */ = {isa = PBXBuildFile; fileRef = 2362735A1F10B7C60090F4F5 /* train.png */; };
+		2362735D1F11C2D10090F4F5 /* CustomToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2362735C1F11C2D10090F4F5 /* CustomToolbar.swift */; };
 		236DCB6B1E7DAA54009AE6D6 /* capture.png in Resources */ = {isa = PBXBuildFile; fileRef = 236DCB6A1E7DAA54009AE6D6 /* capture.png */; };
 		236DCB6D1E7DAE04009AE6D6 /* cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 236DCB6C1E7DAE04009AE6D6 /* cancel.png */; };
 		2389A6FE1E7C65A100D7C973 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A6FD1E7C65A100D7C973 /* AppDelegate.swift */; };
@@ -88,6 +92,10 @@
 		235DD00C1EC6702E00B8432B /* ImagesCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesCollectionViewController.swift; sourceTree = "<group>"; };
 		235DD00E1EC67B0800B8432B /* ClassCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassCollectionViewCell.swift; sourceTree = "<group>"; };
 		23609DBA1EBA727800FD03FC /* Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
+		236273561F10B0290090F4F5 /* photos.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photos.png; sourceTree = "<group>"; };
+		236273571F10B0290090F4F5 /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
+		2362735A1F10B7C60090F4F5 /* train.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = train.png; sourceTree = "<group>"; };
+		2362735C1F11C2D10090F4F5 /* CustomToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomToolbar.swift; sourceTree = "<group>"; };
 		236DCB6A1E7DAA54009AE6D6 /* capture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = capture.png; sourceTree = "<group>"; };
 		236DCB6C1E7DAE04009AE6D6 /* cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cancel.png; sourceTree = "<group>"; };
 		2389A6FA1E7C65A100D7C973 /* Visual Recognition.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Visual Recognition.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -246,6 +254,7 @@
 			children = (
 				2389A7341E7CA9E700D7C973 /* ProgressBar.swift */,
 				232B9F8D1E808EA500407BB8 /* RoundedButton.swift */,
+				2362735C1F11C2D10090F4F5 /* CustomToolbar.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -266,11 +275,14 @@
 				236DCB6A1E7DAA54009AE6D6 /* capture.png */,
 				236DCB6C1E7DAE04009AE6D6 /* cancel.png */,
 				231D6FE11EBAA8E0003DDE56 /* classifiers.png */,
+				236273571F10B0290090F4F5 /* camera.png */,
+				236273561F10B0290090F4F5 /* photos.png */,
 				23C9BE8E1ECBF52D00FFD71C /* create.png */,
 				232B9F8B1E80885900407BB8 /* scrim.png */,
 				23C62EC11EDDF5BA002A0311 /* select.png */,
 				231D6FE31EBADAA1003DDE56 /* library.png */,
 				23AA52331EC0E7CD0073D4DC /* checkmark.png */,
+				2362735A1F10B7C60090F4F5 /* train.png */,
 				23E5ED901ED9F84A00E5AF97 /* watson_icon2.png */,
 				23AA52311EC0E6240073D4DC /* btn_dropdown.png */,
 				23E5ED921ED9F90400E5AF97 /* watson_icon2_180.png */,
@@ -419,6 +431,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2362735B1F10B80E0090F4F5 /* train.png in Resources */,
+				236273581F10B03E0090F4F5 /* camera.png in Resources */,
+				236273591F10B03E0090F4F5 /* photos.png in Resources */,
 				23609DBB1EBA727800FD03FC /* Keys.plist in Resources */,
 				232B9F8C1E80885900407BB8 /* scrim.png in Resources */,
 				232B9F8A1E80842D00407BB8 /* api.png in Resources */,
@@ -599,6 +614,7 @@
 			files = (
 				2389A72C1E7C668100D7C973 /* MainCameraViewController.swift in Sources */,
 				2389A7301E7C79CA00D7C973 /* PulleyViewController.swift in Sources */,
+				2362735D1F11C2D10090F4F5 /* CustomToolbar.swift in Sources */,
 				2389A6FE1E7C65A100D7C973 /* AppDelegate.swift in Sources */,
 				23DAFC681F0C7CC200216134 /* CameraViewController.swift in Sources */,
 				232B9F901E80A5AD00407BB8 /* ClassifiersTableViewController.swift in Sources */,

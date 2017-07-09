@@ -15,7 +15,7 @@
         <!--Pulley View Controller-->
         <scene sceneID="duC-YJ-Vjf">
             <objects>
-                <viewController id="UXp-9A-p5K" customClass="PulleyViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" id="UXp-9A-p5K" customClass="PulleyViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="SBX-bO-Y0t"/>
                         <viewControllerLayoutGuide type="bottom" id="5hT-n0-sZd"/>
@@ -58,7 +58,7 @@
         <!--Main Camera View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="MainCameraViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" id="BYZ-38-t0r" customClass="MainCameraViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -259,7 +259,7 @@
         <!--Results Table View Controller-->
         <scene sceneID="enS-CM-b60">
             <objects>
-                <tableViewController id="HdM-am-By7" customClass="ResultsTableViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController extendedLayoutIncludesOpaqueBars="YES" id="HdM-am-By7" customClass="ResultsTableViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="LNt-X7-xrR">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -375,7 +375,7 @@
         <!--Classifiers-->
         <scene sceneID="1t0-oY-tuU">
             <objects>
-                <tableViewController id="c0r-LS-hjU" customClass="ClassifiersTableViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController extendedLayoutIncludesOpaqueBars="YES" id="c0r-LS-hjU" customClass="ClassifiersTableViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="w5l-Pa-UMc">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -524,7 +524,7 @@
         <!--Title-->
         <scene sceneID="nKP-go-WPx">
             <objects>
-                <collectionViewController id="0de-JU-aQR" customClass="ClassesCollectionViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController extendedLayoutIncludesOpaqueBars="YES" id="0de-JU-aQR" customClass="ClassesCollectionViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="bDO-ar-YGX">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -635,8 +635,17 @@
                             <outlet property="delegate" destination="0de-JU-aQR" id="dBR-9U-0qh"/>
                         </connections>
                     </collectionView>
-                    <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Title" id="I9l-Pq-G73"/>
+                    <toolbarItems>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="mhq-A2-OPz"/>
+                        <barButtonItem image="train" id="VBW-kP-ndF">
+                            <connections>
+                                <action selector="train" destination="0de-JU-aQR" id="qVp-6Q-Yrk"/>
+                            </connections>
+                        </barButtonItem>
+                    </toolbarItems>
+                    <navigationItem key="navigationItem" title="Title" id="I9l-Pq-G73">
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="hmh-u7-H1c"/>
+                    </navigationItem>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hjN-QF-3d9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -645,7 +654,7 @@
         <!--Title-->
         <scene sceneID="xNn-c8-QgK">
             <objects>
-                <collectionViewController storyboardIdentifier="images" id="4qN-YW-6M6" customClass="ImagesCollectionViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="images" extendedLayoutIncludesOpaqueBars="YES" id="4qN-YW-6M6" customClass="ImagesCollectionViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="4t5-sP-aGU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -685,13 +694,17 @@
                         </connections>
                     </collectionView>
                     <toolbarItems>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="bwT-lN-lv3"/>
-                        <barButtonItem image="capture.png" id="uKJ-3h-kxF">
+                        <barButtonItem image="cam" id="O3K-pa-TFw">
+                            <color key="tintColor" red="0.5725490196078431" green="0.5725490196078431" blue="0.5725490196078431" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
-                                <segue destination="zjM-K8-kVZ" kind="presentation" identifier="showSnapper" id="w9t-p1-gJV"/>
+                                <segue destination="zjM-K8-kVZ" kind="presentation" identifier="showSnapper" id="LAS-Yr-Vd7"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="zCs-sv-28M"/>
+                        <barButtonItem image="phot" id="VK6-6K-iVA">
+                            <color key="tintColor" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="calibratedRGB"/>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="bwT-lN-lv3"/>
+                        <barButtonItem image="train" id="uKJ-3h-kxF"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Title" id="c5Z-Qz-SN9">
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="IPv-zH-bZo"/>
@@ -704,7 +717,7 @@
         <!--Camera View Controller-->
         <scene sceneID="iqg-Wg-M9o">
             <objects>
-                <viewController id="zjM-K8-kVZ" customClass="CameraViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" id="zjM-K8-kVZ" customClass="CameraViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jfY-j1-ZMq"/>
                         <viewControllerLayoutGuide type="bottom" id="vd9-CM-w7K"/>
@@ -847,7 +860,7 @@
         <!--Navigation Controller-->
         <scene sceneID="Woy-H8-uLq">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="FDT-sa-UqY" sceneMemberID="viewController">
+                <navigationController extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="FDT-sa-UqY" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" shadowImage="api.png" id="b8m-IB-9qV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -856,7 +869,7 @@
                         <color key="barTintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
-                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="HrL-jt-OH2">
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" id="HrL-jt-OH2" customClass="CustomToolbar" customModule="Visual_Recognition" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
@@ -872,13 +885,17 @@
     <resources>
         <image name="api.png" width="41" height="133"/>
         <image name="btn_dropdown.png" width="76" height="76"/>
+        <image name="cam" width="36" height="51"/>
         <image name="cancel.png" width="100" height="100"/>
         <image name="capture.png" width="232" height="232"/>
         <image name="checkmark.png" width="60" height="60"/>
         <image name="classifiers.png" width="165" height="165"/>
         <image name="create.png" width="90" height="90"/>
         <image name="library.png" width="165" height="165"/>
+        <image name="phot" width="31" height="51"/>
         <image name="scrim.png" width="41" height="133"/>
         <image name="select.png" width="36" height="18"/>
+        <image name="train" width="67" height="51"/>
     </resources>
+    <color key="tintColor" red="0.47058823529411764" green="0.38823529411764707" blue="0.92549019607843142" alpha="1" colorSpace="calibratedRGB"/>
 </document>
