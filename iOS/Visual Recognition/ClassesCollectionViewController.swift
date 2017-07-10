@@ -32,6 +32,9 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
         show(viewControllerToCommit, sender: self)
     }
     
+    @IBOutlet weak var trainButton: UIBarButtonItem!
+    @IBOutlet weak var editButton: UIBarButtonItem!
+    
     struct ClassObj {
         var pendingClass: PendingClass
         var image: UIImage
@@ -72,6 +75,40 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
         for result in classifier.relationship?.allObjects as! [PendingClass] {
             classes.append(grabPhoto(for: result))
         }
+        
+        reloadData()
+    }
+    
+    @IBOutlet private weak var barLabelHolder: UIBarButtonItem!
+    private var barLabel = UILabel(frame: CGRect.zero)
+    
+    func reloadData() {
+        if classes.count >= 2 {
+            trainButton.isEnabled = true
+            barLabel.text = ""
+        } else {
+            trainButton.isEnabled = false
+        }
+        
+        if classes.count <= 0 {
+            editButton.isEnabled = false
+        }
+        
+        if classes.count == 1 {
+            barLabel.text = "Add at least one more class."
+        }
+        
+        if UserDefaults.standard.string(forKey: "api_key") == nil {
+            trainButton.isEnabled = false
+            barLabel.text = "Sign in with an API Key to train."
+        }
+        
+        barLabel.backgroundColor = UIColor.clear
+        barLabel.font = UIFont(name: barLabel.font.fontName, size: 14)
+        barLabel.textColor = UIColor.darkGray
+        barLabel.sizeToFit()
+        barLabelHolder.customView = barLabel
+        
         collectionView?.reloadData()
     }
 
@@ -207,10 +244,10 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
             pendingClass.name = textfield.text!
             
             self.classifier.addToRelationship(pendingClass)
-
+            
             self.classes.append(self.grabPhoto(for: pendingClass))
             
-            self.collectionView?.reloadData()
+            self.reloadData()
             
             DatabaseController.saveContext()
         }

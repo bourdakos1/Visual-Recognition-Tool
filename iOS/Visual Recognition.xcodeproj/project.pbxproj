@@ -27,6 +27,7 @@
 		236273591F10B03E0090F4F5 /* photos.png in Resources */ = {isa = PBXBuildFile; fileRef = 236273561F10B0290090F4F5 /* photos.png */; };
 		2362735B1F10B80E0090F4F5 /* train.png in Resources */ = {isa = PBXBuildFile; fileRef = 2362735A1F10B7C60090F4F5 /* train.png */; };
 		2362735D1F11C2D10090F4F5 /* CustomToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2362735C1F11C2D10090F4F5 /* CustomToolbar.swift */; };
+		2362735F1F122EE60090F4F5 /* reverse.png in Resources */ = {isa = PBXBuildFile; fileRef = 2362735E1F122E660090F4F5 /* reverse.png */; };
 		236DCB6B1E7DAA54009AE6D6 /* capture.png in Resources */ = {isa = PBXBuildFile; fileRef = 236DCB6A1E7DAA54009AE6D6 /* capture.png */; };
 		236DCB6D1E7DAE04009AE6D6 /* cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 236DCB6C1E7DAE04009AE6D6 /* cancel.png */; };
 		2389A6FE1E7C65A100D7C973 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A6FD1E7C65A100D7C973 /* AppDelegate.swift */; };
@@ -96,6 +97,7 @@
 		236273571F10B0290090F4F5 /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
 		2362735A1F10B7C60090F4F5 /* train.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = train.png; sourceTree = "<group>"; };
 		2362735C1F11C2D10090F4F5 /* CustomToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomToolbar.swift; sourceTree = "<group>"; };
+		2362735E1F122E660090F4F5 /* reverse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reverse.png; sourceTree = "<group>"; };
 		236DCB6A1E7DAA54009AE6D6 /* capture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = capture.png; sourceTree = "<group>"; };
 		236DCB6C1E7DAE04009AE6D6 /* cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cancel.png; sourceTree = "<group>"; };
 		2389A6FA1E7C65A100D7C973 /* Visual Recognition.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Visual Recognition.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -274,6 +276,7 @@
 			children = (
 				236DCB6A1E7DAA54009AE6D6 /* capture.png */,
 				236DCB6C1E7DAE04009AE6D6 /* cancel.png */,
+				2362735E1F122E660090F4F5 /* reverse.png */,
 				231D6FE11EBAA8E0003DDE56 /* classifiers.png */,
 				236273571F10B0290090F4F5 /* camera.png */,
 				236273561F10B0290090F4F5 /* photos.png */,
@@ -431,6 +434,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2362735F1F122EE60090F4F5 /* reverse.png in Resources */,
 				2362735B1F10B80E0090F4F5 /* train.png in Resources */,
 				236273581F10B03E0090F4F5 /* camera.png in Resources */,
 				236273591F10B03E0090F4F5 /* photos.png in Resources */,

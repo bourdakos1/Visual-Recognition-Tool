@@ -33,13 +33,13 @@
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "watson120.png",
+      "filename" : "watson_icon3_120.png",
       "scale" : "2x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "watson180.png",
+      "filename" : "watson4_180.png",
       "scale" : "3x"
     },
     {
@@ -80,13 +80,13 @@
     {
       "size" : "76x76",
       "idiom" : "ipad",
-      "filename" : "watson152.png",
+      "filename" : "watson_icon3_152.png",
       "scale" : "2x"
     },
     {
       "size" : "83.5x83.5",
       "idiom" : "ipad",
-      "filename" : "watson_icon.png",
+      "filename" : "watson_icon3_167.png",
       "scale" : "2x"
     },
     {
