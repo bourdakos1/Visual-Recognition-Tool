@@ -711,7 +711,11 @@
                             <color key="tintColor" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="bwT-lN-lv3"/>
-                        <barButtonItem image="train" id="uKJ-3h-kxF"/>
+                        <barButtonItem image="train" id="uKJ-3h-kxF">
+                            <connections>
+                                <action selector="train" destination="4qN-YW-6M6" id="MgJ-lC-ZxT"/>
+                            </connections>
+                        </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Title" id="c5Z-Qz-SN9">
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="IPv-zH-bZo"/>
