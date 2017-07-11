@@ -12,6 +12,12 @@ import CoreData
 import Zip
 import Alamofire
 
+struct ClassObj {
+    var pendingClass: PendingClass
+    var image: UIImage
+    var imageCount: Int
+}
+
 class ClassesCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate {
     @available(iOS 9.0, *)
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
@@ -34,12 +40,6 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
     
     @IBOutlet weak var trainButton: UIBarButtonItem!
     @IBOutlet weak var editButton: UIBarButtonItem!
-    
-    struct ClassObj {
-        var pendingClass: PendingClass
-        var image: UIImage
-        var imageCount: Int
-    }
     
     var classifier = PendingClassifier()
     var classes = [ClassObj]()
@@ -90,9 +90,7 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
             trainButton.isEnabled = false
         }
         
-        if classes.count <= 0 {
-            editButton.isEnabled = false
-        }
+        editButton.isEnabled = !(classes.count <= 0)
         
         if classes.count == 1 {
             barLabel.text = "Add at least one more class."
@@ -195,6 +193,7 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
             let index = collectionView?.indexPathsForSelectedItems?.first?.item {
             destination.pendingClass = classes[index].pendingClass
             destination.classifier = classifier
+            destination.classes = classes
         }
     }
     
@@ -347,7 +346,6 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
                         print(encodingError)
                     }
             })
-            
         }
         catch {
             print(error)

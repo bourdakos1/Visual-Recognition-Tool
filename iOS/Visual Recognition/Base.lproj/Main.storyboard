@@ -716,6 +716,10 @@
                     <navigationItem key="navigationItem" title="Title" id="c5Z-Qz-SN9">
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="IPv-zH-bZo"/>
                     </navigationItem>
+                    <connections>
+                        <outlet property="editButton" destination="IPv-zH-bZo" id="KL2-OH-DeM"/>
+                        <outlet property="trainButton" destination="uKJ-3h-kxF" id="Hzw-qg-0jd"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ibe-sp-1Od" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
