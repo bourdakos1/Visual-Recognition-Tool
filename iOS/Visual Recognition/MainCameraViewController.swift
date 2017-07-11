@@ -35,8 +35,8 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     @IBOutlet var captureButton: UIButton!
     @IBOutlet var retakeButton: UIButton!
     @IBOutlet var apiKeyDoneButton: UIButton!
-    @IBOutlet var apiKey: UIButton!
     @IBOutlet var apiKeySubmit: UIButton!
+    @IBOutlet var apiKeyLogOut: UIButton!
     @IBOutlet var apiKeyTextField: UITextField!
     @IBOutlet var hintTextView: UITextView!
     
@@ -134,13 +134,22 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                         self.pickerView.reloadData()
                         return
                     }
-                    
+                                        
                     var data = json["classifiers"] as! [[String: AnyObject]]
                     
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
                     data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! }).filter({ $0["status"] as? String == "ready" })
                     
+                    // The count may be 0 even though we have classifiers, because we delete the failed ones
+                    if data.count <= 0 {
+                        self.classifiers = []
+                        self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+                        self.pickerView.selectItem(0)
+                        self.pickerView.reloadData()
+                        return
+                    }
+
                     // it should be safe to check the first and last date and the length is the same
                     // count - 1 to account for no default
                     if !(self.classifiers.first!["created"] as? String == data.first!["created"] as? String
@@ -220,6 +229,7 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         view.bringSubview(toFront: apiKeyTextField)
         view.bringSubview(toFront: apiKeyDoneButton)
         view.bringSubview(toFront: apiKeySubmit)
+        view.bringSubview(toFront: apiKeyLogOut)
         view.bringSubview(toFront: hintTextView)
     }
     
@@ -408,6 +418,24 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     // Verify the API entered or scanned.
     func testKey(key: String) {
+        // Escape if they are already logged in with this key.
+        if key == UserDefaults.standard.string(forKey: "api_key") {
+            return
+        }
+        
+        apiKeyDone()
+        
+        let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
+        
+        alert.view.tintColor = UIColor.black
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50)) as UIActivityIndicatorView
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        loadingIndicator.startAnimating()
+        
+        alert.view.addSubview(loadingIndicator)
+        present(alert, animated: true, completion: nil)
+        
         var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api")!)
         r.query(params: [
             "api_key": key,
@@ -417,14 +445,27 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         let task = URLSession.shared.dataTask(with: r) { data, response, error in
             // Check for fundamental networking error.
             guard let data = data, error == nil else {
+                self.dismiss(animated: true, completion: nil)
                 return
             }
             
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
                 
+                print(json)
+                
                 if json["statusInfo"] as! String == "invalid-api-key" {
                     print("Ivalid api key!")
+                    let alert = UIAlertController(title: nil, message: "Invalid api key.", preferredStyle: .alert)
+                    
+                    let cancelAction = UIAlertAction(title: "Okay", style: .cancel) { action in
+                        print("cancel")
+                    }
+                    
+                    alert.addAction(cancelAction)
+                    self.dismiss(animated: true, completion: {
+                        self.present(alert, animated: true, completion: nil)
+                    })
                     return
                 }
                 
@@ -434,23 +475,18 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             
             DispatchQueue.main.async {
                 print("Key set!")
+                self.dismiss(animated: true, completion: nil)
                 UserDefaults.standard.set(key, forKey: "api_key")
                 
                 let key = self.obscureKey(key: key)
                 
-                self.apiKey.setAttributedTitle(NSAttributedString(string: key, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+                if let drawer = self.parent as? PulleyViewController {
+                    (drawer.navigationItem.titleView as! UIButton).setAttributedTitle(NSAttributedString(string: key, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+                }
             }
         }
         task.resume()
     }
-    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        // save a tmp image
-//        if segue.identifier == "showClassifiers",
-//            let destination = segue.destination as? ClassifiersTableViewController {
-//
-//        }
-//    }
     
     @IBAction func unwindToVC(segue: UIStoryboardSegue) {
         
@@ -465,7 +501,11 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         apiKeyTextField.isHidden = false
         apiKeyDoneButton.isHidden = false
         apiKeySubmit.isHidden = false
+        apiKeyLogOut.isHidden = false
         hintTextView.isHidden = false
+        
+        // If the key isn't set disable the logout button.
+        apiKeyLogOut.isEnabled = UserDefaults.standard.string(forKey: "api_key") != nil
         
         apiKeyTextField.becomeFirstResponder()
     }
@@ -478,6 +518,7 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         apiKeyTextField.isHidden = true
         apiKeyDoneButton.isHidden = true
         apiKeySubmit.isHidden = true
+        apiKeyLogOut.isHidden = true
         hintTextView.isHidden = true
         blurredEffectView.isHidden = true
 
@@ -487,15 +528,21 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     @IBAction func submitApiKey() {
         let key = apiKeyTextField.text
-        apiKeyDone()
         testKey(key: key!)
+    }
+    
+    @IBAction func logOut() {
+        apiKeyDone()
+        UserDefaults.standard.set(nil, forKey: "api_key")
+        if let drawer = self.parent as? PulleyViewController {
+            (drawer.navigationItem.titleView as! UIButton).setAttributedTitle(NSAttributedString(string: "🔑 API Key", attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+        }
     }
     
     @IBAction func takePhoto() {
         photoOutput?.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
         captureButton.isHidden = true
         retakeButton.isHidden = false
-        apiKey.isHidden = true
         classifiersButton.isHidden = true
         
         if let drawer = self.parent as? PulleyViewController {
@@ -519,7 +566,6 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         tempImageView.isHidden = true
         captureButton.isHidden = false
         retakeButton.isHidden = true
-        apiKey.isHidden = false
         classifiersButton.isHidden = false
         
         if let drawer = self.parent as? PulleyViewController {

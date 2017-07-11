@@ -135,17 +135,32 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LMj-gK-YYp" customClass="RoundedButton" customModule="Visual_Recognition" customModuleProvider="target">
-                                <rect key="frame" x="87" y="84" width="200" height="48"/>
+                                <rect key="frame" x="197.5" y="84" width="157.5" height="48"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="LHs-SE-67H"/>
                                     <constraint firstAttribute="height" constant="48" id="mzp-vw-xSb"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <state key="normal" title="OK">
+                                <state key="normal" title="Save Key">
                                     <color key="titleColor" red="0.25098039215686274" green="0.25098039215686274" blue="0.25098039215686274" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="submitApiKey" destination="BYZ-38-t0r" eventType="touchUpInside" id="uyC-Lo-QPg"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rLC-P0-1KE" customClass="RoundedButton" customModule="Visual_Recognition" customModuleProvider="target">
+                                <rect key="frame" x="20" y="84" width="157.5" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="P7p-Ci-8zj"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <state key="normal" title="Log Out">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isSolid" value="NO"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="logOut" destination="BYZ-38-t0r" eventType="touchUpInside" id="pju-nh-4sC"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3n4-v9-abV">
@@ -205,7 +220,6 @@
                             <constraint firstItem="usO-SO-NRr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Jaz-UD-2zg"/>
                             <constraint firstItem="iHJ-Ta-u2A" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Jml-9L-6p4"/>
                             <constraint firstItem="Vih-RT-oNx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Nqp-wx-HAJ"/>
-                            <constraint firstItem="LMj-gK-YYp" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Oya-16-T0E"/>
                             <constraint firstItem="usO-SO-NRr" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="QFY-5U-VVu"/>
                             <constraint firstItem="hbX-2x-72A" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="25" id="Qeo-ql-kea"/>
                             <constraint firstItem="usO-SO-NRr" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="RHN-0f-5pi"/>
@@ -215,9 +229,14 @@
                             <constraint firstItem="KQS-fI-xsI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="X25-4a-USP"/>
                             <constraint firstItem="9WH-Si-Dao" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="YsL-Xa-WQn"/>
                             <constraint firstItem="3n4-v9-abV" firstAttribute="centerY" secondItem="beL-ak-Suw" secondAttribute="centerY" id="aCO-Fb-f1a"/>
+                            <constraint firstItem="LMj-gK-YYp" firstAttribute="leading" secondItem="rLC-P0-1KE" secondAttribute="trailing" constant="20" id="bKc-nc-vvb"/>
                             <constraint firstItem="aaW-Uw-VLV" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="20" id="cEx-Kc-Md4"/>
+                            <constraint firstAttribute="trailing" secondItem="LMj-gK-YYp" secondAttribute="trailing" constant="20" id="cfn-wX-u21"/>
                             <constraint firstItem="LMj-gK-YYp" firstAttribute="top" secondItem="aaW-Uw-VLV" secondAttribute="bottom" constant="20" id="dhT-rD-sfB"/>
+                            <constraint firstItem="rLC-P0-1KE" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="ee3-6h-Cnt"/>
+                            <constraint firstItem="LMj-gK-YYp" firstAttribute="width" secondItem="rLC-P0-1KE" secondAttribute="width" id="ftn-v6-Clz"/>
                             <constraint firstItem="KQS-fI-xsI" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="glt-JJ-x7O"/>
+                            <constraint firstItem="9WH-Si-Dao" firstAttribute="top" secondItem="rLC-P0-1KE" secondAttribute="bottom" constant="20" id="hfF-kC-XAx"/>
                             <constraint firstItem="UjN-QC-Tx6" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="k16-fO-Yiu"/>
                             <constraint firstItem="UjN-QC-Tx6" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="kGU-2H-5S8"/>
                             <constraint firstItem="9WH-Si-Dao" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="lFM-Pp-elE"/>
@@ -229,6 +248,7 @@
                             <constraint firstItem="beL-ak-Suw" firstAttribute="top" secondItem="9WH-Si-Dao" secondAttribute="bottom" id="pvT-xC-O4h"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="usO-SO-NRr" secondAttribute="bottom" id="qyj-PS-QE6"/>
                             <constraint firstItem="aaW-Uw-VLV" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="sTP-M9-kDJ"/>
+                            <constraint firstItem="rLC-P0-1KE" firstAttribute="top" secondItem="aaW-Uw-VLV" secondAttribute="bottom" constant="20" id="vpv-Re-ARW"/>
                             <constraint firstItem="usO-SO-NRr" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xT7-n0-yQu"/>
                         </constraints>
                         <variation key="default">
@@ -239,8 +259,8 @@
                         </variation>
                     </view>
                     <connections>
-                        <outlet property="apiKey" destination="iHJ-Ta-u2A" id="cVS-RZ-U2p"/>
                         <outlet property="apiKeyDoneButton" destination="KQQ-I6-IMA" id="sHG-AW-hgh"/>
+                        <outlet property="apiKeyLogOut" destination="rLC-P0-1KE" id="mgY-1N-iHP"/>
                         <outlet property="apiKeySubmit" destination="LMj-gK-YYp" id="Hph-hp-AQj"/>
                         <outlet property="apiKeyTextField" destination="aaW-Uw-VLV" id="xzG-g1-mRq"/>
                         <outlet property="cameraView" destination="KQS-fI-xsI" id="mlN-nW-oFP"/>
