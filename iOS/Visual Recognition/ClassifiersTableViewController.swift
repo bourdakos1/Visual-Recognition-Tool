@@ -88,6 +88,7 @@ class ClassifiersTableViewController: UITableViewController {
     }
     
     func loadClassifiers() {
+        indicator.startAnimating()
         // Load from Watson
         let apiKey = UserDefaults.standard.string(forKey: "api_key")
         
@@ -128,6 +129,8 @@ class ClassifiersTableViewController: UITableViewController {
                     self.classifiers = data
                     self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
                     
+                    self.indicator.stopAnimating()
+                    
                     self.tableView.reloadData()
                 }
             } catch let error as NSError {
@@ -154,9 +157,16 @@ class ClassifiersTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         loadClassifiers()
     }
-
+    
+    var indicator = UIActivityIndicatorView()
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        indicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        indicator.hidesWhenStopped = true
+        indicator.center = self.view.center
+        self.view.addSubview(indicator)
         
         v.backgroundColor = UIColor.white
         tableView.addSubview(v)

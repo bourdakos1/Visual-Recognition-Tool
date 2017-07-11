@@ -99,16 +99,28 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                 break
             }
         }
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        loadClassifiers()
+    }
+    
+    func loadClassifiers() {
+        print("loading classifiers")
         // Load from Watson
         let apiKey = UserDefaults.standard.string(forKey: "api_key")
         
         if apiKey == nil {
-            self.classifiers = []
-            self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-            self.pickerView.selectItem(0)
-            self.pickerView.reloadData()
+            classifiers = []
+            classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+            pickerView.selectItem(0)
+            pickerView.reloadData()
             return
+        }
+        
+        if classifiers.count <= 0 {
+            classifiers.append(["name": "Loading..." as AnyObject])
+            pickerView.reloadData()
         }
         
         var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers")!)
@@ -134,12 +146,16 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                         self.pickerView.reloadData()
                         return
                     }
-                                        
+                    
                     var data = json["classifiers"] as! [[String: AnyObject]]
                     
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-                    data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! }).filter({ $0["status"] as? String == "ready" })
+                    
+                    self.allClassifiers = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! })
+                    data = self.allClassifiers.filter({ $0["status"] as? String == "ready" })
+                    
+                    self.allClassifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
                     
                     // The count may be 0 even though we have classifiers, because we delete the failed ones
                     if data.count <= 0 {
@@ -149,7 +165,7 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                         self.pickerView.reloadData()
                         return
                     }
-
+                    
                     // it should be safe to check the first and last date and the length is the same
                     // count - 1 to account for no default
                     if !(self.classifiers.first!["created"] as? String == data.first!["created"] as? String
@@ -176,6 +192,7 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     }
     
     var classifiers = [[String: AnyObject]]()
+    var allClassifiers = [[String: AnyObject]]()
     var select = -1
     
     func numberOfItemsInPickerView(_ pickerView: AKPickerView) -> Int {
@@ -195,8 +212,6 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        classifiers.append(["name": "Loading..." as AnyObject])
         
         pickerView.delegate = self
         pickerView.dataSource = self
@@ -280,6 +295,7 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         }
         print(qrCode)
         testKey(key: qrCode)
+        loadClassifiers()
     }
     
     // Delegate for Camera.
@@ -529,6 +545,7 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     @IBAction func submitApiKey() {
         let key = apiKeyTextField.text
         testKey(key: key!)
+        loadClassifiers()
     }
     
     @IBAction func logOut() {
@@ -537,6 +554,7 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         if let drawer = self.parent as? PulleyViewController {
             (drawer.navigationItem.titleView as! UIButton).setAttributedTitle(NSAttributedString(string: "🔑 API Key", attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
         }
+        loadClassifiers()
     }
     
     @IBAction func takePhoto() {
@@ -575,6 +593,13 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         getTableController { tableController, drawer in
             drawer.setDrawerPosition(position: .closed, animated: true)
             tableController.classes = []
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showClassifiers",
+            let destination = segue.destination as? ClassifiersTableViewController {
+            destination.classifiers = self.allClassifiers
         }
     }
 }
