@@ -149,6 +149,11 @@ class ClassifiersTableViewController: UITableViewController {
     }
     
     let v = UIView(frame: CGRect(x: 0, y: -64, width: 500, height: 64))
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadClassifiers()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -160,8 +165,8 @@ class ClassifiersTableViewController: UITableViewController {
         tableView.estimatedRowHeight = 85.0
         tableView.rowHeight = UITableViewAutomaticDimension
         
-        loadClassifiers()
-    
+        
+        // This doesn't need reloaded everytime we show the page
         let fetchRequest:NSFetchRequest<PendingClassifier> = PendingClassifier.fetchRequest()
         
         do {
