@@ -29,8 +29,8 @@ class CameraViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.thumbnailImage.layer.cornerRadius = 5.0
         
+        // This needs to happen in view did appear so it loads in the right spot.
         let border = UIView()
         let frame = CGRect(x: self.thumbnailImage.frame.origin.x - 1.0, y: self.thumbnailImage.frame.origin.y - 1.0, width: self.thumbnailImage.frame.size.height + 2.0, height: self.thumbnailImage.frame.size.height + 2.0)
         border.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.25)
@@ -41,6 +41,8 @@ class CameraViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.thumbnailImage.layer.cornerRadius = 5.0
         
         // Disable UI. The UI is enabled if and only if the session starts running.
         cameraButton.isEnabled = false // front vs back

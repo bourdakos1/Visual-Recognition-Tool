@@ -300,13 +300,16 @@
                                             </constraints>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6PQ-4M-DOL">
-                                            <rect key="frame" x="18" y="18" width="66.5" height="19.5"/>
+                                            <rect key="frame" x="18" y="18" width="267.5" height="19.5"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="26"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d09-zp-RBd">
                                             <rect key="frame" x="295.5" y="12" width="61.5" height="31.5"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="61.5" id="cjd-2v-0wx"/>
+                                            </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -320,6 +323,7 @@
                                         <constraint firstItem="d09-zp-RBd" firstAttribute="trailing" secondItem="AXx-N9-qNM" secondAttribute="trailingMargin" constant="-10" id="J1g-sU-f4Q"/>
                                         <constraint firstItem="d09-zp-RBd" firstAttribute="centerY" secondItem="6PQ-4M-DOL" secondAttribute="centerY" id="arm-Fd-5DI"/>
                                         <constraint firstItem="dkp-nT-HSR" firstAttribute="trailing" secondItem="AXx-N9-qNM" secondAttribute="trailingMargin" constant="-10" id="svy-wE-c6f"/>
+                                        <constraint firstItem="d09-zp-RBd" firstAttribute="leading" secondItem="6PQ-4M-DOL" secondAttribute="trailing" constant="10" id="w61-gx-hDl"/>
                                         <constraint firstItem="6PQ-4M-DOL" firstAttribute="top" secondItem="AXx-N9-qNM" secondAttribute="topMargin" constant="10" id="wOS-yH-GMJ"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -349,13 +353,16 @@
                                             </constraints>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MDQ-l4-074">
-                                            <rect key="frame" x="18" y="18" width="45" height="54"/>
+                                            <rect key="frame" x="18" y="18" width="170" height="54"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ADR-NZ-zMF">
                                             <rect key="frame" x="315" y="34" width="42" height="21"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="42" id="dWo-1l-DcB"/>
+                                            </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -366,6 +373,7 @@
                                         <constraint firstItem="ADR-NZ-zMF" firstAttribute="centerY" secondItem="MuE-oV-efD" secondAttribute="centerY" id="PdU-Iw-Ghz"/>
                                         <constraint firstItem="ADR-NZ-zMF" firstAttribute="leading" secondItem="MuE-oV-efD" secondAttribute="trailing" constant="10" id="SCY-Iw-Ztq"/>
                                         <constraint firstItem="ADR-NZ-zMF" firstAttribute="trailing" secondItem="cJV-jl-FtK" secondAttribute="trailingMargin" constant="-10" id="Xk5-SG-cus"/>
+                                        <constraint firstItem="MuE-oV-efD" firstAttribute="leading" secondItem="MDQ-l4-074" secondAttribute="trailing" constant="10" id="iJg-K2-AWv"/>
                                         <constraint firstItem="MDQ-l4-074" firstAttribute="centerY" secondItem="cJV-jl-FtK" secondAttribute="centerY" id="q8t-Ki-pEH"/>
                                         <constraint firstItem="MDQ-l4-074" firstAttribute="top" secondItem="cJV-jl-FtK" secondAttribute="topMargin" constant="10" id="t7g-Tg-8Jc"/>
                                         <constraint firstItem="ADR-NZ-zMF" firstAttribute="centerY" secondItem="MDQ-l4-074" secondAttribute="centerY" id="vZq-qk-Kqh"/>
