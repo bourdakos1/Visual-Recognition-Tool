@@ -56,7 +56,7 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
         
         do {
             // Get the directory contents urls (including subfolders urls)
-            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(classifier.name!), includingPropertiesForKeys: nil, options: [])
+            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(classifier.id!), includingPropertiesForKeys: nil, options: [])
             
             let files = directoryContents.map{ $0.pathComponents.last! }
             
@@ -164,7 +164,7 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
         
         do {
             // Get the directory contents urls (including subfolders urls)
-            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(classifier.name!).appendingPathComponent(pendingClass.name!), includingPropertiesForKeys: nil, options: [])
+            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(classifier.id!).appendingPathComponent(pendingClass.name!), includingPropertiesForKeys: nil, options: [])
             
             // if you want to filter the directory contents you can do like this:
             let jpgFiles = directoryContents.filter{ $0.pathExtension == "jpg" }
@@ -278,7 +278,7 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
         alert.view.addSubview(loadingIndicator)
         present(alert, animated: true, completion: nil)
         do {
-            let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(classifier.name!)
+            let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(classifier.id!)
             
             var paths = [URL]()
             

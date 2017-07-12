@@ -54,7 +54,7 @@ class ClassifiersTableViewController: UITableViewController {
             let pendingClassifierClassName:String  = String(describing: PendingClassifier.self)
     
             let pendingClassifier:PendingClassifier = NSEntityDescription.insertNewObject(forEntityName: pendingClassifierClassName, into: DatabaseController.getContext()) as! PendingClassifier
-            pendingClassifier.id = "g3eq80eun09132ue13e9012u9e01" // make this an actual id, this will be the directory
+            pendingClassifier.id = UUID().uuidString
             pendingClassifier.name = textfield.text!
             
             self.pending.append(pendingClassifier)
@@ -88,7 +88,6 @@ class ClassifiersTableViewController: UITableViewController {
     }
     
     func loadClassifiers() {
-        indicator.startAnimating()
         // Load from Watson
         let apiKey = UserDefaults.standard.string(forKey: "api_key")
         
@@ -98,6 +97,8 @@ class ClassifiersTableViewController: UITableViewController {
             self.tableView.reloadData()
             return
         }
+        
+        indicator.startAnimating()
         
         var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers")!)
         
@@ -174,6 +175,21 @@ class ClassifiersTableViewController: UITableViewController {
         
         tableView.estimatedRowHeight = 85.0
         tableView.rowHeight = UITableViewAutomaticDimension
+        
+        
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        
+        do {
+            // Get the directory contents urls (including subfolders urls)
+            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil, options: [])
+            
+            let files = directoryContents.map{ $0.pathComponents.last! }
+            
+            print(files)
+            
+        } catch {
+            print(error.localizedDescription)
+        }
         
         
         // This doesn't need reloaded everytime we show the page
@@ -336,14 +352,16 @@ class ClassifiersTableViewController: UITableViewController {
             if tableView.numberOfSections > 1 && indexPath.section == 0 {
                 let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
                 
-                let path = documentsUrl.appendingPathComponent(pending[indexPath.item].name!)
+                let path = documentsUrl.appendingPathComponent(pending[indexPath.item].id!)
                 
                 do {
                     try FileManager.default.removeItem(at: path)
                     DatabaseController.getContext().delete(pending[indexPath.item])
+                    DatabaseController.saveContext()
                     pending.remove(at: indexPath.item)
                     if (pending.count <= 0) {
-                        tableView.deleteSections([indexPath.section], with: .fade)
+                        // Not the prettiest, but delete section isn't working.
+                        tableView.reloadData()
                     } else {
                         tableView.deleteRows(at: [indexPath], with: .fade)
                     }
@@ -356,9 +374,10 @@ class ClassifiersTableViewController: UITableViewController {
                     } else {
                         print("File does not exist")
                         DatabaseController.getContext().delete(pending[indexPath.item])
+                        DatabaseController.saveContext()
                         pending.remove(at: indexPath.item)
                         if (pending.count <= 0) {
-                            tableView.deleteSections([indexPath.section], with: .fade)
+                            tableView.reloadData()
                         } else {
                             tableView.deleteRows(at: [indexPath], with: .fade)
                         }

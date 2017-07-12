@@ -88,20 +88,6 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             drawer.navigationItem.titleView?.isUserInteractionEnabled = true
             drawer.navigationItem.titleView?.addGestureRecognizer(recognizer)
         }
-        
-        // Set the selection so it's right.
-        // Then reload data incase something changed.
-        
-        for (item, classifier) in classifiers.enumerated() {
-            if classifier["classifier_id"] as? String == UserDefaults.standard.string(forKey: "classifier_id") {
-                select = item
-                pickerView.selectItem(select)
-                break
-            }
-        }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
         loadClassifiers()
     }
     
@@ -111,15 +97,20 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         let apiKey = UserDefaults.standard.string(forKey: "api_key")
         
         if apiKey == nil {
+            print("logout and show default")
             classifiers = []
+            allClassifiers = []
             classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+            allClassifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
             pickerView.selectItem(0)
             pickerView.reloadData()
             return
         }
         
         if classifiers.count <= 0 {
+            print(self.pickerView.selectedItem)
             classifiers.append(["name": "Loading..." as AnyObject])
+            pickerView.selectItem(0)
             pickerView.reloadData()
         }
         
@@ -223,6 +214,10 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         pickerView.highlightedFont = UIFont.boldSystemFont(ofSize: 14)
         pickerView.highlightedTextColor = UIColor.white
         pickerView.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6)
+        if classifiers.count <= 0 {
+            classifiers.append(["name": "Loading..." as AnyObject])
+        }
+        pickerView.reloadData()
         
         // Give the API TextField styles and a stroke.
         apiKeyTextField.attributedPlaceholder = NSAttributedString(string: "API Key", attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 1, blue: 1, alpha: 0.5)])
@@ -295,7 +290,6 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         }
         print(qrCode)
         testKey(key: qrCode)
-        loadClassifiers()
     }
     
     // Delegate for Camera.
@@ -471,6 +465,7 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                 print(json)
                 
                 if json["statusInfo"] as! String == "invalid-api-key" {
+                    self.loadClassifiers()
                     print("Ivalid api key!")
                     let alert = UIAlertController(title: nil, message: "Invalid api key.", preferredStyle: .alert)
                     
@@ -493,6 +488,7 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                 print("Key set!")
                 self.dismiss(animated: true, completion: nil)
                 UserDefaults.standard.set(key, forKey: "api_key")
+                self.loadClassifiers()
                 
                 let key = self.obscureKey(key: key)
                 
@@ -545,7 +541,6 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     @IBAction func submitApiKey() {
         let key = apiKeyTextField.text
         testKey(key: key!)
-        loadClassifiers()
     }
     
     @IBAction func logOut() {

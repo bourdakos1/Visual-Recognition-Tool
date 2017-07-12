@@ -105,7 +105,7 @@ class CameraViewController: UIViewController {
         
         do {
             // Get the directory contents urls (including subfolders urls)
-            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(classifier.name!).appendingPathComponent(pendingClass.name!), includingPropertiesForKeys: nil, options: [])
+            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(classifier.id!).appendingPathComponent(pendingClass.name!), includingPropertiesForKeys: nil, options: [])
             
             // if you want to filter the directory contents you can do like this:
             let jpgFile = directoryContents.filter{ $0.pathExtension == "jpg" }
@@ -491,7 +491,7 @@ class CameraViewController: UIViewController {
                 
                 let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
                 
-                let path = documentsUrl.appendingPathComponent(self.classifier.name!).appendingPathComponent(self.pendingClass.name!)
+                let path = documentsUrl.appendingPathComponent(self.classifier.id!).appendingPathComponent(self.pendingClass.name!)
                 
                 do {
                     try FileManager.default.createDirectory(atPath: path.path, withIntermediateDirectories: true, attributes: nil)
