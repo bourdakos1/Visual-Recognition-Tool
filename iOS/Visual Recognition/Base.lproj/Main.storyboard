@@ -74,6 +74,12 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="usO-SO-NRr">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bottom_scrim.png" translatesAutoresizingMaskIntoConstraints="NO" id="cgw-ra-nMb">
+                                <rect key="frame" x="0.0" y="579" width="375" height="88"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="88" id="h7i-C0-iYc"/>
+                                </constraints>
+                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="scrim.png" translatesAutoresizingMaskIntoConstraints="NO" id="UjN-QC-Tx6">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <constraints>
@@ -213,9 +219,12 @@
                             <constraint firstItem="KQS-fI-xsI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6Op-bq-ic7"/>
                             <constraint firstAttribute="trailing" secondItem="f82-Na-Q0n" secondAttribute="trailing" id="8UI-ub-WOR"/>
                             <constraint firstItem="beL-ak-Suw" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="9BU-LJ-PaA"/>
+                            <constraint firstItem="cgw-ra-nMb" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="9DX-HU-tgs"/>
                             <constraint firstAttribute="trailing" secondItem="aaW-Uw-VLV" secondAttribute="trailing" id="9FE-Zn-s1d"/>
                             <constraint firstAttribute="bottom" secondItem="beL-ak-Suw" secondAttribute="bottom" constant="53" id="9Se-79-qGf"/>
+                            <constraint firstAttribute="bottom" secondItem="cgw-ra-nMb" secondAttribute="bottom" id="BBh-Yt-r9P"/>
                             <constraint firstAttribute="trailing" secondItem="KQS-fI-xsI" secondAttribute="trailing" id="BUu-HX-RNL"/>
+                            <constraint firstAttribute="trailing" secondItem="cgw-ra-nMb" secondAttribute="trailing" id="C8n-ri-X6i"/>
                             <constraint firstItem="KQS-fI-xsI" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="HWh-hL-tPp"/>
                             <constraint firstItem="usO-SO-NRr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Jaz-UD-2zg"/>
                             <constraint firstItem="iHJ-Ta-u2A" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Jml-9L-6p4"/>
@@ -274,7 +283,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="452" y="-398"/>
+            <point key="canvasLocation" x="452" y="-398.05097451274366"/>
         </scene>
         <!--Results Table View Controller-->
         <scene sceneID="enS-CM-b60">
@@ -784,7 +793,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uf7-W4-7Sg">
-                                <rect key="frame" x="26" y="44" width="33" height="33"/>
+                                <rect key="frame" x="26" y="40" width="33" height="33"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="33" id="Z1f-Y7-prZ"/>
                                     <constraint firstAttribute="width" constant="33" id="oDr-wN-FCh"/>
@@ -856,8 +865,8 @@
                             <constraint firstAttribute="trailing" secondItem="U26-ZO-1Um" secondAttribute="trailing" id="Xsm-eG-HvX"/>
                             <constraint firstAttribute="trailingMargin" secondItem="QUY-H0-coo" secondAttribute="trailing" id="bLb-hv-K9h"/>
                             <constraint firstItem="xcv-Pf-cMj" firstAttribute="centerX" secondItem="98g-Sh-LsG" secondAttribute="centerX" id="cCC-FL-xrK"/>
+                            <constraint firstItem="Uf7-W4-7Sg" firstAttribute="top" secondItem="jfY-j1-ZMq" secondAttribute="bottom" constant="20" id="nL9-rc-k3q"/>
                             <constraint firstItem="BaX-FG-sQv" firstAttribute="centerX" secondItem="do6-7o-qgl" secondAttribute="centerX" id="rBH-DW-9hN"/>
-                            <constraint firstItem="Uf7-W4-7Sg" firstAttribute="top" secondItem="YWt-BL-vyv" secondAttribute="bottom" id="ryq-bs-6Rc"/>
                             <constraint firstItem="YWt-BL-vyv" firstAttribute="leading" secondItem="98g-Sh-LsG" secondAttribute="leading" id="tWu-VE-jON"/>
                             <constraint firstItem="vd9-CM-w7K" firstAttribute="top" secondItem="U26-ZO-1Um" secondAttribute="bottom" id="x1x-RU-2zx"/>
                             <constraint firstItem="0FB-iI-Bq0" firstAttribute="centerX" secondItem="do6-7o-qgl" secondAttribute="centerX" id="ysV-w8-PvB"/>
@@ -912,6 +921,7 @@
     </scenes>
     <resources>
         <image name="api.png" width="41" height="133"/>
+        <image name="bottom_scrim.png" width="41" height="133"/>
         <image name="btn_dropdown.png" width="76" height="76"/>
         <image name="cam" width="36" height="51"/>
         <image name="cancel.png" width="100" height="100"/>

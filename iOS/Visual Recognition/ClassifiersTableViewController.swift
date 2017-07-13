@@ -227,7 +227,7 @@ class ClassifiersTableViewController: UITableViewController {
         if tableView.numberOfSections > 1 && section == 0 {
             return "in progress"
         } else {
-            return "my classifiers"
+            return "trained"
         }
     }
 
