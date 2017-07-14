@@ -130,8 +130,8 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                             classifiers.append(classifier)
                         }
                         
-                        self.classifiers = classifiers.sorted(by: { $0.created > $1.created })
-                        self.classifiers.append(Classifier(name: "Default"))
+                        classifiers = classifiers.sorted(by: { $0.created > $1.created })
+                        classifiers.append(Classifier(name: "Default"))
                         
                         // it should be safe to check the first and last date and the length is the same
                         // count - 1 to account for no default
@@ -540,7 +540,7 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showClassifiers",
             let destination = segue.destination as? ClassifiersTableViewController {
-            //destination.classifiers = self.classifiers
+            destination.classifiers = self.classifiers
         }
     }
 }

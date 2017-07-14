@@ -19,7 +19,7 @@ class ClassifiersTableViewController: UITableViewController {
     
     var pending = [PendingClassifier]()
     
-    var classifiers = [[String: AnyObject]]()
+    var classifiers = [Classifier]()
     
     required init?(coder aDecoder: NSCoder) {
         var keys: NSDictionary?
@@ -94,85 +94,79 @@ class ClassifiersTableViewController: UITableViewController {
         
         if apiKey == nil || apiKey == "" {
             self.classifiers = []
-            self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+            self.classifiers.append(Classifier(name: "Default"))
             self.tableView.reloadData()
             return
         }
         
         // Only show the loading indicator if nothing is training.
-        let training = classifiers.filter({ $0["status"] as? String == "training" })
+        let training = classifiers.filter({ $0.status == .training })
         if training.count == 0 {
             indicator.startAnimating()
         }
         
-//        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers")!)
-//
-//        r.query(params: [
-//            "api_key": apiKey!,
-//            "version": "2016-05-20",
-//            "verbose": "true"
-//            ])
-//
-//        let task = URLSession.shared.dataTask(with: r) { data, response, error in
-//            // Check for fundamental networking error.
-//            guard let data = data, error == nil else {
-//                return
-//            }
-//            do {
-//                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
-//                DispatchQueue.main.async{
-//                    var data = json["classifiers"] as! [[String: AnyObject]]
-//
-//                    let dateFormatter = DateFormatter()
-//                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-//                    data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! })
-//
-//                    let training = data.filter({ $0["status"] as? String == "training" })
-//                    if training.count > 0 {
-//                        self.trainingCount = training.count
-//                        self.reloadClassifiers()
-//                    } else if training.count != self.trainingCount {
-//                        self.trainingCount = training.count
-//                        self.classifiers = data
-//                        self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-//
-//                        print("reload tableview")
-//                        self.tableView.reloadData()
-//                    } else {
-//                         self.trainingCount = training.count
-//                    }
-//
-//                    self.indicator.stopAnimating()
-//
-//                    if self.classifiers.count <= 1 && data.count > 0 {
-//                        print("reload tableview")
-//                        if self.classifiers.count <= 0 {
-//                            self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-//                        }
-//                        self.tableView.reloadData()
-//                        return
-//                    }
-//
-//                    if self.classifiers.count <= 1 {
-//                        return
-//                    }
-//
-//                    // it should be safe to check the first and last date and the length is the same
-//                    if !(self.classifiers.first!["created"] as? String == data.first!["created"] as? String
-//                        && self.classifiers[self.classifiers.count - 2]["created"] as? String == data.last!["created"] as? String
-//                        && self.classifiers.count - 1 == data.count) {
-//                        self.classifiers = data
-//                        self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-//
-//                        print("reload tableview")
-//                        self.tableView.reloadData()
-//                    }
-//                }
-//            } catch let error as NSError {
-//                print("error : \(error)")
-//            }
-//        }
-//        task.resume()
+        let url = "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers"
+        let params = [
+            "api_key": apiKey!,
+            "version": "2016-05-20",
+            "verbose": "true"
+        ]
+        Alamofire.request(url, parameters: params).validate().responseJSON { response in
+            switch response.result {
+            case .success:
+                if let json = response.result.value as? [String : Any] {
+                    if let classifiersJSON = json["classifiers"] as? [Any] {
+                        
+                        // Build classifiers from json.
+                        var classifiers = [Classifier]()
+                        for classifierJSON in classifiersJSON {
+                            let classifier = Classifier(json: classifierJSON)!
+                            classifiers.append(classifier)
+                        }
+                        
+                        classifiers = classifiers.sorted(by: { $0.created > $1.created })
+                        
+                        let training = classifiers.filter({ $0.status == .training })
+                        if training.count > 0 {
+                            self.trainingCount = training.count
+                            self.reloadClassifiers()
+                        } else if training.count != self.trainingCount {
+                            self.trainingCount = training.count
+                            self.classifiers = classifiers
+                            self.classifiers.append(Classifier(name: "Default"))
+                            self.tableView.reloadData()
+                        } else {
+                             self.trainingCount = training.count
+                        }
+                        
+                        self.indicator.stopAnimating()
+                        
+                        if self.classifiers.count <= 1 && classifiers.count > 0 {
+                            if self.classifiers.count <= 0 {
+                                self.classifiers.append(Classifier(name: "Default"))
+                            }
+                            self.tableView.reloadData()
+                            return
+                        }
+                        
+                        if self.classifiers.count <= 1 {
+                            return
+                        }
+                        
+                        // it should be safe to check the first and last date and the length is the same
+                        if !(self.classifiers.first!.created == classifiers.first!.created
+                            && self.classifiers[self.classifiers.count - 2].created == classifiers.last!.created
+                            && self.classifiers.count - 1 == classifiers.count) {
+                            self.classifiers = classifiers
+                            self.classifiers.append(Classifier(name: "Default"))
+                            self.tableView.reloadData()
+                        }
+                    }
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
     func reloadClassifiers() {
@@ -277,19 +271,19 @@ class ClassifiersTableViewController: UITableViewController {
             
             let classifierData = classifiers[indexPath.item]
             
-            cell.classifierNameLabel?.text = classifierData["name"] as? String
-            cell.classifierIdLabel?.text = classifierData["classifier_id"] as? String
-            cell.classifierStatusLabel?.text = classifierData["status"] as? String
+            cell.classifierNameLabel?.text = classifierData.name
+            cell.classifierIdLabel?.text = classifierData.classifierId
+            cell.classifierStatusLabel?.text = classifierData.status.rawValue
             cell.statusIndicator?.layer.cornerRadius = 6
             
-            if classifierData["status"] as? String == "ready" {
+            if classifierData.status == .ready {
                 cell.classifierNameLabel?.alpha = 1.0
                 cell.classifierIdLabel?.alpha = 1.0
                 cell.classifierStatusLabel?.alpha = 1.0
                 cell.statusIndicator?.backgroundColor = UIColor(red: 105/255, green: 219/255, blue: 48/255, alpha: 1)
                 cell.activityIndicator?.stopAnimating()
                 cell.activityIndicator?.isHidden = true
-            } else if classifierData["status"] as? String == "training" || classifierData["status"] as? String == "retraining" {
+            } else if classifierData.status == .training || classifierData.status == .retraining {
                 cell.classifierNameLabel?.alpha = 0.4
                 cell.classifierIdLabel?.alpha = 0.4
                 cell.classifierStatusLabel?.alpha = 0.4
@@ -306,8 +300,6 @@ class ClassifiersTableViewController: UITableViewController {
             }
             
             cell.tapAction = { (cell) in
-                print(self.classifiers[tableView.indexPath(for: cell)!.item]["classifier_id"] ?? "default")
-
                 let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                 
                 
@@ -342,13 +334,13 @@ class ClassifiersTableViewController: UITableViewController {
             let classifierId = UserDefaults.standard.string(forKey: "classifier_id")
             
             if classifierId != nil {
-                if classifierData["classifier_id"] as? String == classifierId {
+                if classifierData.classifierId == classifierId {
                     cell.checkmark?.isHidden = false
                 } else {
                     cell.checkmark?.isHidden = true
                 }
             } else {
-                if classifierData["name"] as? String == "Default" {
+                if classifierData.name == "Default" {
                     cell.checkmark?.isHidden = false
                 } else {
                     cell.checkmark?.isHidden = true
@@ -362,8 +354,8 @@ class ClassifiersTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if !(tableView.numberOfSections > 1 && indexPath.section == 0) {
             let classifierData = classifiers[indexPath.item]
-            if classifierData["status"] as? String == "ready"{
-                UserDefaults.standard.set(classifiers[indexPath.item]["classifier_id"], forKey: "classifier_id")
+            if classifierData.status == .ready {
+                UserDefaults.standard.set(classifiers[indexPath.item].classifierId, forKey: "classifier_id")
             }
         }
         self.tableView.reloadData()
@@ -418,7 +410,7 @@ class ClassifiersTableViewController: UITableViewController {
                     }
                 }
             } else {
-                let url = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers/\(classifiers[indexPath.item]["classifier_id"]!)")!
+                let url = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers/\(classifiers[indexPath.item].classifierId)")!
                 
                 let parameters: Parameters = [
                     "api_key": UserDefaults.standard.string(forKey: "api_key")!,
