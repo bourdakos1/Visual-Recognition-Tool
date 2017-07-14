@@ -302,67 +302,56 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             
             let classifierId = UserDefaults.standard.string(forKey: "classifier_id")
             
-//            let url = "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify"
-//
-//            var r = URLRequest(url: URL(string: url)!)
-//
-//            r.query(params: [
-//                "api_key": apiKey!,
-//                "version": "2016-05-20",
-//                "threshold": "0",
-//                "classifier_ids": "\(classifierId ?? "default")"
-//            ])
-//
-//            // Attach the small image at 40% quality.
-//            r.attach(
-//                jpeg: UIImageJPEGRepresentation(reducedImage, 0.4)!,
-//                filename: "test.jpg"
-//            )
-//
-//            let task = URLSession.shared.dataTask(with: r) { data, response, error in
-//                // Check for fundamental networking error.
-//                guard let data = data, error == nil else {
-//                    return
-//                }
-//
-//                var json: AnyObject?
-//
-//                do {
-//                    json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
-//                } catch {
-//                    print("Error: \(error)")
-//                }
-//
-//                guard let images = json?["images"] as? [Any],
-//                    let image = images.first as? [String: Any],
-//                    let classifiers = image["classifiers"] as? [Any],
-//                    let classifier = classifiers.first as? [String: Any],
-//                    let classes = classifier["classes"] as? [Any] else {
-//                        print("Error: No classes returned.")
-//                        var myNewData = [[String: Any]]()
-//
-//                        myNewData.append([
-//                            "class_name": "No classes found" as Any,
-//                            "score": CGFloat(0.0) as Any
-//                        ])
-//                        self.push(data: myNewData)
-//                        return
-//                }
-//
-//                var myNewData = [[String: Any]]()
-//
-//                for case let classObj as [String: Any] in classes {
-//                    myNewData.append([
-//                        "class_name": classObj["class"] as Any,
-//                        "score": classObj["score"] as Any
-//                    ])
-//                }
-//
-//                // Sort data by score and reload table.
-//                myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
-//                self.push(data: myNewData)
-//            }
-//            task.resume()
+            let url = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify")!
+            
+            let urlRequest = URLRequest(url: url)
+            
+            let parameters: Parameters = [
+                "api_key": apiKey!,
+                "version": "2016-05-20",
+                "threshold": "0",
+                "classifier_ids": "\(classifierId ?? "default")"
+            ]
+            
+            do {
+                let encodedURLRequest = try URLEncoding.queryString.encode(urlRequest, with: parameters)
+                
+                Alamofire.upload(UIImageJPEGRepresentation(reducedImage, 0.4)!, to: encodedURLRequest.url!).responseJSON { response in
+                    guard
+                        let json = response.result.value as? [String: Any],
+                        let images = json["images"] as? [Any],
+                        let image = images.first as? [String: Any],
+                        let classifiers = image["classifiers"] as? [Any],
+                        let classifier = classifiers.first as? [String: Any],
+                        let classes = classifier["classes"] as? [Any] else {
+                            print("Error: No classes returned.")
+                            var myNewData = [[String: Any]]()
+                            
+                            myNewData.append([
+                                "class_name": "No classes found" as Any,
+                                "score": CGFloat(0.0) as Any
+                            ])
+                            self.push(data: myNewData)
+                            return
+                    }
+                    
+                    var myNewData = [[String: Any]]()
+                    
+                    for case let classObj as [String: Any] in classes {
+                        myNewData.append([
+                            "class_name": classObj["class"] as Any,
+                            "score": classObj["score"] as Any
+                        ])
+                    }
+                    
+                    // Sort data by score and reload table.
+                    myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
+                    self.push(data: myNewData)
+                    debugPrint(response)
+                }
+            } catch {
+                print("Error: \(error)")
+            }
             
             // Set the screen to our captured photo.
             tempImageView.image = image
@@ -422,58 +411,39 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         alert.view.addSubview(loadingIndicator)
         present(alert, animated: true, completion: nil)
         
-//        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api")!)
-//        r.query(params: [
-//            "api_key": key,
-//            "version": "2016-05-20"
-//        ])
-//
-//        let task = URLSession.shared.dataTask(with: r) { data, response, error in
-//            // Check for fundamental networking error.
-//            guard let data = data, error == nil else {
-//                self.dismiss(animated: true, completion: nil)
-//                return
-//            }
-//
-//            do {
-//                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
-//
-//                print(json)
-//
-//                if json["statusInfo"] as! String == "invalid-api-key" {
-//                    self.loadClassifiers()
-//                    print("Ivalid api key!")
-//                    let alert = UIAlertController(title: nil, message: "Invalid api key.", preferredStyle: .alert)
-//
-//                    let cancelAction = UIAlertAction(title: "Okay", style: .cancel) { action in
-//                        print("cancel")
-//                    }
-//
-//                    alert.addAction(cancelAction)
-//                    self.dismiss(animated: true, completion: {
-//                        self.present(alert, animated: true, completion: nil)
-//                    })
-//                    return
-//                }
-//
-//            } catch {
-//                print("Error: \(error)")
-//            }
-//
-//            DispatchQueue.main.async {
-//                print("Key set!")
-//                self.dismiss(animated: true, completion: nil)
-//                UserDefaults.standard.set(key, forKey: "api_key")
-//                self.loadClassifiers()
-//
-//                let key = self.obscureKey(key: key)
-//
-//                if let drawer = self.parent as? PulleyViewController {
-//                    (drawer.navigationItem.titleView as! UIButton).setAttributedTitle(NSAttributedString(string: key, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
-//                }
-//            }
-//        }
-//        task.resume()
+        let url = "https://gateway-a.watsonplatform.net/visual-recognition/api"
+        let params = [
+            "api_key": key,
+            "version": "2016-05-20"
+        ]
+        Alamofire.request(url, parameters: params).responseJSON { response in
+            if let json = response.result.value as? [String : Any] {
+                if json["statusInfo"] as! String == "invalid-api-key" {
+                    print("Ivalid api key!")
+                    let alert = UIAlertController(title: nil, message: "Invalid api key.", preferredStyle: .alert)
+                    
+                    let cancelAction = UIAlertAction(title: "Okay", style: .cancel) { action in
+                        print("cancel")
+                    }
+                    
+                    alert.addAction(cancelAction)
+                    self.dismiss(animated: true, completion: {
+                        self.present(alert, animated: true, completion: nil)
+                    })
+                    return
+                }
+            }
+            print("Key set!")
+            self.dismiss(animated: true, completion: nil)
+            UserDefaults.standard.set(key, forKey: "api_key")
+            self.loadClassifiers()
+            
+            let key = self.obscureKey(key: key)
+            
+            if let drawer = self.parent as? PulleyViewController {
+                (drawer.navigationItem.titleView as! UIButton).setAttributedTitle(NSAttributedString(string: key, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+            }
+        }
     }
     
     @IBAction func unwindToVC(segue: UIStoryboardSegue) {
@@ -631,15 +601,11 @@ extension Classifier {
     
 extension Classifier {
     init?(json: Any) {
-        guard let json = json as? [String: Any]
-            else {
-                return nil
-        }
-        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         
-        guard let name = json["name"] as? String,
+        guard let json = json as? [String: Any],
+            let name = json["name"] as? String,
             let classesArray = json["classes"] as? [Any],
             let classifierId = json["classifier_id"] as? String,
             let created = json["created"] as? String,
