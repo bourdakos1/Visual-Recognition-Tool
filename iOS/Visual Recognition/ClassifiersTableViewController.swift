@@ -105,74 +105,74 @@ class ClassifiersTableViewController: UITableViewController {
             indicator.startAnimating()
         }
         
-        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers")!)
-        
-        r.query(params: [
-            "api_key": apiKey!,
-            "version": "2016-05-20",
-            "verbose": "true"
-            ])
-        
-        let task = URLSession.shared.dataTask(with: r) { data, response, error in
-            // Check for fundamental networking error.
-            guard let data = data, error == nil else {
-                return
-            }
-            do {
-                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
-                DispatchQueue.main.async{
-                    var data = json["classifiers"] as! [[String: AnyObject]]
-                    
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-                    data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! })
-                    
-                    let training = data.filter({ $0["status"] as? String == "training" })
-                    if training.count > 0 {
-                        self.trainingCount = training.count
-                        self.reloadClassifiers()
-                    } else if training.count != self.trainingCount {
-                        self.trainingCount = training.count
-                        self.classifiers = data
-                        self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-                        
-                        print("reload tableview")
-                        self.tableView.reloadData()
-                    } else {
-                         self.trainingCount = training.count
-                    }
-                    
-                    self.indicator.stopAnimating()
-                    
-                    if self.classifiers.count <= 1 && data.count > 0 {
-                        print("reload tableview")
-                        if self.classifiers.count <= 0 {
-                            self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-                        }
-                        self.tableView.reloadData()
-                        return
-                    }
-                    
-                    if self.classifiers.count <= 1 {
-                        return
-                    }
-                    
-                    // it should be safe to check the first and last date and the length is the same
-                    if !(self.classifiers.first!["created"] as? String == data.first!["created"] as? String
-                        && self.classifiers[self.classifiers.count - 2]["created"] as? String == data.last!["created"] as? String
-                        && self.classifiers.count - 1 == data.count) {
-                        self.classifiers = data
-                        self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-                        
-                        print("reload tableview")
-                        self.tableView.reloadData()
-                    }
-                }
-            } catch let error as NSError {
-                print("error : \(error)")
-            }
-        }
-        task.resume()
+//        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers")!)
+//
+//        r.query(params: [
+//            "api_key": apiKey!,
+//            "version": "2016-05-20",
+//            "verbose": "true"
+//            ])
+//
+//        let task = URLSession.shared.dataTask(with: r) { data, response, error in
+//            // Check for fundamental networking error.
+//            guard let data = data, error == nil else {
+//                return
+//            }
+//            do {
+//                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
+//                DispatchQueue.main.async{
+//                    var data = json["classifiers"] as! [[String: AnyObject]]
+//
+//                    let dateFormatter = DateFormatter()
+//                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+//                    data = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! })
+//
+//                    let training = data.filter({ $0["status"] as? String == "training" })
+//                    if training.count > 0 {
+//                        self.trainingCount = training.count
+//                        self.reloadClassifiers()
+//                    } else if training.count != self.trainingCount {
+//                        self.trainingCount = training.count
+//                        self.classifiers = data
+//                        self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+//
+//                        print("reload tableview")
+//                        self.tableView.reloadData()
+//                    } else {
+//                         self.trainingCount = training.count
+//                    }
+//
+//                    self.indicator.stopAnimating()
+//
+//                    if self.classifiers.count <= 1 && data.count > 0 {
+//                        print("reload tableview")
+//                        if self.classifiers.count <= 0 {
+//                            self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+//                        }
+//                        self.tableView.reloadData()
+//                        return
+//                    }
+//
+//                    if self.classifiers.count <= 1 {
+//                        return
+//                    }
+//
+//                    // it should be safe to check the first and last date and the length is the same
+//                    if !(self.classifiers.first!["created"] as? String == data.first!["created"] as? String
+//                        && self.classifiers[self.classifiers.count - 2]["created"] as? String == data.last!["created"] as? String
+//                        && self.classifiers.count - 1 == data.count) {
+//                        self.classifiers = data
+//                        self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+//
+//                        print("reload tableview")
+//                        self.tableView.reloadData()
+//                    }
+//                }
+//            } catch let error as NSError {
+//                print("error : \(error)")
+//            }
+//        }
+//        task.resume()
     }
     
     func reloadClassifiers() {

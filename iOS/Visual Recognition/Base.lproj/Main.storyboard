@@ -766,10 +766,10 @@
             </objects>
             <point key="canvasLocation" x="3153" y="-398"/>
         </scene>
-        <!--Camera View Controller-->
+        <!--Snapper View Controller-->
         <scene sceneID="iqg-Wg-M9o">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" id="zjM-K8-kVZ" customClass="CameraViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" id="zjM-K8-kVZ" customClass="SnapperViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jfY-j1-ZMq"/>
                         <viewControllerLayoutGuide type="bottom" id="vd9-CM-w7K"/>

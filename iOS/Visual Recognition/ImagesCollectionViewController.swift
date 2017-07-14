@@ -199,7 +199,7 @@ class ImagesCollectionViewController: UICollectionViewController, UICollectionVi
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if  segue.identifier == "showSnapper",
-            let destination = segue.destination as? CameraViewController {
+            let destination = segue.destination as? SnapperViewController {
             destination.pendingClass = pendingClass
             destination.classifier = classifier
         }

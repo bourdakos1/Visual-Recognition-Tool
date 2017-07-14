@@ -12,37 +12,13 @@ import AVFoundation
 import Photos
 
 class CameraViewController: UIViewController {
-    var classifier = PendingClassifier()
-    var pendingClass = PendingClass()
-    
     // Set the StatusBar color.
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
     
-    @IBOutlet var thumbnail: UIView!
-    @IBOutlet var thumbnailImage: UIImageView!
-    @IBOutlet weak var width: NSLayoutConstraint!
-    @IBOutlet weak var height: NSLayoutConstraint!
-    
-    // MARK: View Controller Life Cycle
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        // This needs to happen in view did appear so it loads in the right spot.
-        let border = UIView()
-        let frame = CGRect(x: self.thumbnailImage.frame.origin.x - 1.0, y: self.thumbnailImage.frame.origin.y - 1.0, width: self.thumbnailImage.frame.size.height + 2.0, height: self.thumbnailImage.frame.size.height + 2.0)
-        border.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.25)
-        border.frame = frame
-        border.layer.cornerRadius = 7.0
-        self.view.insertSubview(border, belowSubview: self.thumbnailImage)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.thumbnailImage.layer.cornerRadius = 5.0
         
         // Disable UI. The UI is enabled if and only if the session starts running.
         cameraButton.isEnabled = false // front vs back
@@ -95,31 +71,6 @@ class CameraViewController: UIViewController {
          */
         sessionQueue.async { [unowned self] in
             self.configureSession()
-        }
-        
-        grabPhoto()
-    }
-    
-    func grabPhoto() {
-        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        
-        do {
-            // Get the directory contents urls (including subfolders urls)
-            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(classifier.id!).appendingPathComponent(pendingClass.name!), includingPropertiesForKeys: nil, options: [])
-            
-            // if you want to filter the directory contents you can do like this:
-            let jpgFile = directoryContents.filter{ $0.pathExtension == "jpg" }
-                .map { url -> (URL, TimeInterval) in
-                    var lastModified = try? url.resourceValues(forKeys: [URLResourceKey.contentModificationDateKey])
-                    return (url, lastModified?.contentModificationDate?.timeIntervalSinceReferenceDate ?? 0)
-                }
-                .sorted(by: { $0.1 > $1.1 }) // sort descending modification dates
-                .map{ $0.0 }.first!
-            
-            thumbnailImage.image = UIImage(contentsOfFile: jpgFile.path)!
-            
-        } catch {
-            print(error.localizedDescription)
         }
     }
     
@@ -311,10 +262,6 @@ class CameraViewController: UIViewController {
                     alertController.addAction(cancelAction)
                     self.present(alertController, animated: true, completion: nil)
                 }
-            } else {
-//                DispatchQueue.main.async { [unowned self] in
-//                    self.resumeButton.isHidden = true
-//                }
             }
         }
     }
@@ -422,6 +369,8 @@ class CameraViewController: UIViewController {
         }
     }
     
+    func captured(image: UIImage) { }
+    
     // MARK: Capturing Photos
     
     private let photoOutput = AVCapturePhotoOutput()
@@ -472,45 +421,13 @@ class CameraViewController: UIViewController {
                     return
                 }
                 let image = photoCaptureProcessor.photoData!
-                DispatchQueue.main.async { [unowned self] in
-                    self.width.constant = 5
-                    self.height.constant = 5
-                    self.thumbnailImage.image = image
-                    self.view.layoutIfNeeded()
-                    self.width.constant = 60
-                    self.height.constant = 60
-                    UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: { () -> Void in
-                        self.thumbnailImage.alpha = 1.0
-                    }, completion: nil)
-                    UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: { () -> Void in
-                        self.view.layoutIfNeeded()
-                    }, completion: nil)
-                }
                 
-                let reducedImage = image.resized(toWidth: 300)!
-                
-                let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-                
-                let path = documentsUrl.appendingPathComponent(self.classifier.id!).appendingPathComponent(self.pendingClass.name!)
-                
-                do {
-                    try FileManager.default.createDirectory(atPath: path.path, withIntermediateDirectories: true, attributes: nil)
-                } catch {
-                    print(error.localizedDescription)
-                }
-                
-                let filename = path.appendingPathComponent("\(NSUUID().uuidString).jpg")
-                
-                do {
-                    try UIImageJPEGRepresentation(reducedImage, 0.4)!.write(to: filename)
-                } catch {
-                    print(error.localizedDescription)
-                }
+                self.captured(image: image)
                 
                 // When the capture is complete, remove a reference to the photo capture delegate so it can be deallocated.
                 self.sessionQueue.async { [unowned self] in
-                    self.inProgressPhotoCaptureDelegates[photoCaptureProcessor.requestedPhotoSettings.uniqueID] = nil
-                }
+                        self.inProgressPhotoCaptureDelegates[photoCaptureProcessor.requestedPhotoSettings.uniqueID] = nil
+                    }
                 }
             )
             
@@ -523,8 +440,6 @@ class CameraViewController: UIViewController {
             self.photoOutput.capturePhoto(with: photoSettings, delegate: photoCaptureProcessor)
         }
     }
-    
-    // MARK: Recording Movies
     
     // MARK: KVO and Notifications
     
@@ -584,22 +499,15 @@ class CameraViewController: UIViewController {
         
         /*
          Automatically try to restart the session running if media services were
-         reset and the last start running succeeded. Otherwise, enable the user
-         to try to resume the session running.
+         reset and the last start running succeeded.
          */
         if error.code == .mediaServicesWereReset {
             sessionQueue.async { [unowned self] in
                 if self.isSessionRunning {
                     self.session.startRunning()
                     self.isSessionRunning = self.session.isRunning
-                } else {
-//                    DispatchQueue.main.async { [unowned self] in
-//                        self.resumeButton.isHidden = false
-//                    }
                 }
             }
-        } else {
-//            resumeButton.isHidden = false
         }
     }
     
@@ -616,52 +524,17 @@ class CameraViewController: UIViewController {
         if let userInfoValue = notification.userInfo?[AVCaptureSessionInterruptionReasonKey] as AnyObject?, let reasonIntegerValue = userInfoValue.integerValue, let reason = AVCaptureSession.InterruptionReason(rawValue: reasonIntegerValue) {
             print("Capture session was interrupted with reason \(reason)")
             
-//            var showResumeButton = false
-            
             if reason == .audioDeviceInUseByAnotherClient || reason == .videoDeviceInUseByAnotherClient {
-//                showResumeButton = true
+                // We can let them resume here if we want.
             } else if reason == .videoDeviceNotAvailableWithMultipleForegroundApps {
-                // Simply fade-in a label to inform the user that the camera is unavailable.
-//                cameraUnavailableLabel.alpha = 0
-//                cameraUnavailableLabel.isHidden = false
-//                UIView.animate(withDuration: 0.25) { [unowned self] in
-//                    self.cameraUnavailableLabel.alpha = 1
-//                }
+                // Camera is unavailable.
             }
-            
-//            if showResumeButton {
-//                // Simply fade-in a button to enable the user to try to resume the session running.
-//                resumeButton.alpha = 0
-//                resumeButton.isHidden = false
-//                UIView.animate(withDuration: 0.25) { [unowned self] in
-//                    self.resumeButton.alpha = 1
-//                }
-//            }
         }
     }
     
     @objc
     func sessionInterruptionEnded(notification: NSNotification) {
         print("Capture session interruption ended")
-        
-//        if !resumeButton.isHidden {
-//            UIView.animate(withDuration: 0.25,
-//                           animations: { [unowned self] in
-//                            self.resumeButton.alpha = 0
-//                }, completion: { [unowned self] _ in
-//                    self.resumeButton.isHidden = true
-//                }
-//            )
-//        }
-//        if !cameraUnavailableLabel.isHidden {
-//            UIView.animate(withDuration: 0.25,
-//                           animations: { [unowned self] in
-//                            self.cameraUnavailableLabel.alpha = 0
-//                }, completion: { [unowned self] _ in
-//                    self.cameraUnavailableLabel.isHidden = true
-//                }
-//            )
-//        }
     }
 }
 

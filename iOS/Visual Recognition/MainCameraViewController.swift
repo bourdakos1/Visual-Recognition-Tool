@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import Alamofire
 
 class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, AVCapturePhotoCaptureDelegate, AKPickerViewDelegate, AKPickerViewDataSource {
     
@@ -97,108 +98,83 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         let apiKey = UserDefaults.standard.string(forKey: "api_key")
         
         if apiKey == nil {
-            print("logout and show default")
             classifiers = []
-            allClassifiers = []
-            classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-            allClassifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+            classifiers.append(Classifier(name: "Default"))
             pickerView.selectItem(0)
             pickerView.reloadData()
             return
         }
         
         if classifiers.count <= 0 {
-            print(self.pickerView.selectedItem)
-            classifiers.append(["name": "Loading..." as AnyObject])
+            classifiers.append(Classifier(name: "Loading..."))
             pickerView.selectItem(0)
             pickerView.reloadData()
         }
         
-        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers")!)
-        
-        r.query(params: [
+        let url = "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers"
+        let params = [
             "api_key": apiKey ?? "none",
             "version": "2016-05-20",
             "verbose": "true"
-            ])
-        
-        let task = URLSession.shared.dataTask(with: r) { data, response, error in
-            // Check for fundamental networking error.
-            guard let data = data, error == nil else {
-                return
-            }
-            do {
-                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
-                DispatchQueue.main.async{
-                    if json["classifiers"]! == nil {
-                        self.classifiers = []
-                        self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-                        self.pickerView.selectItem(0)
-                        self.pickerView.reloadData()
-                        return
-                    }
-                    
-                    var data = json["classifiers"] as! [[String: AnyObject]]
-                    
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-                    
-                    self.allClassifiers = data.sorted(by: { dateFormatter.date(from: $0["created"] as! String)! > dateFormatter.date(from: $1["created"] as! String)! })
-                    data = self.allClassifiers.filter({ $0["status"] as? String == "ready" })
-                    
-                    self.allClassifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-                    
-                    // The count may be 0 even though we have classifiers, because we delete the failed ones
-                    if data.count <= 0 {
-                        self.classifiers = []
-                        self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
-                        self.pickerView.selectItem(0)
-                        self.pickerView.reloadData()
-                        return
-                    }
-                    
-                    // it should be safe to check the first and last date and the length is the same
-                    // count - 1 to account for no default
-                    if !(self.classifiers.first!["created"] as? String == data.first!["created"] as? String
-                        && self.classifiers[self.classifiers.count - 2]["created"] as? String == data.last!["created"] as? String
-                        && self.classifiers.count - 1 == data.count) {
-                        self.classifiers = data
-                        self.classifiers.append(["name": "Default" as AnyObject, "status": "ready" as AnyObject])
+        ]
+        Alamofire.request(url, parameters: params).validate().responseJSON { response in
+            switch response.result {
+            case .success:
+                if let json = response.result.value as? [String : Any] {
+                    if let classifiersJSON = json["classifiers"] as? [Any] {
                         
-                        if self.select >= self.classifiers.count {
-                            self.pickerView.selectItem(self.classifiers.count - 1)
+                        // Build classifiers from json.
+                        var classifiers = [Classifier]()
+                        for classifierJSON in classifiersJSON {
+                            let classifier = Classifier(json: classifierJSON)!
+                            classifiers.append(classifier)
                         }
                         
-                        self.pickerView.reloadData()
-                        if self.select >= 0 {
-                            self.pickerView.selectItem(self.select)
+                        self.classifiers = classifiers.sorted(by: { $0.created > $1.created })
+                        self.classifiers.append(Classifier(name: "Default"))
+                        
+                        // it should be safe to check the first and last date and the length is the same
+                        // count - 1 to account for no default
+                        if !(self.classifiers.first!.created == classifiers.first!.created
+                            && self.classifiers[self.classifiers.count - 2].created  == classifiers.last!.created
+                            && self.classifiers.count - 1 == classifiers.count) {
+                            self.classifiers = []
+                            self.classifiers = classifiers
+                            self.classifiers.append(Classifier(name: "Default"))
+                            
+                            if self.select >= self.classifiers.count {
+                                self.pickerView.selectItem(self.classifiers.count - 1)
+                            }
+                            
+                            self.pickerView.reloadData()
+                            if self.select >= 0 {
+                                self.pickerView.selectItem(self.select)
+                            }
                         }
                     }
                 }
-            } catch let error as NSError {
-                print("error : \(error)")
+            case .failure(let error):
+                print(error)
             }
         }
-        task.resume()
     }
     
-    var classifiers = [[String: AnyObject]]()
-    var allClassifiers = [[String: AnyObject]]()
+    var classifiers = [Classifier]()
     var select = -1
     
     func numberOfItemsInPickerView(_ pickerView: AKPickerView) -> Int {
-        return classifiers.count
+        return classifiers.filter({ $0.status == .ready }).count
     }
     
     func pickerView(_ pickerView: AKPickerView, titleForItem item: Int) -> String {
-        if classifiers[item]["classifier_id"] as? String == UserDefaults.standard.string(forKey: "classifier_id") {
+        if classifiers.filter({ $0.status == .ready })[item].classifierId == UserDefaults.standard.string(forKey: "classifier_id") {
             select = item
         }
-        return classifiers[item]["name"] as! String
+        return classifiers.filter({ $0.status == .ready })[item].name
     }
     
     func pickerView(_ pickerView: AKPickerView, didSelectItem item: Int) {
-        UserDefaults.standard.set(classifiers[item]["classifier_id"], forKey: "classifier_id")
+        UserDefaults.standard.set(classifiers.filter({ $0.status == .ready })[item].classifierId, forKey: "classifier_id")
     }
     
     override func viewDidLoad() {
@@ -215,7 +191,7 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         pickerView.highlightedTextColor = UIColor.white
         pickerView.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6)
         if classifiers.count <= 0 {
-            classifiers.append(["name": "Loading..." as AnyObject])
+            classifiers.append(Classifier(name: "Loading..."))
         }
         pickerView.reloadData()
         
@@ -326,67 +302,67 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             
             let classifierId = UserDefaults.standard.string(forKey: "classifier_id")
             
-            let url = "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify"
-            
-            var r = URLRequest(url: URL(string: url)!)
-            
-            r.query(params: [
-                "api_key": apiKey!,
-                "version": "2016-05-20",
-                "threshold": "0",
-                "classifier_ids": "\(classifierId ?? "default")"
-            ])
-            
-            // Attach the small image at 40% quality.
-            r.attach(
-                jpeg: UIImageJPEGRepresentation(reducedImage, 0.4)!,
-                filename: "test.jpg"
-            )
-            
-            let task = URLSession.shared.dataTask(with: r) { data, response, error in
-                // Check for fundamental networking error.
-                guard let data = data, error == nil else {
-                    return
-                }
-                
-                var json: AnyObject?
-                
-                do {
-                    json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
-                } catch {
-                    print("Error: \(error)")
-                }
-                
-                guard let images = json?["images"] as? [Any],
-                    let image = images.first as? [String: Any],
-                    let classifiers = image["classifiers"] as? [Any],
-                    let classifier = classifiers.first as? [String: Any],
-                    let classes = classifier["classes"] as? [Any] else {
-                        print("Error: No classes returned.")
-                        var myNewData = [[String: Any]]()
-                        
-                        myNewData.append([
-                            "class_name": "No classes found" as Any,
-                            "score": CGFloat(0.0) as Any
-                        ])
-                        self.push(data: myNewData)
-                        return
-                }
-                
-                var myNewData = [[String: Any]]()
-                
-                for case let classObj as [String: Any] in classes {
-                    myNewData.append([
-                        "class_name": classObj["class"] as Any,
-                        "score": classObj["score"] as Any
-                    ])
-                }
-                
-                // Sort data by score and reload table.
-                myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
-                self.push(data: myNewData)
-            }
-            task.resume()
+//            let url = "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify"
+//
+//            var r = URLRequest(url: URL(string: url)!)
+//
+//            r.query(params: [
+//                "api_key": apiKey!,
+//                "version": "2016-05-20",
+//                "threshold": "0",
+//                "classifier_ids": "\(classifierId ?? "default")"
+//            ])
+//
+//            // Attach the small image at 40% quality.
+//            r.attach(
+//                jpeg: UIImageJPEGRepresentation(reducedImage, 0.4)!,
+//                filename: "test.jpg"
+//            )
+//
+//            let task = URLSession.shared.dataTask(with: r) { data, response, error in
+//                // Check for fundamental networking error.
+//                guard let data = data, error == nil else {
+//                    return
+//                }
+//
+//                var json: AnyObject?
+//
+//                do {
+//                    json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
+//                } catch {
+//                    print("Error: \(error)")
+//                }
+//
+//                guard let images = json?["images"] as? [Any],
+//                    let image = images.first as? [String: Any],
+//                    let classifiers = image["classifiers"] as? [Any],
+//                    let classifier = classifiers.first as? [String: Any],
+//                    let classes = classifier["classes"] as? [Any] else {
+//                        print("Error: No classes returned.")
+//                        var myNewData = [[String: Any]]()
+//
+//                        myNewData.append([
+//                            "class_name": "No classes found" as Any,
+//                            "score": CGFloat(0.0) as Any
+//                        ])
+//                        self.push(data: myNewData)
+//                        return
+//                }
+//
+//                var myNewData = [[String: Any]]()
+//
+//                for case let classObj as [String: Any] in classes {
+//                    myNewData.append([
+//                        "class_name": classObj["class"] as Any,
+//                        "score": classObj["score"] as Any
+//                    ])
+//                }
+//
+//                // Sort data by score and reload table.
+//                myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
+//                self.push(data: myNewData)
+//            }
+//            task.resume()
             
             // Set the screen to our captured photo.
             tempImageView.image = image
@@ -446,58 +422,58 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         alert.view.addSubview(loadingIndicator)
         present(alert, animated: true, completion: nil)
         
-        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api")!)
-        r.query(params: [
-            "api_key": key,
-            "version": "2016-05-20"
-        ])
-        
-        let task = URLSession.shared.dataTask(with: r) { data, response, error in
-            // Check for fundamental networking error.
-            guard let data = data, error == nil else {
-                self.dismiss(animated: true, completion: nil)
-                return
-            }
-            
-            do {
-                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
-                
-                print(json)
-                
-                if json["statusInfo"] as! String == "invalid-api-key" {
-                    self.loadClassifiers()
-                    print("Ivalid api key!")
-                    let alert = UIAlertController(title: nil, message: "Invalid api key.", preferredStyle: .alert)
-                    
-                    let cancelAction = UIAlertAction(title: "Okay", style: .cancel) { action in
-                        print("cancel")
-                    }
-                    
-                    alert.addAction(cancelAction)
-                    self.dismiss(animated: true, completion: {
-                        self.present(alert, animated: true, completion: nil)
-                    })
-                    return
-                }
-                
-            } catch {
-                print("Error: \(error)")
-            }
-            
-            DispatchQueue.main.async {
-                print("Key set!")
-                self.dismiss(animated: true, completion: nil)
-                UserDefaults.standard.set(key, forKey: "api_key")
-                self.loadClassifiers()
-                
-                let key = self.obscureKey(key: key)
-                
-                if let drawer = self.parent as? PulleyViewController {
-                    (drawer.navigationItem.titleView as! UIButton).setAttributedTitle(NSAttributedString(string: key, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
-                }
-            }
-        }
-        task.resume()
+//        var r  = URLRequest(url: URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api")!)
+//        r.query(params: [
+//            "api_key": key,
+//            "version": "2016-05-20"
+//        ])
+//
+//        let task = URLSession.shared.dataTask(with: r) { data, response, error in
+//            // Check for fundamental networking error.
+//            guard let data = data, error == nil else {
+//                self.dismiss(animated: true, completion: nil)
+//                return
+//            }
+//
+//            do {
+//                let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as AnyObject
+//
+//                print(json)
+//
+//                if json["statusInfo"] as! String == "invalid-api-key" {
+//                    self.loadClassifiers()
+//                    print("Ivalid api key!")
+//                    let alert = UIAlertController(title: nil, message: "Invalid api key.", preferredStyle: .alert)
+//
+//                    let cancelAction = UIAlertAction(title: "Okay", style: .cancel) { action in
+//                        print("cancel")
+//                    }
+//
+//                    alert.addAction(cancelAction)
+//                    self.dismiss(animated: true, completion: {
+//                        self.present(alert, animated: true, completion: nil)
+//                    })
+//                    return
+//                }
+//
+//            } catch {
+//                print("Error: \(error)")
+//            }
+//
+//            DispatchQueue.main.async {
+//                print("Key set!")
+//                self.dismiss(animated: true, completion: nil)
+//                UserDefaults.standard.set(key, forKey: "api_key")
+//                self.loadClassifiers()
+//
+//                let key = self.obscureKey(key: key)
+//
+//                if let drawer = self.parent as? PulleyViewController {
+//                    (drawer.navigationItem.titleView as! UIButton).setAttributedTitle(NSAttributedString(string: key, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+//                }
+//            }
+//        }
+//        task.resume()
     }
     
     @IBAction func unwindToVC(segue: UIStoryboardSegue) {
@@ -594,125 +570,8 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showClassifiers",
             let destination = segue.destination as? ClassifiersTableViewController {
-            destination.classifiers = self.allClassifiers
+            //destination.classifiers = self.classifiers
         }
-    }
-}
-
-extension NSMutableData {
-    func appendString(_ string: String) {
-        let data = string.data(using: String.Encoding.utf8, allowLossyConversion: false)
-        append(data!)
-    }
-}
-
-extension Dictionary {
-    func toHttpParameters() -> String {
-        let parameterArray = self.map { (key, value) -> String in
-            let percentEscapedKey = (key as! String).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-            let percentEscapedValue = (value as! String).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-            return "\(percentEscapedKey!)=\(percentEscapedValue!)"
-        }
-        return parameterArray.joined(separator: "&")
-    }
-}
-
-extension URLRequest {
-    mutating func attach(jpeg: Data, filename: String) {
-        httpMethod = "POST"
-        let boundary = "Boundary-\(UUID().uuidString)"
-        setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        httpBody = createBody(
-            parameters: [:],
-            boundary: boundary,
-            data: jpeg,
-            mimeType: "image/jpg",
-            filename: filename
-        )
-    }
-    
-    mutating func attach(zip: Data, name: String) {
-        httpMethod = "POST"
-        let boundary = "Boundary-\(UUID().uuidString)"
-        setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        httpBody = createBody(
-            parameters: ["name": "Star Wars"],
-            boundary: boundary,
-            data: zip,
-            mimeType: "application/zip",
-            filename: "\(name).zip",
-            name: name
-        )
-    }
-    
-    private func createBody(parameters: [String: String],
-                            boundary: String,
-                            data: Data,
-                            mimeType: String,
-                            filename: String,
-                            name: String) -> Data {
-        let body = NSMutableData()
-        
-        let boundaryPrefix = "--\(boundary)\r\n"
-        
-        for (key, value) in parameters {
-            body.appendString(boundaryPrefix)
-            body.appendString("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n")
-            body.appendString("\(value)\r\n")
-        }
-        
-        body.appendString(boundaryPrefix)
-        // Don't worry about negative examples for now
-        body.appendString("Content-Disposition: form-data; name=\"\(name)_positive_examples\"; filename=\"\(filename)\"\r\n")
-        body.appendString("Content-Type: \(mimeType)\r\n\r\n")
-        body.append(data)
-        body.appendString("\r\n")
-        
-        body.appendString(boundaryPrefix)
-        // Don't worry about negative examples for now
-        body.appendString("Content-Disposition: form-data; name=\"\(name)2_positive_examples\"; filename=\"\(filename)\"\r\n")
-        body.appendString("Content-Type: \(mimeType)\r\n\r\n")
-        body.append(data)
-        body.appendString("\r\n")
-        
-        body.appendString("--".appending(boundary.appending("--")))
-        
-        return body as Data
-    }
-    
-    mutating func query(params: [String: String]) {
-        let parameterArray = params.map { (key, value) -> String in
-            let percentEscapedKey = key.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-            let percentEscapedValue = value.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-            return "\(percentEscapedKey!)=\(percentEscapedValue!)"
-        }
-        let baseUrl = (url?.absoluteString)!
-        url = URL(string: "\(baseUrl)?\(parameterArray.joined(separator: "&"))")
-    }
-    
-    private func createBody(parameters: [String: String],
-                    boundary: String,
-                    data: Data,
-                    mimeType: String,
-                    filename: String) -> Data {
-        let body = NSMutableData()
-        
-        let boundaryPrefix = "--\(boundary)\r\n"
-        
-        for (key, value) in parameters {
-            body.appendString(boundaryPrefix)
-            body.appendString("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n")
-            body.appendString("\(value)\r\n")
-        }
-        
-        body.appendString(boundaryPrefix)
-        body.appendString("Content-Disposition: form-data; name=\"file\"; filename=\"\(filename)\"\r\n")
-        body.appendString("Content-Type: \(mimeType)\r\n\r\n")
-        body.append(data)
-        body.appendString("\r\n")
-        body.appendString("--".appending(boundary.appending("--")))
-        
-        return body as Data
     }
 }
 
@@ -745,5 +604,66 @@ extension UITextField {
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
         self.rightView = paddingView
         self.rightViewMode = .always
+    }
+}
+
+struct Classifier {
+    enum Status: String {
+        case ready, training, retraining, failed
+    }
+    
+    let name: String
+    let classes: [String]
+    let classifierId: String
+    let created: Date
+    let status: Status
+}
+
+extension Classifier {
+    init(name: String) {
+        self.name = name
+        self.classes = [String]()
+        self.classifierId = String()
+        self.created = Date()
+        self.status = .ready
+    }
+}
+    
+extension Classifier {
+    init?(json: Any) {
+        guard let json = json as? [String: Any]
+            else {
+                return nil
+        }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        
+        guard let name = json["name"] as? String,
+            let classesArray = json["classes"] as? [Any],
+            let classifierId = json["classifier_id"] as? String,
+            let created = json["created"] as? String,
+            let date = dateFormatter.date(from: created),
+            let statusString = json["status"] as? String,
+            let status = Status(rawValue: statusString)
+            else {
+                return nil
+        }
+        
+        var classes = [String]()
+        for classJSON in classesArray {
+            guard let classJSON = classJSON as? [String: Any],
+                let classItem = classJSON["class"] as? String
+                else {
+                    return nil
+            }
+            classes.append(classItem)
+        }
+        
+        self.name = name
+        self.classes = classes
+        self.classifierId = classifierId
+        self.created = date
+        self.status = status
     }
 }
