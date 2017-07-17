@@ -82,7 +82,22 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
     
     func loadClassifiers() {
         print("loading classifiers")
-        // Load from Watson
+        let readyClassifiers = classifiers.filter({ $0.status == .ready })
+        for (index, item) in readyClassifiers.enumerated() {
+            if item.classifierId == UserDefaults.standard.string(forKey: "classifier_id") {
+                select = index
+            } else if item.classifierId == String() && item.name == UserDefaults.standard.string(forKey: "classifier_id") {
+                select = index
+            }
+        }
+        
+        if self.select >= self.classifiers.count {
+            self.pickerView.selectItem(self.classifiers.count - 1)
+        } else if select >= 0 {
+            self.pickerView.selectItem(select)
+        }
+        
+        // Load from Watson.
         let apiKey = UserDefaults.standard.string(forKey: "api_key")
         
         if apiKey == nil {
@@ -119,7 +134,7 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
                         }
                         
                         classifiers = classifiers.sorted(by: { $0.created > $1.created })
-                        classifiers.append(Classifier(name: "Default"))
+                        classifiers.append(contentsOf: Classifier.defaults)
                         
                         // If the count and head are the same nothing was deleted or added.
                         if !(self.classifiers.first!.isEqual(classifiers.first!)
@@ -151,14 +166,23 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
     }
     
     func pickerView(_ pickerView: AKPickerView, titleForItem item: Int) -> String {
-        if classifiers.filter({ $0.status == .ready })[item].classifierId == UserDefaults.standard.string(forKey: "classifier_id") {
+        let readyClassifier = classifiers.filter({ $0.status == .ready })[item]
+        if readyClassifier.classifierId == UserDefaults.standard.string(forKey: "classifier_id") {
+            select = item
+        } else if readyClassifier.classifierId == String() && readyClassifier.name == UserDefaults.standard.string(forKey: "classifier_id") {
             select = item
         }
         return classifiers.filter({ $0.status == .ready })[item].name
     }
     
     func pickerView(_ pickerView: AKPickerView, didSelectItem item: Int) {
-        UserDefaults.standard.set(classifiers.filter({ $0.status == .ready })[item].classifierId, forKey: "classifier_id")
+        // This should be safe because the picker only shows ready classifiers.
+        let readyClassifier = classifiers.filter({ $0.status == .ready })[item]
+        if readyClassifier.classifierId == String() {
+            UserDefaults.standard.set(readyClassifier.name, forKey: "classifier_id")
+        } else {
+            UserDefaults.standard.set(readyClassifier.classifierId, forKey: "classifier_id")
+        }
     }
     
     override func viewDidLoad() {
@@ -238,7 +262,7 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
             "api_key": apiKey!,
             "version": "2016-05-20",
             "threshold": "0",
-            "classifier_ids": "\(classifierId ?? "default")"
+            "classifier_ids": "\(classifierId?.lowercased() ?? "default")"
         ]
         
         do {

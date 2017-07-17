@@ -125,7 +125,7 @@ class ClassifiersTableViewController: UITableViewController {
                         }
                         
                         classifiers = classifiers.sorted(by: { $0.created > $1.created })
-                        classifiers.append(Classifier(name: "Default"))
+                        classifiers.append(contentsOf: Classifier.defaults)
                         
                         let training = classifiers.filter({ $0.status == .training })
                         if training.count > 0 {
@@ -320,7 +320,10 @@ class ClassifiersTableViewController: UITableViewController {
             let classifierId = UserDefaults.standard.string(forKey: "classifier_id")
             
             if classifierId != nil {
-                if classifierData.classifierId == classifierId {
+                // If the classifierId == String() that means its empty.
+                if classifierData.classifierId == String() && classifierData.name == classifierId {
+                    cell.checkmark?.isHidden = false
+                } else if classifierData.classifierId == classifierId {
                     cell.checkmark?.isHidden = false
                 } else {
                     cell.checkmark?.isHidden = true
@@ -341,7 +344,11 @@ class ClassifiersTableViewController: UITableViewController {
         if !(tableView.numberOfSections > 1 && indexPath.section == 0) {
             let classifierData = classifiers[indexPath.item]
             if classifierData.status == .ready {
-                UserDefaults.standard.set(classifiers[indexPath.item].classifierId, forKey: "classifier_id")
+                if classifierData.classifierId == String() {
+                    UserDefaults.standard.set(classifiers[indexPath.item].name, forKey: "classifier_id")
+                } else {
+                    UserDefaults.standard.set(classifiers[indexPath.item].classifierId, forKey: "classifier_id")
+                }
             }
         }
         self.tableView.reloadData()
