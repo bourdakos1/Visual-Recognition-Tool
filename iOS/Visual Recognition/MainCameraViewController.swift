@@ -133,14 +133,10 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                         classifiers = classifiers.sorted(by: { $0.created > $1.created })
                         classifiers.append(Classifier(name: "Default"))
                         
-                        // it should be safe to check the first and last date and the length is the same
-                        // count - 1 to account for no default
-                        if !(self.classifiers.first!.created.compare(classifiers.first!.created) == .orderedSame
-                            && self.classifiers[self.classifiers.count - 2].created.compare(classifiers.last!.created) == .orderedSame
-                            && self.classifiers.count - 1 == classifiers.count) {
-                            self.classifiers = []
+                        // If the count and head are the same nothing was deleted or added.
+                        if !(self.classifiers.first!.isEqual(classifiers.first!)
+                            && self.classifiers.count == classifiers.count) {
                             self.classifiers = classifiers
-                            self.classifiers.append(Classifier(name: "Default"))
                             
                             if self.select >= self.classifiers.count {
                                 self.pickerView.selectItem(self.classifiers.count - 1)
