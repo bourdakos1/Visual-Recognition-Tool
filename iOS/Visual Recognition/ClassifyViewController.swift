@@ -256,6 +256,9 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
         
         let url = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify")!
         
+        // TODO: add faces support
+        // let facesUrl = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/detect_faces")!
+        
         let urlRequest = URLRequest(url: url)
         
         let parameters: Parameters = [
