@@ -125,6 +125,7 @@ class ClassifiersTableViewController: UITableViewController {
                         }
                         
                         classifiers = classifiers.sorted(by: { $0.created > $1.created })
+                        classifiers.append(Classifier(name: "Default"))
                         
                         let training = classifiers.filter({ $0.status == .training })
                         if training.count > 0 {
@@ -133,7 +134,6 @@ class ClassifiersTableViewController: UITableViewController {
                         } else if training.count != self.trainingCount {
                             self.trainingCount = training.count
                             self.classifiers = classifiers
-                            self.classifiers.append(Classifier(name: "Default"))
                             self.tableView.reloadData()
                         } else {
                              self.trainingCount = training.count
@@ -141,24 +141,10 @@ class ClassifiersTableViewController: UITableViewController {
                         
                         self.indicator.stopAnimating()
                         
-                        if self.classifiers.count <= 1 && classifiers.count > 0 {
-                            if self.classifiers.count <= 0 {
-                                self.classifiers.append(Classifier(name: "Default"))
-                            }
-                            self.tableView.reloadData()
-                            return
-                        }
-                        
-                        if self.classifiers.count <= 1 {
-                            return
-                        }
-                        
-                        // it should be safe to check the first and last date and the length is the same
-                        if !(self.classifiers.first!.created == classifiers.first!.created
-                            && self.classifiers[self.classifiers.count - 2].created == classifiers.last!.created
-                            && self.classifiers.count - 1 == classifiers.count) {
+                        // If the count and head are the same nothing was deleted or added.
+                        if !(self.classifiers.first!.isEqual(classifiers.first!)
+                            && self.classifiers.count == classifiers.count) {
                             self.classifiers = classifiers
-                            self.classifiers.append(Classifier(name: "Default"))
                             self.tableView.reloadData()
                         }
                     }

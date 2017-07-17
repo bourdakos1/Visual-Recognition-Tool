@@ -135,8 +135,8 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                         
                         // it should be safe to check the first and last date and the length is the same
                         // count - 1 to account for no default
-                        if !(self.classifiers.first!.created == classifiers.first!.created
-                            && self.classifiers[self.classifiers.count - 2].created  == classifiers.last!.created
+                        if !(self.classifiers.first!.created.compare(classifiers.first!.created) == .orderedSame
+                            && self.classifiers[self.classifiers.count - 2].created.compare(classifiers.last!.created) == .orderedSame
                             && self.classifiers.count - 1 == classifiers.count) {
                             self.classifiers = []
                             self.classifiers = classifiers
@@ -588,7 +588,7 @@ struct Classifier {
     let created: Date
     let status: Status
 }
-
+    
 extension Classifier {
     init(name: String) {
         self.name = name
@@ -597,9 +597,7 @@ extension Classifier {
         self.created = Date()
         self.status = .ready
     }
-}
     
-extension Classifier {
     init?(json: Any) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
@@ -631,5 +629,10 @@ extension Classifier {
         self.classifierId = classifierId
         self.created = date
         self.status = status
+    }
+    
+    func isEqual(_ object: Classifier) -> Bool {
+        // Status might be something we want to check... don't know.
+        return classifierId == object.classifierId
     }
 }
