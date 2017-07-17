@@ -268,7 +268,7 @@ class CameraViewController: UIViewController {
     
     // MARK: Device Configuration
     
-    @IBOutlet private weak var cameraButton: UIButton!
+    @IBOutlet weak var cameraButton: UIButton!
     
     private let videoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera], mediaType: AVMediaTypeVideo, position: .unspecified)
     
@@ -377,7 +377,7 @@ class CameraViewController: UIViewController {
     
     private var inProgressPhotoCaptureDelegates = [Int64: PhotoCaptureProcessor]()
     
-    @IBOutlet private weak var photoButton: UIButton!
+    @IBOutlet weak var photoButton: UIButton!
     @IBAction private func capturePhoto(_ photoButton: UIButton) {   
         // We don't want a million photos queued, lets just queue 2
         if self.inProgressPhotoCaptureDelegates.count > 1 {

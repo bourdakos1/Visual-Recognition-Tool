@@ -22,7 +22,6 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
     
     // All the buttons.
     @IBOutlet var classifiersButton: UIButton!
-    @IBOutlet var captureButton: UIButton!
     @IBOutlet var retakeButton: UIButton!
     @IBOutlet var apiKeyDoneButton: UIButton!
     @IBOutlet var apiKeySubmit: UIButton!
@@ -187,7 +186,7 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
         
         // Retake just resets the UI.
         retake()
-        view.bringSubview(toFront: captureButton)
+        view.bringSubview(toFront: photoButton)
         
         // Create and hide the blur effect.
         blurredEffectView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
@@ -286,7 +285,8 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
         tempImageView.image = image
         tempImageView.isHidden = false
         
-        captureButton.isHidden = true
+        photoButton.isHidden = true
+        cameraButton.isHidden = true
         retakeButton.isHidden = false
         classifiersButton.isHidden = true
         
@@ -448,7 +448,8 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
     
     @IBAction func retake() {
         tempImageView.isHidden = true
-        captureButton.isHidden = false
+        photoButton.isHidden = false
+        cameraButton.isHidden = false
         retakeButton.isHidden = true
         classifiersButton.isHidden = false
         

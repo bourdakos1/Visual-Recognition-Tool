@@ -200,10 +200,13 @@
                                     <constraint firstAttribute="width" constant="12" id="G1a-5C-bff"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kcX-nD-Zb0">
-                                <rect key="frame" x="131" y="401" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kcX-nD-Zb0">
+                                <rect key="frame" x="16" y="548" width="55" height="55"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="3ro-xN-JUc"/>
+                                    <constraint firstAttribute="width" constant="55" id="yUv-wQ-J7g"/>
+                                </constraints>
+                                <state key="normal" image="reverse_solid.png"/>
                                 <connections>
                                     <action selector="changeCamera:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aIW-Hb-Cyl"/>
                                 </connections>
@@ -220,6 +223,7 @@
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="3n4-v9-abV" firstAttribute="centerY" secondItem="kcX-nD-Zb0" secondAttribute="centerY" id="0wE-oj-Fdc"/>
                             <constraint firstItem="hbX-2x-72A" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="1FF-Zd-XB0"/>
                             <constraint firstItem="KQQ-I6-IMA" firstAttribute="centerY" secondItem="aaW-Uw-VLV" secondAttribute="centerY" id="42c-nR-kxk"/>
                             <constraint firstAttribute="bottom" secondItem="f82-Na-Q0n" secondAttribute="bottom" id="4By-J0-GWU"/>
@@ -234,6 +238,7 @@
                             <constraint firstAttribute="bottom" secondItem="cgw-ra-nMb" secondAttribute="bottom" id="BBh-Yt-r9P"/>
                             <constraint firstAttribute="trailing" secondItem="KQS-fI-xsI" secondAttribute="trailing" id="BUu-HX-RNL"/>
                             <constraint firstAttribute="trailing" secondItem="cgw-ra-nMb" secondAttribute="trailing" id="C8n-ri-X6i"/>
+                            <constraint firstItem="kcX-nD-Zb0" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="Cp0-WT-XZd"/>
                             <constraint firstItem="KQS-fI-xsI" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="HWh-hL-tPp"/>
                             <constraint firstItem="usO-SO-NRr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Jaz-UD-2zg"/>
                             <constraint firstItem="iHJ-Ta-u2A" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Jml-9L-6p4"/>
@@ -285,7 +290,6 @@
                         <outlet property="apiKeySubmit" destination="LMj-gK-YYp" id="Hph-hp-AQj"/>
                         <outlet property="apiKeyTextField" destination="aaW-Uw-VLV" id="xzG-g1-mRq"/>
                         <outlet property="cameraButton" destination="kcX-nD-Zb0" id="CAa-In-yjp"/>
-                        <outlet property="captureButton" destination="beL-ak-Suw" id="feO-4D-SvN"/>
                         <outlet property="classifiersButton" destination="3n4-v9-abV" id="Obg-sh-CIM"/>
                         <outlet property="hintTextView" destination="9WH-Si-Dao" id="Zdo-Gx-lQ8"/>
                         <outlet property="photoButton" destination="beL-ak-Suw" id="bMC-Pn-pPI"/>
@@ -950,6 +954,7 @@
         <image name="library.png" width="165" height="165"/>
         <image name="phot" width="31" height="51"/>
         <image name="reverse.png" width="100" height="100"/>
+        <image name="reverse_solid.png" width="165" height="165"/>
         <image name="scrim.png" width="41" height="133"/>
         <image name="select.png" width="36" height="18"/>
         <image name="train" width="67" height="51"/>
