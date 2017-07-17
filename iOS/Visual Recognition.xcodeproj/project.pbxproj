@@ -31,13 +31,14 @@
 		2362735F1F122EE60090F4F5 /* reverse.png in Resources */ = {isa = PBXBuildFile; fileRef = 2362735E1F122E660090F4F5 /* reverse.png */; };
 		236DCB6B1E7DAA54009AE6D6 /* capture.png in Resources */ = {isa = PBXBuildFile; fileRef = 236DCB6A1E7DAA54009AE6D6 /* capture.png */; };
 		236DCB6D1E7DAE04009AE6D6 /* cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 236DCB6C1E7DAE04009AE6D6 /* cancel.png */; };
+		23742B5E1F1D296E00F52C1B /* Classifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23742B5D1F1D296E00F52C1B /* Classifier.swift */; };
+		23742B601F1D29EB00F52C1B /* ClassifyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23742B5F1F1D29EB00F52C1B /* ClassifyViewController.swift */; };
 		2389A6FE1E7C65A100D7C973 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A6FD1E7C65A100D7C973 /* AppDelegate.swift */; };
 		2389A7031E7C65A100D7C973 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2389A7011E7C65A100D7C973 /* Main.storyboard */; };
 		2389A7051E7C65A100D7C973 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2389A7041E7C65A100D7C973 /* Assets.xcassets */; };
 		2389A7081E7C65A100D7C973 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2389A7061E7C65A100D7C973 /* LaunchScreen.storyboard */; };
 		2389A7131E7C65A100D7C973 /* Visual_RecognitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A7121E7C65A100D7C973 /* Visual_RecognitionTests.swift */; };
 		2389A71E1E7C65A200D7C973 /* Visual_RecognitionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A71D1E7C65A200D7C973 /* Visual_RecognitionUITests.swift */; };
-		2389A72C1E7C668100D7C973 /* MainCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A72B1E7C668100D7C973 /* MainCameraViewController.swift */; };
 		2389A72E1E7C79C100D7C973 /* PulleyPassthroughScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A72D1E7C79C100D7C973 /* PulleyPassthroughScrollView.swift */; };
 		2389A7301E7C79CA00D7C973 /* PulleyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A72F1E7C79CA00D7C973 /* PulleyViewController.swift */; };
 		2389A7321E7C7D4F00D7C973 /* ResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A7311E7C7D4F00D7C973 /* ResultsTableViewController.swift */; };
@@ -102,6 +103,8 @@
 		2362735E1F122E660090F4F5 /* reverse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reverse.png; sourceTree = "<group>"; };
 		236DCB6A1E7DAA54009AE6D6 /* capture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = capture.png; sourceTree = "<group>"; };
 		236DCB6C1E7DAE04009AE6D6 /* cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cancel.png; sourceTree = "<group>"; };
+		23742B5D1F1D296E00F52C1B /* Classifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Classifier.swift; sourceTree = "<group>"; };
+		23742B5F1F1D29EB00F52C1B /* ClassifyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassifyViewController.swift; sourceTree = "<group>"; };
 		2389A6FA1E7C65A100D7C973 /* Visual Recognition.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Visual Recognition.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2389A6FD1E7C65A100D7C973 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2389A7021E7C65A100D7C973 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -114,7 +117,6 @@
 		2389A7191E7C65A200D7C973 /* Visual RecognitionUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Visual RecognitionUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2389A71D1E7C65A200D7C973 /* Visual_RecognitionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Visual_RecognitionUITests.swift; sourceTree = "<group>"; };
 		2389A71F1E7C65A200D7C973 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2389A72B1E7C668100D7C973 /* MainCameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainCameraViewController.swift; sourceTree = "<group>"; };
 		2389A72D1E7C79C100D7C973 /* PulleyPassthroughScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PulleyPassthroughScrollView.swift; sourceTree = "<group>"; };
 		2389A72F1E7C79CA00D7C973 /* PulleyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PulleyViewController.swift; sourceTree = "<group>"; };
 		2389A7311E7C7D4F00D7C973 /* ResultsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultsTableViewController.swift; sourceTree = "<group>"; };
@@ -182,6 +184,16 @@
 			name = Models;
 			sourceTree = "<group>";
 		};
+		23742B611F1D315400F52C1B /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				23DAFC651F0C7C0100216134 /* PreviewView.swift */,
+				23DAFC671F0C7CC200216134 /* CameraViewController.swift */,
+				23DAFC691F0C7D1200216134 /* PhotoCaptureDelegate.swift */,
+			);
+			name = Camera;
+			sourceTree = "<group>";
+		};
 		2389A6F11E7C65A100D7C973 = {
 			isa = PBXGroup;
 			children = (
@@ -210,21 +222,20 @@
 				233D0BBA1EC22EC5005E5594 /* Models */,
 				2395A02B1EC2708D00C29325 /* PulleyLibrary */,
 				2395A02A1EC2705D00C29325 /* Views */,
+				23742B611F1D315400F52C1B /* Camera */,
 				2389A6FD1E7C65A100D7C973 /* AppDelegate.swift */,
 				233D0B9F1EC17C53005E5594 /* DatabaseController.swift */,
 				2389A7011E7C65A100D7C973 /* Main.storyboard */,
 				2389A7311E7C7D4F00D7C973 /* ResultsTableViewController.swift */,
 				2389A7371E7CAA7500D7C973 /* ResultTableViewCell.swift */,
-				2389A72B1E7C668100D7C973 /* MainCameraViewController.swift */,
+				23742B5D1F1D296E00F52C1B /* Classifier.swift */,
+				23742B5F1F1D29EB00F52C1B /* ClassifyViewController.swift */,
 				232B9F8F1E80A5AD00407BB8 /* ClassifiersTableViewController.swift */,
 				23AA522F1EC0DC550073D4DC /* ClassiferTableViewCell.swift */,
 				235DD00A1EC63F3A00B8432B /* ClassesCollectionViewController.swift */,
 				235DD00E1EC67B0800B8432B /* ClassCollectionViewCell.swift */,
 				235DD00C1EC6702E00B8432B /* ImagesCollectionViewController.swift */,
-				23DAFC651F0C7C0100216134 /* PreviewView.swift */,
-				23DAFC671F0C7CC200216134 /* CameraViewController.swift */,
 				2352A3071F194DDE00458F1F /* SnapperViewController.swift */,
-				23DAFC691F0C7D1200216134 /* PhotoCaptureDelegate.swift */,
 				2395A02C1EC270BC00C29325 /* res */,
 				23609DBA1EBA727800FD03FC /* Keys.plist */,
 				233D0B9C1EC13101005E5594 /* Classifiers.xcdatamodeld */,
@@ -620,8 +631,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2389A72C1E7C668100D7C973 /* MainCameraViewController.swift in Sources */,
 				2389A7301E7C79CA00D7C973 /* PulleyViewController.swift in Sources */,
+				23742B601F1D29EB00F52C1B /* ClassifyViewController.swift in Sources */,
 				2362735D1F11C2D10090F4F5 /* CustomToolbar.swift in Sources */,
 				2389A6FE1E7C65A100D7C973 /* AppDelegate.swift in Sources */,
 				23DAFC681F0C7CC200216134 /* CameraViewController.swift in Sources */,
@@ -636,6 +647,7 @@
 				233D0BB81EC22EB6005E5594 /* PendingClass+CoreDataClass.swift in Sources */,
 				2389A72E1E7C79C100D7C973 /* PulleyPassthroughScrollView.swift in Sources */,
 				235DD00D1EC6702E00B8432B /* ImagesCollectionViewController.swift in Sources */,
+				23742B5E1F1D296E00F52C1B /* Classifier.swift in Sources */,
 				2352A3081F194DDE00458F1F /* SnapperViewController.swift in Sources */,
 				233D0BA01EC17C53005E5594 /* DatabaseController.swift in Sources */,
 				23E5ED951EDBCF1D00E5AF97 /* AKPickerView.swift in Sources */,

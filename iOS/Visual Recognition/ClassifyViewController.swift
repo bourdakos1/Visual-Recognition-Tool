@@ -1,8 +1,8 @@
 //
-//  CameraView.swift
+//  ClassifyViewController.swift
 //  Visual Recognition
 //
-//  Created by Nicholas Bourdakos on 3/17/17.
+//  Created by Nicholas Bourdakos on 7/17/17.
 //  Copyright © 2017 Nicholas Bourdakos. All rights reserved.
 //
 
@@ -10,12 +10,7 @@ import UIKit
 import AVFoundation
 import Alamofire
 
-class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, AVCapturePhotoCaptureDelegate, AKPickerViewDelegate, AKPickerViewDataSource {
-    
-    // Set the StatusBar color.
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjectsDelegate, AKPickerViewDelegate, AKPickerViewDataSource {
     
     // Blurred effect for the API key form.
     let blurredEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
@@ -23,12 +18,6 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     // Demo API key constant.
     let VISION_API_KEY: String
     
-    // Camera variables.
-    var captureSession: AVCaptureSession?
-    var photoOutput: AVCapturePhotoOutput?
-    var previewLayer: AVCaptureVideoPreviewLayer?
-//    var image = UIImage()
-    @IBOutlet var cameraView: UIView!
     @IBOutlet var tempImageView: UIImageView!
     
     // All the buttons.
@@ -196,8 +185,6 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         apiKeyTextField.setLeftPaddingPoints(20)
         apiKeyTextField.setRightPaddingPoints(50)
         
-        initializeCamera()
-
         // Retake just resets the UI.
         retake()
         view.bringSubview(toFront: captureButton)
@@ -213,37 +200,6 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         view.bringSubview(toFront: apiKeySubmit)
         view.bringSubview(toFront: apiKeyLogOut)
         view.bringSubview(toFront: hintTextView)
-    }
-    
-    // Initialize camera.
-    func initializeCamera() {
-        captureSession = AVCaptureSession()
-        captureSession?.sessionPreset = AVCaptureSessionPreset1920x1080
-        let backCamera = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
-        
-        do {
-            let input = try AVCaptureDeviceInput(device: backCamera)
-            captureSession?.addInput(input)
-            photoOutput = AVCapturePhotoOutput()
-            if (captureSession?.canAddOutput(photoOutput) != nil){
-                captureSession?.addOutput(photoOutput)
-                
-                previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-                previewLayer?.videoGravity = AVLayerVideoGravityResizeAspect
-                previewLayer?.connection.videoOrientation = AVCaptureVideoOrientation.portrait
-                cameraView.layer.addSublayer(previewLayer!)
-                captureSession?.startRunning()
-                
-                // Initialize a AVCaptureMetadataOutput object and set it as the output device to the capture session.
-                let captureMetadataOutput = AVCaptureMetadataOutput()
-                captureSession?.addOutput(captureMetadataOutput)
-                captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-                captureMetadataOutput.metadataObjectTypes = [AVMetadataObjectTypeQRCode]
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-        previewLayer?.frame = view.bounds
     }
     
     // Delegate for QR Codes.
@@ -264,95 +220,91 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         testKey(key: qrCode)
     }
     
-    // Delegate for Camera.
-    func capture(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhotoSampleBuffer photoSampleBuffer: CMSampleBuffer?, previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
-        
+    override func captured(image: UIImage) {
         var apiKey = UserDefaults.standard.string(forKey: "api_key")
         
         if apiKey == nil || apiKey == "" {
             apiKey = VISION_API_KEY
         }
         
-        if photoSampleBuffer != nil {
-            let imageData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(
-                forJPEGSampleBuffer: photoSampleBuffer!,
-                previewPhotoSampleBuffer: previewPhotoSampleBuffer
-            )
+        let reducedImage = image.resized(toWidth: 300)!
+        
+        let classifierId = UserDefaults.standard.string(forKey: "classifier_id")
+        
+        let url = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify")!
+        
+        let urlRequest = URLRequest(url: url)
+        
+        let parameters: Parameters = [
+            "api_key": apiKey!,
+            "version": "2016-05-20",
+            "threshold": "0",
+            "classifier_ids": "\(classifierId ?? "default")"
+        ]
+        
+        do {
+            let encodedURLRequest = try URLEncoding.queryString.encode(urlRequest, with: parameters)
             
-            let dataProvider  = CGDataProvider(data: imageData! as CFData)
-            
-            let cgImageRef = CGImage(
-                jpegDataProviderSource: dataProvider!,
-                decode: nil,
-                shouldInterpolate: true,
-                intent: .defaultIntent
-            )
-            
-            let image = UIImage(
-                cgImage: cgImageRef!,
-                scale: 1.0,
-                orientation: UIImageOrientation.right
-            )
-            
-            let reducedImage = image.resized(toWidth: 300)!
-            
-            let classifierId = UserDefaults.standard.string(forKey: "classifier_id")
-            
-            let url = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify")!
-            
-            let urlRequest = URLRequest(url: url)
-            
-            let parameters: Parameters = [
-                "api_key": apiKey!,
-                "version": "2016-05-20",
-                "threshold": "0",
-                "classifier_ids": "\(classifierId ?? "default")"
-            ]
-            
-            do {
-                let encodedURLRequest = try URLEncoding.queryString.encode(urlRequest, with: parameters)
-                
-                Alamofire.upload(UIImageJPEGRepresentation(reducedImage, 0.4)!, to: encodedURLRequest.url!).responseJSON { response in
-                    guard
-                        let json = response.result.value as? [String: Any],
-                        let images = json["images"] as? [Any],
-                        let image = images.first as? [String: Any],
-                        let classifiers = image["classifiers"] as? [Any],
-                        let classifier = classifiers.first as? [String: Any],
-                        let classes = classifier["classes"] as? [Any] else {
-                            print("Error: No classes returned.")
-                            var myNewData = [[String: Any]]()
-                            
-                            myNewData.append([
-                                "class_name": "No classes found" as Any,
-                                "score": CGFloat(0.0) as Any
-                            ])
-                            self.push(data: myNewData)
-                            return
-                    }
-                    
-                    var myNewData = [[String: Any]]()
-                    
-                    for case let classObj as [String: Any] in classes {
+            Alamofire.upload(UIImageJPEGRepresentation(reducedImage, 0.4)!, to: encodedURLRequest.url!).responseJSON { response in
+                guard
+                    let json = response.result.value as? [String: Any],
+                    let images = json["images"] as? [Any],
+                    let image = images.first as? [String: Any],
+                    let classifiers = image["classifiers"] as? [Any],
+                    let classifier = classifiers.first as? [String: Any],
+                    let classes = classifier["classes"] as? [Any] else {
+                        print("Error: No classes returned.")
+                        var myNewData = [[String: Any]]()
+                        
                         myNewData.append([
-                            "class_name": classObj["class"] as Any,
-                            "score": classObj["score"] as Any
-                        ])
-                    }
-                    
-                    // Sort data by score and reload table.
-                    myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
-                    self.push(data: myNewData)
-                    debugPrint(response)
+                            "class_name": "No classes found" as Any,
+                            "score": CGFloat(0.0) as Any
+                            ])
+                        self.push(data: myNewData)
+                        return
                 }
-            } catch {
-                print("Error: \(error)")
+                
+                var myNewData = [[String: Any]]()
+                
+                for case let classObj as [String: Any] in classes {
+                    myNewData.append([
+                        "class_name": classObj["class"] as Any,
+                        "score": classObj["score"] as Any
+                        ])
+                }
+                
+                // Sort data by score and reload table.
+                myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
+                self.push(data: myNewData)
+                debugPrint(response)
             }
-            
-            // Set the screen to our captured photo.
-            tempImageView.image = image
-            tempImageView.isHidden = false
+        } catch {
+            print("Error: \(error)")
         }
+        
+        // Set the screen to our captured photo.
+        tempImageView.image = image
+        tempImageView.isHidden = false
+        
+        captureButton.isHidden = true
+        retakeButton.isHidden = false
+        classifiersButton.isHidden = true
+        
+        if let drawer = self.parent as? PulleyViewController {
+            drawer.navigationController?.navigationBar.isHidden = true
+        }
+        
+        // Show an activity indicator while its loading.
+        let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
+        
+        alert.view.tintColor = UIColor.black
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50)) as UIActivityIndicatorView
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        loadingIndicator.startAnimating()
+        
+        alert.view.addSubview(loadingIndicator)
+        present(alert, animated: true, completion: nil)
     }
     
     // Convenience method for pushing data to the TableView.
@@ -446,7 +398,7 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         
     }
     
-    @IBAction func addApiKey() {
+    func addApiKey() {
         if let drawer = self.parent as? PulleyViewController {
             drawer.navigationController?.navigationBar.isHidden = true
         }
@@ -475,7 +427,7 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         apiKeyLogOut.isHidden = true
         hintTextView.isHidden = true
         blurredEffectView.isHidden = true
-
+        
         view.endEditing(true)
         apiKeyTextField.text = ""
     }
@@ -492,29 +444,6 @@ class MainCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             (drawer.navigationItem.titleView as! UIButton).setAttributedTitle(NSAttributedString(string: "🔑 API Key", attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
         }
         loadClassifiers()
-    }
-    
-    @IBAction func takePhoto() {
-        photoOutput?.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
-        captureButton.isHidden = true
-        retakeButton.isHidden = false
-        classifiersButton.isHidden = true
-        
-        if let drawer = self.parent as? PulleyViewController {
-            drawer.navigationController?.navigationBar.isHidden = true
-        }
-        
-        // Show an activity indicator while its loading.
-        let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
-        
-        alert.view.tintColor = UIColor.black
-        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50)) as UIActivityIndicatorView
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-        loadingIndicator.startAnimating()
-        
-        alert.view.addSubview(loadingIndicator)
-        present(alert, animated: true, completion: nil)
     }
     
     @IBAction func retake() {
@@ -573,62 +502,3 @@ extension UITextField {
     }
 }
 
-struct Classifier {
-    enum Status: String {
-        case ready, training, retraining, failed
-    }
-    
-    let name: String
-    let classes: [String]
-    let classifierId: String
-    let created: Date
-    let status: Status
-}
-    
-extension Classifier {
-    init(name: String) {
-        self.name = name
-        self.classes = [String]()
-        self.classifierId = String()
-        self.created = Date()
-        self.status = .ready
-    }
-    
-    init?(json: Any) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        
-        guard let json = json as? [String: Any],
-            let name = json["name"] as? String,
-            let classesArray = json["classes"] as? [Any],
-            let classifierId = json["classifier_id"] as? String,
-            let created = json["created"] as? String,
-            let date = dateFormatter.date(from: created),
-            let statusString = json["status"] as? String,
-            let status = Status(rawValue: statusString)
-            else {
-                return nil
-        }
-        
-        var classes = [String]()
-        for classJSON in classesArray {
-            guard let classJSON = classJSON as? [String: Any],
-                let classItem = classJSON["class"] as? String
-                else {
-                    return nil
-            }
-            classes.append(classItem)
-        }
-        
-        self.name = name
-        self.classes = classes
-        self.classifierId = classifierId
-        self.created = date
-        self.status = status
-    }
-    
-    func isEqual(_ object: Classifier) -> Bool {
-        // Status might be something we want to check... don't know.
-        return classifierId == object.classifierId
-    }
-}
