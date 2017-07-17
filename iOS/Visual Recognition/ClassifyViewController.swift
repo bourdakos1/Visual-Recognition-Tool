@@ -188,9 +188,9 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Set up PickerView.
         pickerView.delegate = self
         pickerView.dataSource = self
-        
         pickerView.interitemSpacing = CGFloat(25.0)
         pickerView.pickerViewStyle = .flat
         pickerView.maskDisabled = true
@@ -210,14 +210,13 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
         
         // Retake just resets the UI.
         retake()
-        view.bringSubview(toFront: photoButton)
         
         // Create and hide the blur effect.
         blurredEffectView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
         view.addSubview(blurredEffectView)
         blurredEffectView.isHidden = true
         
-        // Bring all the API key views to the front
+        // Bring all the API key views to the front of the blur effect
         view.bringSubview(toFront: apiKeyTextField)
         view.bringSubview(toFront: apiKeyDoneButton)
         view.bringSubview(toFront: apiKeySubmit)
