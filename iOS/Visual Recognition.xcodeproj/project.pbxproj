@@ -34,6 +34,7 @@
 		23742B5E1F1D296E00F52C1B /* Classifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23742B5D1F1D296E00F52C1B /* Classifier.swift */; };
 		23742B601F1D29EB00F52C1B /* ClassifyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23742B5F1F1D29EB00F52C1B /* ClassifyViewController.swift */; };
 		23742B631F1D377200F52C1B /* reverse_solid.png in Resources */ = {isa = PBXBuildFile; fileRef = 23742B621F1D370A00F52C1B /* reverse_solid.png */; };
+		23742B651F1D399D00F52C1B /* ClassResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23742B641F1D399D00F52C1B /* ClassResult.swift */; };
 		2389A6FE1E7C65A100D7C973 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2389A6FD1E7C65A100D7C973 /* AppDelegate.swift */; };
 		2389A7031E7C65A100D7C973 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2389A7011E7C65A100D7C973 /* Main.storyboard */; };
 		2389A7051E7C65A100D7C973 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2389A7041E7C65A100D7C973 /* Assets.xcassets */; };
@@ -107,6 +108,7 @@
 		23742B5D1F1D296E00F52C1B /* Classifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Classifier.swift; sourceTree = "<group>"; };
 		23742B5F1F1D29EB00F52C1B /* ClassifyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassifyViewController.swift; sourceTree = "<group>"; };
 		23742B621F1D370A00F52C1B /* reverse_solid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reverse_solid.png; sourceTree = "<group>"; };
+		23742B641F1D399D00F52C1B /* ClassResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassResult.swift; sourceTree = "<group>"; };
 		2389A6FA1E7C65A100D7C973 /* Visual Recognition.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Visual Recognition.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2389A6FD1E7C65A100D7C973 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2389A7021E7C65A100D7C973 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				2389A6FD1E7C65A100D7C973 /* AppDelegate.swift */,
 				233D0B9F1EC17C53005E5594 /* DatabaseController.swift */,
 				2389A7011E7C65A100D7C973 /* Main.storyboard */,
+				23742B641F1D399D00F52C1B /* ClassResult.swift */,
 				2389A7311E7C7D4F00D7C973 /* ResultsTableViewController.swift */,
 				2389A7371E7CAA7500D7C973 /* ResultTableViewCell.swift */,
 				23742B5D1F1D296E00F52C1B /* Classifier.swift */,
@@ -660,6 +663,7 @@
 				2389A7381E7CAA7500D7C973 /* ResultTableViewCell.swift in Sources */,
 				2389A7361E7CA9E700D7C973 /* ProgressBar.swift in Sources */,
 				235DD00B1EC63F3A00B8432B /* ClassesCollectionViewController.swift in Sources */,
+				23742B651F1D399D00F52C1B /* ClassResult.swift in Sources */,
 				233D0BB61EC22EB6005E5594 /* PendingClassifier+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

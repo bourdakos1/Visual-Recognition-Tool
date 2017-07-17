@@ -245,37 +245,38 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
             let encodedURLRequest = try URLEncoding.queryString.encode(urlRequest, with: parameters)
             
             Alamofire.upload(UIImageJPEGRepresentation(reducedImage, 0.4)!, to: encodedURLRequest.url!).responseJSON { response in
-                guard
-                    let json = response.result.value as? [String: Any],
+                // Start parsing json, throw error popup if it messed up.
+                guard let json = response.result.value as? [String: Any],
                     let images = json["images"] as? [Any],
                     let image = images.first as? [String: Any],
                     let classifiers = image["classifiers"] as? [Any],
                     let classifier = classifiers.first as? [String: Any],
                     let classes = classifier["classes"] as? [Any] else {
                         print("Error: No classes returned.")
-                        var myNewData = [[String: Any]]()
+                        self.retake()
+                        let alert = UIAlertController(title: nil, message: "No classes found.", preferredStyle: .alert)
                         
-                        myNewData.append([
-                            "class_name": "No classes found" as Any,
-                            "score": CGFloat(0.0) as Any
-                            ])
-                        self.push(data: myNewData)
+                        let cancelAction = UIAlertAction(title: "Okay", style: .cancel) { action in
+                            print("cancel")
+                        }
+                        
+                        alert.addAction(cancelAction)
+                        
+                        self.dismiss(animated: true, completion: {
+                            self.present(alert, animated: true, completion: nil)
+                        })
                         return
                 }
                 
-                var myNewData = [[String: Any]]()
+                var myNewData = [ClassResult]()
                 
-                for case let classObj as [String: Any] in classes {
-                    myNewData.append([
-                        "class_name": classObj["class"] as Any,
-                        "score": classObj["score"] as Any
-                        ])
+                for case let classResult in classes {
+                    myNewData.append(ClassResult(json: classResult)!)
                 }
                 
                 // Sort data by score and reload table.
-                myNewData = myNewData.sorted(by: { $0["score"] as! CGFloat > $1["score"] as! CGFloat})
+                myNewData = myNewData.sorted(by: { $0.score > $1.score })
                 self.push(data: myNewData)
-                debugPrint(response)
             }
         } catch {
             print("Error: \(error)")
@@ -308,7 +309,7 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
     }
     
     // Convenience method for pushing data to the TableView.
-    func push(data: [[String: Any]]) {
+    func push(data: [ClassResult]) {
         getTableController { tableController, drawer in
             tableController.classes = data
             self.dismiss(animated: false, completion: nil)

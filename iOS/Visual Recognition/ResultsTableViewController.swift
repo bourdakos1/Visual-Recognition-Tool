@@ -13,7 +13,7 @@ class ResultsTableViewController: UITableViewController {
         return .lightContent
     }
     
-    var classes: [[String: Any]] = []
+    var classes = [ClassResult]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,9 +38,9 @@ class ResultsTableViewController: UITableViewController {
             cell = tableView.dequeueReusableCell(withIdentifier: "cellDefault", for: indexPath) as! ResultTableViewCell
         }
         
-        let score = classes[indexPath.item]["score"] as! CGFloat
+        let score = classes[indexPath.item].score
         
-        cell.label.text = classes[indexPath.item]["class_name"] as! String?
+        cell.label.text = classes[indexPath.item].className
         cell.progress.progress = score
         cell.score.text = String(format: "%.2f", score)
 
