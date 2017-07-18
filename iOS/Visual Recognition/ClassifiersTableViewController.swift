@@ -374,10 +374,9 @@ class ClassifiersTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(tableView.numberOfSections)
         if !(tableView.numberOfSections > 1 && indexPath.section == 0) {
             let classifierData = classifiers[indexPath.item]
-            if classifierData.status == .ready {
+            if classifierData.status == .ready && !(classifierData.classifierId == String() && classifierData.name == "Loading...") {
                 if classifierData.classifierId == String() {
                     UserDefaults.standard.set(classifiers[indexPath.item].name, forKey: "classifier_id")
                 } else {
