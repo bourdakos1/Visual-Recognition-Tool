@@ -142,7 +142,7 @@ class ClassifiersTableViewController: UITableViewController {
                         classifiers.append(contentsOf: Classifier.defaults)
                         
                         // Don't know if this is thread safe. We could do this better...
-                        let training = classifiers.filter({ $0.status == .training })
+                        let training = classifiers.filter({ $0.status == .training || $0.status == .training })
                         if training.count > 0 {
                             self.reloadClassifiers()
                         } else {
