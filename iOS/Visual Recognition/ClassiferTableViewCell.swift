@@ -11,8 +11,7 @@ class ClassiferTableViewCell: UITableViewCell {
     
     @IBOutlet weak var classifierNameLabel: UILabel!
     @IBOutlet weak var classifierIdLabel: UILabel!
-    @IBOutlet weak var classifierStatusLabel: UILabel!
-    @IBOutlet weak var statusIndicator: UIView!
+    @IBOutlet weak var classifierStatusEmoji: UILabel!
     @IBOutlet weak var checkmark: UIImageView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     

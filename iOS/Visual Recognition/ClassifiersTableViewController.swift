@@ -94,7 +94,7 @@ class ClassifiersTableViewController: UITableViewController {
         v.removeFromSuperview()
     }
     
-    var trainingCount = 0
+    var isLoading = false
     func loadClassifiers() {
         print("loading classifiers")
         // Load from Watson
@@ -117,7 +117,15 @@ class ClassifiersTableViewController: UITableViewController {
             "version": "2016-05-20",
             "verbose": "true"
         ]
+        if self.isLoading {
+            // We are loading something already so escape.
+            return
+        }
+        isLoading = true
         Alamofire.request(url, parameters: params).validate().responseJSON { response in
+            self.isLoading = false
+            print("done")
+            self.refreshControl?.endRefreshing()
             switch response.result {
             case .success:
                 if let json = response.result.value as? [String : Any] {
@@ -133,21 +141,16 @@ class ClassifiersTableViewController: UITableViewController {
                         classifiers = classifiers.sorted(by: { $0.created > $1.created })
                         classifiers.append(contentsOf: Classifier.defaults)
                         
-                        // This entire block needs to be redone.
+                        // Don't know if this is thread safe. We could do this better...
                         let training = classifiers.filter({ $0.status == .training })
                         if training.count > 0 {
-                            self.trainingCount = training.count
                             self.reloadClassifiers()
-                        } else if training.count != self.trainingCount {
-                            self.trainingCount = training.count
+                        } else {
                             self.classifiers = classifiers
                             self.tableView.reloadData()
-                        } else {
-                             self.trainingCount = training.count
+                            // We can return here because we reload the entire table.
+                            return
                         }
-                        
-                        print("done")
-                        self.refreshControl?.endRefreshing()
                         
                         // If the count and head are the same nothing was deleted or added.
                         if !(self.classifiers.first!.isEqual(classifiers.first!)
@@ -178,8 +181,6 @@ class ClassifiersTableViewController: UITableViewController {
                     }
                 }
             case .failure(let error):
-                print("done")
-                self.refreshControl?.endRefreshing()
                 print(error)
             }
         }
@@ -284,45 +285,41 @@ class ClassifiersTableViewController: UITableViewController {
             
             cell.classifierNameLabel?.text = classifierData.name
             cell.classifierIdLabel?.text = classifierData.classifierId
-            cell.classifierStatusLabel?.text = classifierData.status.rawValue
-            cell.classifierStatusLabel?.text = "😭😴😊"
-            cell.statusIndicator?.layer.cornerRadius = 6
             
-            // Hide status to work on things.
-            cell.classifierStatusLabel?.text = "😭😴😊"
-            cell.statusIndicator?.layer.cornerRadius = 6
+            switch classifierData.status {
+            case .ready:
+                cell.classifierStatusEmoji?.text = ""
+            case .training, .retraining:
+                cell.classifierStatusEmoji?.text = "😴"
+                cell.classifierIdLabel?.text = classifierData.status.rawValue
+            case .failed:
+                cell.classifierStatusEmoji?.text = "😭"
+                cell.classifierIdLabel?.text = "Verify there are at least 10 images per class."
+            }
             
             if classifierData.status == .ready {
                 cell.classifierNameLabel?.alpha = 1.0
                 cell.classifierIdLabel?.alpha = 1.0
-                cell.classifierStatusLabel?.alpha = 1.0
-                cell.statusIndicator?.backgroundColor = UIColor(red: 105/255, green: 219/255, blue: 48/255, alpha: 1)
                 cell.activityIndicator?.stopAnimating()
                 cell.activityIndicator?.isHidden = true
             } else if classifierData.status == .training || classifierData.status == .retraining {
                 cell.classifierNameLabel?.alpha = 0.4
                 cell.classifierIdLabel?.alpha = 0.4
-                cell.classifierStatusLabel?.alpha = 0.4
-                cell.statusIndicator?.backgroundColor = UIColor(red: 255/255, green: 171/255, blue: 0/255, alpha: 0.4)
                 cell.activityIndicator?.startAnimating()
                 cell.activityIndicator?.isHidden = false
             } else {
                 cell.classifierNameLabel?.alpha = 0.4
                 cell.classifierIdLabel?.alpha = 0.4
-                cell.classifierStatusLabel?.alpha = 0.4
-                cell.statusIndicator?.backgroundColor = UIColor(red: 244/255, green: 67/255, blue: 54/255, alpha: 0.4)
                 cell.activityIndicator?.stopAnimating()
                 cell.activityIndicator?.isHidden = true
             }
             
             if classifierData.classifierId == String() && classifierData.name == "Loading..." {
-                cell.statusIndicator?.backgroundColor = UIColor(red: 255/255, green: 171/255, blue: 0/255, alpha: 0.0)
                 cell.activityIndicator?.startAnimating()
                 cell.activityIndicator?.isHidden = false
                 
                 cell.classifierNameLabel?.text = String()
                 cell.classifierIdLabel?.text = "Loading..."
-                cell.classifierStatusLabel?.text = String()
             }
             
             cell.tapAction = { (cell) in

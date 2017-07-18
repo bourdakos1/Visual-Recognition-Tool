@@ -18,6 +18,7 @@ struct Classifier {
     let classifierId: String
     let created: Date
     let status: Status
+    let explanation: String
 }
 
 extension Classifier {
@@ -27,6 +28,7 @@ extension Classifier {
         self.classifierId = String()
         self.created = Date()
         self.status = .ready
+        self.explanation = String()
     }
     
     init?(json: Any) {
@@ -45,6 +47,8 @@ extension Classifier {
                 return nil
         }
         
+        let explanation = json["explanation"] as? String ?? String()
+        
         var classes = [String]()
         for classJSON in classesArray {
             guard let classJSON = classJSON as? [String: Any],
@@ -60,6 +64,7 @@ extension Classifier {
         self.classifierId = classifierId
         self.created = date
         self.status = status
+        self.explanation = explanation
     }
     
     func isEqual(_ object: Classifier) -> Bool {
