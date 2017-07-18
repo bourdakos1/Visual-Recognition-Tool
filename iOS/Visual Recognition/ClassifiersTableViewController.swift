@@ -308,6 +308,16 @@ class ClassifiersTableViewController: UITableViewController {
                 cell.activityIndicator?.isHidden = true
             }
             
+            if classifierData.classifierId == String() && classifierData.name == "Loading..." {
+                cell.statusIndicator?.backgroundColor = UIColor(red: 255/255, green: 171/255, blue: 0/255, alpha: 0.0)
+                cell.activityIndicator?.startAnimating()
+                cell.activityIndicator?.isHidden = false
+                
+                cell.classifierNameLabel?.text = String()
+                cell.classifierIdLabel?.text = "Loading..."
+                cell.classifierStatusLabel?.text = String()
+            }
+            
             cell.tapAction = { (cell) in
                 let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                 
