@@ -80,7 +80,7 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
     @IBOutlet private weak var barLabelHolder: UIBarButtonItem!
     private var barLabel = UILabel(frame: CGRect.zero)
     
-    func reloadData() {
+    func invalidateViews() {
         if classes.count >= 2 {
             trainButton.isEnabled = true
             barLabel.text = ""
@@ -104,34 +104,15 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
         barLabel.textColor = UIColor.darkGray
         barLabel.sizeToFit()
         barLabelHolder.customView = barLabel
-        
+    }
+    
+    func reloadData() {
+        invalidateViews()
         collectionView?.reloadData()
     }
     
     func insertItem() {
-        if classes.count >= 2 {
-            trainButton.isEnabled = true
-            barLabel.text = ""
-        } else {
-            trainButton.isEnabled = false
-        }
-        
-        editButton.isEnabled = !(classes.count <= 0)
-        
-        if classes.count == 1 {
-            barLabel.text = "Add at least one more class."
-        }
-        
-        if UserDefaults.standard.string(forKey: "api_key") == nil {
-            trainButton.isEnabled = false
-            barLabel.text = "Sign in with an API Key to train."
-        }
-        
-        barLabel.backgroundColor = UIColor.clear
-        barLabel.font = UIFont(name: barLabel.font.fontName, size: 14)
-        barLabel.textColor = UIColor.darkGray
-        barLabel.sizeToFit()
-        barLabelHolder.customView = barLabel
+        invalidateViews()
         
         // -1 to account for "+" button.
         collectionView?.insertItems(at: [IndexPath(row: classes.count - 1, section: 0)])
