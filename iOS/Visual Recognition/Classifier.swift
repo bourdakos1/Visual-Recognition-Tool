@@ -64,7 +64,7 @@ extension Classifier {
     
     func isEqual(_ object: Classifier) -> Bool {
         // Status might be something we want to check... don't know.
-        return classifierId == object.classifierId
+        return classifierId == object.classifierId && name == object.name
     }
     
     static var defaults = [Classifier(name: "Default"), Classifier(name: "Food"), Classifier(name: "Face Detection")]

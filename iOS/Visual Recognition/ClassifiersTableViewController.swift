@@ -57,8 +57,15 @@ class ClassifiersTableViewController: UITableViewController {
             pendingClassifier.id = UUID().uuidString
             pendingClassifier.name = textfield.text!
             
-            self.pending.append(pendingClassifier)
-            self.tableView.reloadData()
+            self.pending.insert(pendingClassifier, at: 0)
+            if self.tableView.numberOfSections == 2 {
+                self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+            } else {
+                self.tableView.beginUpdates()
+                self.tableView.insertSections([0], with: .automatic)
+                self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+                self.tableView.endUpdates()
+            }
             
             DatabaseController.saveContext()
         }
@@ -102,20 +109,6 @@ class ClassifiersTableViewController: UITableViewController {
         }
         
         // Let's not show the loading indicator.
-        let training = classifiers.filter({ $0.status == .training })
-        if training.count == 0 {
-//            print("refreshing")
-//            if fabs(tableView.contentOffset.y) < CGFloat.ulpOfOne {
-//                print(tableView.contentOffset.y)
-//                tableView.setContentOffset(CGPoint(x: 0, y: tableView.contentOffset.y - refreshControl!.frame.size.height), animated: true)
-//                refreshControl?.beginRefreshing()
-//            } else {
-//                print("not fab")
-//                print(tableView.contentOffset.y)
-//                tableView.setContentOffset(CGPoint(x: 0, y: tableView.contentOffset.y - refreshControl!.frame.size.height), animated: true)
-//                refreshControl?.beginRefreshing()
-//            }
-        }
         
         let url = "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers"
         let params = [
@@ -157,8 +150,28 @@ class ClassifiersTableViewController: UITableViewController {
                         // If the count and head are the same nothing was deleted or added.
                         if !(self.classifiers.first!.isEqual(classifiers.first!)
                             && self.classifiers.count == classifiers.count) {
+                            
+                            // Instead of blindly reloading the entire list, we should use insert/remove row.
+                            var indexesToAdd = [IndexPath]()
+                            for classifier in classifiers {
+                                if !self.classifiers.contains(where: { $0.isEqual(classifier) }) {
+                                    indexesToAdd.append(IndexPath(row: indexesToAdd.count, section: self.tableView.numberOfSections - 1))
+                                }
+                            }
+                            
+                            var indexesToDelete = [IndexPath]()
+                            for classifier in self.classifiers {
+                                if !classifiers.contains(where: { $0.isEqual(classifier)}) {
+                                    let itemToDelete = self.classifiers.index(where: {$0.classifierId == classifier.classifierId})!
+                                    indexesToDelete.append(IndexPath(row: itemToDelete, section: self.tableView.numberOfSections - 1))
+                                }
+                            }
+                            
                             self.classifiers = classifiers
-                            self.tableView.reloadData()
+                            self.tableView.beginUpdates()
+                            self.tableView.insertRows(at: indexesToAdd, with: .automatic)
+                            self.tableView.deleteRows(at: indexesToDelete, with: .automatic)
+                            self.tableView.endUpdates()
                         }
                     }
                 }
@@ -351,6 +364,7 @@ class ClassifiersTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(tableView.numberOfSections)
         if !(tableView.numberOfSections > 1 && indexPath.section == 0) {
             let classifierData = classifiers[indexPath.item]
             if classifierData.status == .ready {
@@ -368,7 +382,8 @@ class ClassifiersTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         if !(tableView.numberOfSections > 1 && indexPath.section == 0) {
-            if indexPath.item == classifiers.count - 1 {
+            // Don't let them edit if there is no classifier id.
+            if classifiers[indexPath.item].classifierId == String() {
                 return false
             }
         }
@@ -389,10 +404,14 @@ class ClassifiersTableViewController: UITableViewController {
                     DatabaseController.saveContext()
                     pending.remove(at: indexPath.item)
                     if (pending.count <= 0) {
-                        // Not the prettiest, but delete section isn't working.
-                        tableView.reloadData()
+                        tableView.beginUpdates()
+                        tableView.deleteSections([0], with: .automatic)
+                        tableView.moveSection(1, toSection: 0)
+                        tableView.endUpdates()
+                        // This seems to be some kind of weird bug...
+                        tableView.setEditing(false, animated: false)
                     } else {
-                        tableView.deleteRows(at: [indexPath], with: .fade)
+                        tableView.deleteRows(at: [indexPath], with: .automatic)
                     }
                 } catch {
                     // If it fails don't delete the row.
@@ -406,7 +425,11 @@ class ClassifiersTableViewController: UITableViewController {
                         DatabaseController.saveContext()
                         pending.remove(at: indexPath.item)
                         if (pending.count <= 0) {
-                            tableView.reloadData()
+                            tableView.beginUpdates()
+                            tableView.deleteSections([0], with: .automatic)
+                            tableView.moveSection(1, toSection: 0)
+                            tableView.endUpdates()
+                            tableView.setEditing(false, animated: false)
                         } else {
                             tableView.deleteRows(at: [indexPath], with: .fade)
                         }
