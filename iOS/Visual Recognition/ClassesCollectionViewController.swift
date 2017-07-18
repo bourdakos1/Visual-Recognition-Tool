@@ -107,6 +107,35 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
         
         collectionView?.reloadData()
     }
+    
+    func insertItem() {
+        if classes.count >= 2 {
+            trainButton.isEnabled = true
+            barLabel.text = ""
+        } else {
+            trainButton.isEnabled = false
+        }
+        
+        editButton.isEnabled = !(classes.count <= 0)
+        
+        if classes.count == 1 {
+            barLabel.text = "Add at least one more class."
+        }
+        
+        if UserDefaults.standard.string(forKey: "api_key") == nil {
+            trainButton.isEnabled = false
+            barLabel.text = "Sign in with an API Key to train."
+        }
+        
+        barLabel.backgroundColor = UIColor.clear
+        barLabel.font = UIFont(name: barLabel.font.fontName, size: 14)
+        barLabel.textColor = UIColor.darkGray
+        barLabel.sizeToFit()
+        barLabelHolder.customView = barLabel
+        
+        // -1 to account for "+" button.
+        collectionView?.insertItems(at: [IndexPath(row: classes.count - 1, section: 0)])
+    }
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -244,7 +273,7 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
             
             self.classes.append(self.grabPhoto(for: pendingClass))
             
-            self.reloadData()
+            self.insertItem()
             
             DatabaseController.saveContext()
         }
