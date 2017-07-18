@@ -89,20 +89,32 @@ class ClassifiersTableViewController: UITableViewController {
     
     var trainingCount = 0
     func loadClassifiers() {
+        print("loading classifiers")
         // Load from Watson
         let apiKey = UserDefaults.standard.string(forKey: "api_key")
         
         if apiKey == nil || apiKey == "" {
-            self.classifiers = []
-            self.classifiers.append(Classifier(name: "Default"))
-            self.tableView.reloadData()
+            classifiers = []
+            classifiers.append(Classifier(name: "Default"))
+            tableView.reloadData()
+            refreshControl?.endRefreshing()
             return
         }
         
-        // Only show the loading indicator if nothing is training.
+        // Let's not show the loading indicator.
         let training = classifiers.filter({ $0.status == .training })
         if training.count == 0 {
-            indicator.startAnimating()
+//            print("refreshing")
+//            if fabs(tableView.contentOffset.y) < CGFloat.ulpOfOne {
+//                print(tableView.contentOffset.y)
+//                tableView.setContentOffset(CGPoint(x: 0, y: tableView.contentOffset.y - refreshControl!.frame.size.height), animated: true)
+//                refreshControl?.beginRefreshing()
+//            } else {
+//                print("not fab")
+//                print(tableView.contentOffset.y)
+//                tableView.setContentOffset(CGPoint(x: 0, y: tableView.contentOffset.y - refreshControl!.frame.size.height), animated: true)
+//                refreshControl?.beginRefreshing()
+//            }
         }
         
         let url = "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers"
@@ -139,7 +151,8 @@ class ClassifiersTableViewController: UITableViewController {
                              self.trainingCount = training.count
                         }
                         
-                        self.indicator.stopAnimating()
+                        print("done")
+                        self.refreshControl?.endRefreshing()
                         
                         // If the count and head are the same nothing was deleted or added.
                         if !(self.classifiers.first!.isEqual(classifiers.first!)
@@ -150,6 +163,8 @@ class ClassifiersTableViewController: UITableViewController {
                     }
                 }
             case .failure(let error):
+                print("done")
+                self.refreshControl?.endRefreshing()
                 print(error)
             }
         }
@@ -173,15 +188,10 @@ class ClassifiersTableViewController: UITableViewController {
         loadClassifiers()
     }
     
-    var indicator = UIActivityIndicatorView()
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        indicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-        indicator.hidesWhenStopped = true
-        indicator.center = self.view.center
-        self.view.addSubview(indicator)
+        refreshControl?.addTarget(self, action: #selector(self.loadClassifiers), for: .valueChanged)
         
         v.backgroundColor = UIColor.white
         tableView.addSubview(v)

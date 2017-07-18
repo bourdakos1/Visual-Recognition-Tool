@@ -135,9 +135,9 @@ private class AKCollectionViewLayout: UICollectionViewFlowLayout {
     
     fileprivate override func prepare() {
         let visibleRect = CGRect(origin: self.collectionView!.contentOffset, size: self.collectionView!.bounds.size)
-        self.midX = visibleRect.midX;
-        self.width = visibleRect.width / 2;
-        self.maxAngle = CGFloat(M_PI_2);
+        self.midX = visibleRect.midX
+        self.width = visibleRect.width / 2
+        self.maxAngle = CGFloat(Double.pi / 2)
     }
     
     fileprivate override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
@@ -150,14 +150,14 @@ private class AKCollectionViewLayout: UICollectionViewFlowLayout {
             case .flat:
                 return attributes
             case .wheel:
-                let distance = attributes.frame.midX - self.midX;
-                let currentAngle = self.maxAngle * distance / self.width / CGFloat(M_PI_2);
-                var transform = CATransform3DIdentity;
-                transform = CATransform3DTranslate(transform, -distance, 0, -self.width);
-                transform = CATransform3DRotate(transform, currentAngle, 0, 1, 0);
-                transform = CATransform3DTranslate(transform, 0, 0, self.width);
-                attributes.transform3D = transform;
-                attributes.alpha = fabs(currentAngle) < self.maxAngle ? 1.0 : 0.0;
+                let distance = attributes.frame.midX - self.midX
+                let currentAngle = self.maxAngle * distance / self.width / CGFloat(Double.pi / 2)
+                var transform = CATransform3DIdentity
+                transform = CATransform3DTranslate(transform, -distance, 0, -self.width)
+                transform = CATransform3DRotate(transform, currentAngle, 0, 1, 0)
+                transform = CATransform3DTranslate(transform, 0, 0, self.width)
+                attributes.transform3D = transform
+                attributes.alpha = fabs(currentAngle) < self.maxAngle ? 1.0 : 0.0
                 return attributes;
             }
         }
@@ -265,7 +265,7 @@ public class AKPickerView: UIView, UICollectionViewDataSource, UICollectionViewD
         }
     }
     /// Readwrite. A boolean value indicates whether the mask is disabled.
-    @IBInspectable public var maskDisabled: Bool! = nil {
+    public var maskDisabled: Bool! = nil {
         didSet {
             self.collectionView.layer.mask = self.maskDisabled == true ? nil : {
                 let maskLayer = CAGradientLayer()

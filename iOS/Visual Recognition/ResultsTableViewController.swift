@@ -43,6 +43,8 @@ class ResultsTableViewController: UITableViewController {
         cell.label.text = classes[indexPath.item].className
         cell.progress.progress = score
         cell.score.text = String(format: "%.2f", score)
+        
+        print(cell.score.frame.width)
 
         return cell
     }
