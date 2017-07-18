@@ -103,6 +103,7 @@ class ClassifiersTableViewController: UITableViewController {
         if apiKey == nil || apiKey == "" {
             classifiers = []
             classifiers.append(Classifier(name: "Default"))
+            // This should be okay.
             tableView.reloadData()
             refreshControl?.endRefreshing()
             return
@@ -132,6 +133,7 @@ class ClassifiersTableViewController: UITableViewController {
                         classifiers = classifiers.sorted(by: { $0.created > $1.created })
                         classifiers.append(contentsOf: Classifier.defaults)
                         
+                        // This entire block needs to be redone.
                         let training = classifiers.filter({ $0.status == .training })
                         if training.count > 0 {
                             self.trainingCount = training.count
@@ -262,9 +264,9 @@ class ClassifiersTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if tableView.numberOfSections > 1 && section == 0 {
-            return "in progress"
+            return "🏋️‍♀️ training data"
         } else {
-            return "trained"
+            return "🚀 trained"
         }
     }
 
@@ -283,6 +285,11 @@ class ClassifiersTableViewController: UITableViewController {
             cell.classifierNameLabel?.text = classifierData.name
             cell.classifierIdLabel?.text = classifierData.classifierId
             cell.classifierStatusLabel?.text = classifierData.status.rawValue
+            cell.classifierStatusLabel?.text = "😭😴😊"
+            cell.statusIndicator?.layer.cornerRadius = 6
+            
+            // Hide status to work on things.
+            cell.classifierStatusLabel?.text = "😭😴😊"
             cell.statusIndicator?.layer.cornerRadius = 6
             
             if classifierData.status == .ready {
