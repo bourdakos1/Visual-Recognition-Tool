@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16E195" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13196.5" systemVersion="16E195" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="PendingClass" representedClassName=".PendingClass" syncable="YES">
+        <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="relationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PendingClassifier" inverseName="relationship" inverseEntity="PendingClassifier" syncable="YES"/>
     </entity>
     <entity name="PendingClassifier" representedClassName=".PendingClassifier" syncable="YES">
+        <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="relationship" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PendingClass" inverseName="relationship" inverseEntity="PendingClass" syncable="YES"/>
     </entity>
     <elements>
-        <element name="PendingClass" positionX="-36" positionY="213" width="128" height="73"/>
-        <element name="PendingClassifier" positionX="-252" positionY="198" width="126" height="90"/>
+        <element name="PendingClass" positionX="-36" positionY="213" width="128" height="90"/>
+        <element name="PendingClassifier" positionX="-252" positionY="198" width="126" height="105"/>
     </elements>
 </model>

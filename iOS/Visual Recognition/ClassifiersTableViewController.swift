@@ -56,6 +56,7 @@ class ClassifiersTableViewController: UITableViewController {
             let pendingClassifier:PendingClassifier = NSEntityDescription.insertNewObject(forEntityName: pendingClassifierClassName, into: DatabaseController.getContext()) as! PendingClassifier
             pendingClassifier.id = UUID().uuidString
             pendingClassifier.name = textfield.text!
+            pendingClassifier.created = Date()
             
             self.pending.insert(pendingClassifier, at: 0)
             if self.tableView.numberOfSections == 2 {
@@ -246,6 +247,8 @@ class ClassifiersTableViewController: UITableViewController {
             for result in searchResults as [PendingClassifier] {
                 pending.append(result)
             }
+            // The date might not exist, so check if it is nil.
+            pending = pending.sorted(by: { $0.created == nil || $1.created == nil || $0.created! > $1.created! })
         }
         catch {
             print("Error: \(error)")
