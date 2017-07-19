@@ -85,6 +85,7 @@ public class PendingClassifier: NSManagedObject {
         }
         catch {
             print(error)
+            completion("FAILUREEEEE")
         }
     }
 }
