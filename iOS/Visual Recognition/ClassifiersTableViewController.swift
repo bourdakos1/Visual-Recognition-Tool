@@ -247,8 +247,9 @@ class ClassifiersTableViewController: UITableViewController {
             for result in searchResults as [PendingClassifier] {
                 pending.append(result)
             }
-            // The date might not exist, so check if it is nil.
-            pending = pending.sorted(by: { $0.created == nil || $1.created == nil || $0.created! > $1.created! })
+            
+            let epoch = Date().addingTimeInterval(0 - Date().timeIntervalSince1970)
+            pending = pending.sorted(by: { $0.created ?? epoch > $1.created ?? epoch })
         }
         catch {
             print("Error: \(error)")

@@ -74,6 +74,9 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
             classes.append(grabPhoto(for: result))
         }
         
+        let epoch = Date().addingTimeInterval(0 - Date().timeIntervalSince1970)
+        classes = classes.sorted(by: { $0.pendingClass.created ?? epoch < $1.pendingClass.created ?? epoch })
+        
         reloadData()
     }
     
@@ -249,6 +252,7 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
             let pendingClass: PendingClass = NSEntityDescription.insertNewObject(forEntityName: pendingClassClassName, into: DatabaseController.getContext()) as! PendingClass
             
             pendingClass.name = textfield.text!
+            pendingClass.created = Date()
             
             self.classifier.addToRelationship(pendingClass)
             
