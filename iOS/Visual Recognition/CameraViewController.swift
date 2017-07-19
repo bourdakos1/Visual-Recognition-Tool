@@ -337,12 +337,14 @@ class CameraViewController: UIViewController {
     }
     
     @IBAction private func focusAndExposeTap(_ gestureRecognizer: UITapGestureRecognizer) {
-        let devicePoint = self.previewView.videoPreviewLayer.captureDevicePointOfInterest(for: gestureRecognizer.location(in: gestureRecognizer.view))
-        focus(with: .autoFocus, exposureMode: .autoExpose, at: devicePoint, monitorSubjectAreaChange: true)
+        // Add this back later.
+//        let devicePoint = self.previewView.videoPreviewLayer.captureDevicePointOfInterest(for: gestureRecognizer.location(in: gestureRecognizer.view))
+//        focus(with: .autoFocus, exposureMode: .autoExpose, at: devicePoint, monitorSubjectAreaChange: true)
     }
     
     private func focus(with focusMode: AVCaptureDevice.FocusMode, exposureMode: AVCaptureDevice.ExposureMode, at devicePoint: CGPoint, monitorSubjectAreaChange: Bool) {
         sessionQueue.async { [unowned self] in
+            print("I should monitor changes: \(monitorSubjectAreaChange)")
             let device = self.videoDeviceInput.device!
             do {
                 try device.lockForConfiguration()
@@ -362,6 +364,8 @@ class CameraViewController: UIViewController {
                 }
                 
                 device.isSubjectAreaChangeMonitoringEnabled = monitorSubjectAreaChange
+                print("yay they should be set!")
+                
                 device.unlockForConfiguration()
             } catch {
                 print("Could not lock device for configuration: \(error)")
@@ -448,6 +452,7 @@ class CameraViewController: UIViewController {
     private func addObservers() {
         session.addObserver(self, forKeyPath: "running", options: .new, context: &sessionRunningObserveContext)
         
+        print("observerving")
         NotificationCenter.default.addObserver(self, selector: #selector(subjectAreaDidChange), name: .AVCaptureDeviceSubjectAreaDidChange, object: videoDeviceInput.device)
         NotificationCenter.default.addObserver(self, selector: #selector(sessionRuntimeError), name: .AVCaptureSessionRuntimeError, object: session)
         
@@ -463,6 +468,7 @@ class CameraViewController: UIViewController {
     }
     
     private func removeObservers() {
+        print("remove observers")
         NotificationCenter.default.removeObserver(self)
         session.removeObserver(self, forKeyPath: "running", context: &sessionRunningObserveContext)
     }
@@ -484,6 +490,7 @@ class CameraViewController: UIViewController {
     
     @objc
     func subjectAreaDidChange(notification: NSNotification) {
+        print("SUBJECT AREA IS CHANGINGGGGG!!!!! DO I GET CALLED?")
         let devicePoint = CGPoint(x: 0.5, y: 0.5)
         focus(with: .autoFocus, exposureMode: .continuousAutoExposure, at: devicePoint, monitorSubjectAreaChange: false)
     }
