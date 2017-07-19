@@ -96,7 +96,7 @@ class ClassifiersTableViewController: UITableViewController {
     
     var isLoading = false
     func loadClassifiers() {
-        print("loading classifiers")
+        print("prepare to load")
         // Load from Watson
         let apiKey = UserDefaults.standard.string(forKey: "api_key")
         
@@ -121,6 +121,7 @@ class ClassifiersTableViewController: UITableViewController {
             // We are loading something already so escape.
             return
         }
+        print("loading from server")
         isLoading = true
         Alamofire.request(url, parameters: params).validate().responseJSON { response in
             self.isLoading = false
@@ -141,42 +142,46 @@ class ClassifiersTableViewController: UITableViewController {
                         classifiers = classifiers.sorted(by: { $0.created > $1.created })
                         classifiers.append(contentsOf: Classifier.defaults)
                         
-                        // Don't know if this is thread safe. We could do this better...
-                        let training = classifiers.filter({ $0.status == .training || $0.status == .training })
-                        if training.count > 0 {
-                            self.reloadClassifiers()
-                        } else {
-                            self.classifiers = classifiers
-                            self.tableView.reloadData()
-                            // We can return here because we reload the entire table.
-                            return
+                        // Instead of blindly reloading the entire list, we should reload/insert/remove row.
+                        var indexesToAdd = [IndexPath]()
+                        for classifier in classifiers {
+                            if !self.classifiers.contains(where: { $0.isEqual(classifier) }) {
+                                print("inserting row \(indexesToAdd.count): \(classifier.name)")
+                                indexesToAdd.append(IndexPath(row: indexesToAdd.count, section: self.tableView.numberOfSections - 1))
+                            }
                         }
                         
-                        // If the count and head are the same nothing was deleted or added.
-                        if !(self.classifiers.first!.isEqual(classifiers.first!)
-                            && self.classifiers.count == classifiers.count) {
-                            
-                            // Instead of blindly reloading the entire list, we should use insert/remove row.
-                            var indexesToAdd = [IndexPath]()
-                            for classifier in classifiers {
-                                if !self.classifiers.contains(where: { $0.isEqual(classifier) }) {
-                                    indexesToAdd.append(IndexPath(row: indexesToAdd.count, section: self.tableView.numberOfSections - 1))
-                                }
+                        var indexesToDelete = [IndexPath]()
+                        for classifier in self.classifiers {
+                            if !classifiers.contains(where: { $0.isEqual(classifier)}) {
+                                let itemToDelete = self.classifiers.index(where: {$0.classifierId == classifier.classifierId})!
+                                print("removing row \(itemToDelete): \(classifier.name)")
+                                indexesToDelete.append(IndexPath(row: itemToDelete, section: self.tableView.numberOfSections - 1))
                             }
-                            
-                            var indexesToDelete = [IndexPath]()
-                            for classifier in self.classifiers {
-                                if !classifiers.contains(where: { $0.isEqual(classifier)}) {
-                                    let itemToDelete = self.classifiers.index(where: {$0.classifierId == classifier.classifierId})!
-                                    indexesToDelete.append(IndexPath(row: itemToDelete, section: self.tableView.numberOfSections - 1))
-                                }
+                        }
+                        
+                        var indexesToUpdate = [IndexPath]()
+                        for classifier in self.classifiers {
+                            // If the new classifier matches one of the old classifiers, but the status is different.
+                            if classifiers.contains(where: { $0.isEqual(classifier) && $0.status != classifier.status}) {
+                                let itemToUpdate = self.classifiers.index(where: {$0.classifierId == classifier.classifierId})!
+                                print("reloading row \(itemToUpdate): \(classifier.name)")
+                                indexesToUpdate.append(IndexPath(row: itemToUpdate, section: self.tableView.numberOfSections - 1))
                             }
-                            
-                            self.classifiers = classifiers
-                            self.tableView.beginUpdates()
-                            self.tableView.insertRows(at: indexesToAdd, with: .automatic)
-                            self.tableView.deleteRows(at: indexesToDelete, with: .automatic)
-                            self.tableView.endUpdates()
+                        }
+                        
+                        self.classifiers = classifiers
+                        self.tableView.beginUpdates()
+                        self.tableView.insertRows(at: indexesToAdd, with: .automatic)
+                        self.tableView.deleteRows(at: indexesToDelete, with: .automatic)
+                        self.tableView.reloadRows(at: indexesToUpdate, with: .automatic)
+                        self.tableView.endUpdates()
+                        
+                        // After we update our table, check if anything is still training.
+                        let training = self.classifiers.filter({ $0.status == .training || $0.status == .training })
+                        if training.count > 0 {
+                            // If things are still training recheck in 4 seconds.
+                            self.reloadClassifiers()
                         }
                     }
                 }
