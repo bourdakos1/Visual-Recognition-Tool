@@ -14,6 +14,7 @@ class ResultsTableViewController: UITableViewController {
     }
     
     var classes = [ClassResult]()
+    var faces = [FaceResult]()
 
     override func viewDidLoad() {
         super.viewDidLoad()

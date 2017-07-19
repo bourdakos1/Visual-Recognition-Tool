@@ -251,26 +251,121 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
         
         let reducedImage = image.resized(toWidth: 300)!
         
-        let classifierId = UserDefaults.standard.string(forKey: "classifier_id")
+        let classifierId = UserDefaults.standard.string(forKey: "classifier_id")?.lowercased() ?? "default"
         
-        let url = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify")!
+        if classifierId == "face detection" {
+            detectFaces(key: apiKey!, image: reducedImage)
+        } else {
+            classify(key: apiKey!, id: classifierId, image: reducedImage)
+        }
         
-        // TODO: add faces support
-        // let facesUrl = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/detect_faces")!
+        // Set the screen to our captured photo.
+        tempImageView.image = image
+        tempImageView.isHidden = false
         
+        photoButton.isHidden = true
+        cameraButton.isHidden = true
+        retakeButton.isHidden = false
+        classifiersButton.isHidden = true
+        
+        if let drawer = self.parent as? PulleyViewController {
+            drawer.navigationController?.navigationBar.isHidden = true
+        }
+        
+        // Show an activity indicator while its loading.
+        let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
+        
+        alert.view.tintColor = UIColor.black
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50)) as UIActivityIndicatorView
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        loadingIndicator.startAnimating()
+        
+        alert.view.addSubview(loadingIndicator)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func detectFaces(key: String, image: UIImage) {
+        let url = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/detect_faces")!
+            
         let urlRequest = URLRequest(url: url)
         
         let parameters: Parameters = [
-            "api_key": apiKey!,
-            "version": "2016-05-20",
-            "threshold": "0",
-            "classifier_ids": "\(classifierId?.lowercased() ?? "default")"
+            "api_key": key,
+            "version": "2016-05-20"
         ]
         
         do {
             let encodedURLRequest = try URLEncoding.queryString.encode(urlRequest, with: parameters)
             
-            Alamofire.upload(UIImageJPEGRepresentation(reducedImage, 0.4)!, to: encodedURLRequest.url!).responseJSON { response in
+            Alamofire.upload(UIImageJPEGRepresentation(image, 0.4)!, to: encodedURLRequest.url!).responseJSON { response in
+                // Start parsing json, throw error popup if it messed up.
+                guard let json = response.result.value as? [String: Any],
+                    let images = json["images"] as? [Any],
+                    let image = images.first as? [String: Any],
+                    let faces = image["faces"] as? [Any] else {
+                        print("Error: No faces found.")
+                        self.retake()
+                        let alert = UIAlertController(title: nil, message: "No faces found.", preferredStyle: .alert)
+                        
+                        let cancelAction = UIAlertAction(title: "Okay", style: .cancel) { action in
+                            print("cancel")
+                        }
+                        
+                        alert.addAction(cancelAction)
+                        
+                        self.dismiss(animated: true, completion: {
+                            self.present(alert, animated: true, completion: nil)
+                        })
+                        return
+                }
+                
+                var myNewData = [FaceResult]()
+                
+                let scale = self.tempImageView.frame.width / 300
+                print(scale)
+                
+                for case let faceResult in faces {
+                    let face = FaceResult(json: faceResult)!
+                    myNewData.append(face)
+                    
+                    let view = UIView()
+                    view.frame.size.width = face.location.width * scale
+                    view.frame.size.height = face.location.height * scale
+                    view.frame.origin.x = face.location.left * scale
+                    view.frame.origin.y = face.location.top * scale
+                    view.layer.borderWidth = 5
+                    view.layer.borderColor = UIColor.red.cgColor
+                    view.clipsToBounds = false
+                    self.tempImageView.addSubview(view)
+                }
+                
+                print(myNewData)
+                
+                // I'll set up the result later...
+                self.push(faces: myNewData)
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+    
+    func classify(key: String, id: String, image: UIImage) {
+        let url = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify")!
+
+        let urlRequest = URLRequest(url: url)
+        
+        let parameters: Parameters = [
+            "api_key": key,
+            "version": "2016-05-20",
+            "threshold": "0",
+            "classifier_ids": "\(id)"
+        ]
+        
+        do {
+            let encodedURLRequest = try URLEncoding.queryString.encode(urlRequest, with: parameters)
+            
+            Alamofire.upload(UIImageJPEGRepresentation(image, 0.4)!, to: encodedURLRequest.url!).responseJSON { response in
                 // Start parsing json, throw error popup if it messed up.
                 guard let json = response.result.value as? [String: Any],
                     let images = json["images"] as? [Any],
@@ -307,37 +402,20 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
         } catch {
             print("Error: \(error)")
         }
-        
-        // Set the screen to our captured photo.
-        tempImageView.image = image
-        tempImageView.isHidden = false
-        
-        photoButton.isHidden = true
-        cameraButton.isHidden = true
-        retakeButton.isHidden = false
-        classifiersButton.isHidden = true
-        
-        if let drawer = self.parent as? PulleyViewController {
-            drawer.navigationController?.navigationBar.isHidden = true
-        }
-        
-        // Show an activity indicator while its loading.
-        let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
-        
-        alert.view.tintColor = UIColor.black
-        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50)) as UIActivityIndicatorView
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-        loadingIndicator.startAnimating()
-        
-        alert.view.addSubview(loadingIndicator)
-        present(alert, animated: true, completion: nil)
     }
     
     // Convenience method for pushing data to the TableView.
     func push(data: [ClassResult]) {
         getTableController { tableController, drawer in
             tableController.classes = data
+            self.dismiss(animated: false, completion: nil)
+            drawer.setDrawerPosition(position: .partiallyRevealed, animated: true)
+        }
+    }
+    
+    func push(faces: [FaceResult]) {
+        getTableController { tableController, drawer in
+            tableController.faces = faces
             self.dismiss(animated: false, completion: nil)
             drawer.setDrawerPosition(position: .partiallyRevealed, animated: true)
         }
@@ -474,6 +552,7 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
     }
     
     @IBAction func retake() {
+        tempImageView.subviews.forEach({ $0.removeFromSuperview() })
         tempImageView.isHidden = true
         photoButton.isHidden = false
         cameraButton.isHidden = false
