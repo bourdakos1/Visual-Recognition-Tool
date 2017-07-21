@@ -11,7 +11,7 @@ import UIKit
 import AVFoundation
 import Photos
 
-class CameraViewController: UIViewController {
+class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     // Set the StatusBar color.
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -192,6 +192,11 @@ class CameraViewController: UIViewController {
                 session.addInput(videoDeviceInput)
                 self.videoDeviceInput = videoDeviceInput
                 
+                let captureMetadataOutput = AVCaptureMetadataOutput()
+                self.session.addOutput(captureMetadataOutput)
+                captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+                captureMetadataOutput.metadataObjectTypes = [AVMetadataObjectTypeQRCode]
+                
                 DispatchQueue.main.async {
                     /*
                      Why are we dispatching this to the main queue?
@@ -241,6 +246,10 @@ class CameraViewController: UIViewController {
         }
         
         session.commitConfiguration()
+    }
+    
+    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
+
     }
     
     @IBAction private func resumeInterruptedSession(_ resumeButton: UIButton) {

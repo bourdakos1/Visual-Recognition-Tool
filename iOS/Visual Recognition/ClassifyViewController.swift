@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 import Alamofire
 
-class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjectsDelegate, AKPickerViewDelegate, AKPickerViewDataSource {
+class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPickerViewDataSource {
     
     // Blurred effect for the API key form.
     let blurredEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
@@ -91,20 +91,23 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
             }
         }
         
-        if self.select >= self.classifiers.count {
-            self.pickerView.selectItem(self.classifiers.count - 1)
+        if select >= classifiers.count {
+            pickerView.selectItem(classifiers.count - 1)
         } else if select >= 0 {
-            self.pickerView.selectItem(select)
+            pickerView.selectItem(select)
         }
         
         // Load from Watson.
         let apiKey = UserDefaults.standard.string(forKey: "api_key")
         
-        if apiKey == nil {
+        // Just reset it if its not the same.
+        if apiKey == nil && !classifiers.first!.isEqual(Classifier.defaults.first!) && classifiers.count != Classifier.defaults.count {
             classifiers = []
-            classifiers.append(Classifier(name: "Default"))
+            classifiers.append(contentsOf: Classifier.defaults)
             pickerView.selectItem(0)
             pickerView.reloadData()
+            return
+        } else if apiKey == nil {
             return
         }
         
@@ -225,7 +228,7 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
     }
     
     // Delegate for QR Codes.
-    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
+    override func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
         // Check if the metadataObjects array is not nil and it contains at least one object.
         if metadataObjects == nil || metadataObjects.count == 0 {
             print("No QR code is detected")
@@ -267,6 +270,7 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
         cameraButton.isHidden = true
         retakeButton.isHidden = false
         classifiersButton.isHidden = true
+        pickerView.isHidden = true
         
         if let drawer = self.parent as? PulleyViewController {
             drawer.navigationController?.navigationBar.isHidden = true
@@ -335,15 +339,14 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
                     view.frame.origin.x = face.location.left * scale
                     view.frame.origin.y = face.location.top * scale
                     view.layer.borderWidth = 5
-                    view.layer.borderColor = UIColor.red.cgColor
+                    view.layer.borderColor = view.tintColor.cgColor
                     view.clipsToBounds = false
                     self.tempImageView.addSubview(view)
                 }
                 
                 print(myNewData)
                 
-                // I'll set up the result later...
-                self.push(faces: myNewData)
+                self.dismiss(animated: false, completion: nil)
             }
         } catch {
             print("Error: \(error)")
@@ -408,14 +411,6 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
     func push(data: [ClassResult]) {
         getTableController { tableController, drawer in
             tableController.classes = data
-            self.dismiss(animated: false, completion: nil)
-            drawer.setDrawerPosition(position: .partiallyRevealed, animated: true)
-        }
-    }
-    
-    func push(faces: [FaceResult]) {
-        getTableController { tableController, drawer in
-            tableController.faces = faces
             self.dismiss(animated: false, completion: nil)
             drawer.setDrawerPosition(position: .partiallyRevealed, animated: true)
         }
@@ -558,6 +553,7 @@ class ClassifyViewController: CameraViewController, AVCaptureMetadataOutputObjec
         cameraButton.isHidden = false
         retakeButton.isHidden = true
         classifiersButton.isHidden = false
+        pickerView.isHidden = false
         
         if let drawer = self.parent as? PulleyViewController {
             drawer.navigationController?.navigationBar.isHidden = false

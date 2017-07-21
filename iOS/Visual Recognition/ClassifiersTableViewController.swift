@@ -103,7 +103,7 @@ class ClassifiersTableViewController: UITableViewController {
         
         if apiKey == nil || apiKey == "" {
             classifiers = []
-            classifiers.append(Classifier(name: "Default"))
+            classifiers.append(contentsOf: Classifier.defaults)
             // This should be okay.
             tableView.reloadData()
             refreshControl?.endRefreshing()
