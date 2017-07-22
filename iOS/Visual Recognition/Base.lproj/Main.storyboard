@@ -458,7 +458,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="0de-JU-aQR" kind="show" identifier="showClasses" id="hHE-2h-Q3Y"/>
+                                    <segue destination="0de-JU-aQR" kind="show" identifier="showClasses" id="THH-vb-X36"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="cell2" rowHeight="181" id="aRv-Bq-Mou" customClass="ClassiferTableViewCell" customModule="Visual_Recognition" customModuleProvider="target">
@@ -560,6 +560,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </refreshControl>
+                    <connections>
+                        <segue destination="zjM-K8-kVZ" kind="presentation" identifier="showSnapper" id="bSV-ur-VVd"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eFi-cR-4Dh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -700,7 +703,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hjN-QF-3d9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2290" y="-398"/>
+            <point key="canvasLocation" x="2385" y="-1206"/>
         </scene>
         <!--Title-->
         <scene sceneID="xNn-c8-QgK">
@@ -747,9 +750,6 @@
                     <toolbarItems>
                         <barButtonItem image="cam" id="O3K-pa-TFw">
                             <color key="tintColor" red="0.5725490196078431" green="0.5725490196078431" blue="0.5725490196078431" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <segue destination="zjM-K8-kVZ" kind="presentation" identifier="showSnapper" id="LAS-Yr-Vd7"/>
-                            </connections>
                         </barButtonItem>
                         <barButtonItem image="phot" id="VK6-6K-iVA">
                             <color key="tintColor" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="calibratedRGB"/>
@@ -771,7 +771,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ibe-sp-1Od" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3153" y="-398"/>
+            <point key="canvasLocation" x="3265" y="-1206"/>
         </scene>
         <!--Snapper View Controller-->
         <scene sceneID="iqg-Wg-M9o">
@@ -792,23 +792,33 @@
                                     <outletCollection property="gestureRecognizers" destination="5bX-Sp-W1R" appends="YES" id="cwS-k0-yq3"/>
                                 </connections>
                             </view>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" text="Start by taking at least 10 photos of an object." textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W0M-Zs-zc7">
+                                <rect key="frame" x="6.5" y="315" width="361.5" height="36.5"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="do6-7o-qgl">
-                                <rect key="frame" x="16" y="558.5" width="60" height="60"/>
+                                <rect key="frame" x="16" y="26.5" width="290" height="60"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="pBj-vy-tkE"/>
-                                    <constraint firstAttribute="width" constant="60" id="vAF-cX-HNI"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uf7-W4-7Sg">
-                                <rect key="frame" x="26" y="40" width="33" height="33"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0FB-iI-Bq0">
+                                <rect key="frame" x="16" y="26.5" width="60" height="60"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="33" id="Z1f-Y7-prZ"/>
-                                    <constraint firstAttribute="width" constant="33" id="oDr-wN-FCh"/>
+                                    <constraint firstAttribute="height" constant="60" id="Akk-ig-QyY"/>
+                                    <constraint firstAttribute="width" constant="60" id="su1-Mh-MY7"/>
                                 </constraints>
-                                <state key="normal" image="reverse.png"/>
-                                <connections>
-                                    <action selector="changeCamera:" destination="zjM-K8-kVZ" eventType="touchUpInside" id="xQ3-9q-Orb"/>
-                                </connections>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wtD-V1-8mm">
+                                <rect key="frame" x="276" y="566.5" width="83" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="OTM-jf-YfM"/>
+                                    <constraint firstAttribute="width" constant="83" id="pLM-rB-oSb"/>
+                                </constraints>
+                                <state key="normal" image="next.png"/>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xcv-Pf-cMj">
                                 <rect key="frame" x="149" y="550" width="77" height="77"/>
@@ -821,21 +831,15 @@
                                     <action selector="capturePhoto:" destination="zjM-K8-kVZ" eventType="touchUpInside" id="6ea-Hn-rEK"/>
                                 </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0FB-iI-Bq0">
-                                <rect key="frame" x="16" y="558" width="60" height="60"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uf7-W4-7Sg">
+                                <rect key="frame" x="16" y="561" width="55" height="55"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="Akk-ig-QyY"/>
-                                    <constraint firstAttribute="width" constant="60" id="su1-Mh-MY7"/>
+                                    <constraint firstAttribute="height" constant="55" id="Z1f-Y7-prZ"/>
+                                    <constraint firstAttribute="width" constant="55" id="oDr-wN-FCh"/>
                                 </constraints>
-                            </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BaX-FG-sQv">
-                                <rect key="frame" x="16" y="558" width="60" height="60"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="60" id="13u-xN-79E"/>
-                                    <constraint firstAttribute="height" constant="60" id="VEP-xv-Sg2"/>
-                                </constraints>
+                                <state key="normal" image="reverse_solid.png"/>
                                 <connections>
-                                    <segue destination="yNw-u1-LOA" kind="unwind" unwindAction="unwindToImagesWithSegue:" id="rrI-ow-TkE"/>
+                                    <action selector="changeCamera:" destination="zjM-K8-kVZ" eventType="touchUpInside" id="xQ3-9q-Orb"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QUY-H0-coo">
@@ -846,7 +850,7 @@
                                 </constraints>
                                 <state key="normal" image="cancel.png"/>
                                 <connections>
-                                    <segue destination="yNw-u1-LOA" kind="unwind" unwindAction="unwindToImagesWithSegue:" id="qyb-Jl-May"/>
+                                    <segue destination="yNw-u1-LOA" kind="unwind" unwindAction="unwindToClassifiersWithSegue:" id="FYL-85-ygN"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="scrim.png" translatesAutoresizingMaskIntoConstraints="NO" id="YWt-BL-vyv">
@@ -858,36 +862,40 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="BaX-FG-sQv" firstAttribute="centerY" secondItem="do6-7o-qgl" secondAttribute="centerY" id="5W2-m3-BqM"/>
-                            <constraint firstItem="Uf7-W4-7Sg" firstAttribute="leading" secondItem="98g-Sh-LsG" secondAttribute="leadingMargin" constant="10" id="7gV-bK-tCx"/>
+                            <constraint firstItem="QUY-H0-coo" firstAttribute="centerY" secondItem="do6-7o-qgl" secondAttribute="centerY" id="2DK-ml-TPX"/>
+                            <constraint firstItem="Uf7-W4-7Sg" firstAttribute="leading" secondItem="98g-Sh-LsG" secondAttribute="leadingMargin" id="5Kx-n5-79a"/>
+                            <constraint firstItem="do6-7o-qgl" firstAttribute="leading" secondItem="98g-Sh-LsG" secondAttribute="leadingMargin" id="6QM-Tf-zVt"/>
                             <constraint firstItem="vd9-CM-w7K" firstAttribute="top" secondItem="xcv-Pf-cMj" secondAttribute="bottom" constant="40" id="7tC-sn-4L0"/>
                             <constraint firstItem="U26-ZO-1Um" firstAttribute="leading" secondItem="98g-Sh-LsG" secondAttribute="leading" id="AJX-wN-bae"/>
-                            <constraint firstItem="0FB-iI-Bq0" firstAttribute="centerY" secondItem="do6-7o-qgl" secondAttribute="centerY" id="F7I-YJ-K8T"/>
+                            <constraint firstItem="xcv-Pf-cMj" firstAttribute="centerY" secondItem="wtD-V1-8mm" secondAttribute="centerY" id="BA8-Tr-R91"/>
+                            <constraint firstItem="QUY-H0-coo" firstAttribute="leading" secondItem="do6-7o-qgl" secondAttribute="trailing" constant="20" id="Cdw-6A-fpu"/>
                             <constraint firstItem="U26-ZO-1Um" firstAttribute="top" secondItem="98g-Sh-LsG" secondAttribute="top" constant="-0.10000000000000001" id="K3H-bO-4qU"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="wtD-V1-8mm" secondAttribute="trailing" id="MZB-Q3-Tzy"/>
                             <constraint firstAttribute="trailing" secondItem="YWt-BL-vyv" secondAttribute="trailing" id="NYq-G1-DGZ"/>
-                            <constraint firstItem="xcv-Pf-cMj" firstAttribute="centerY" secondItem="do6-7o-qgl" secondAttribute="centerY" id="PDK-5m-mmw"/>
-                            <constraint firstItem="do6-7o-qgl" firstAttribute="leading" secondItem="98g-Sh-LsG" secondAttribute="leadingMargin" id="TVL-Lo-4Cv"/>
+                            <constraint firstItem="0FB-iI-Bq0" firstAttribute="leading" secondItem="98g-Sh-LsG" secondAttribute="leadingMargin" id="OWs-tk-xgB"/>
                             <constraint firstItem="YWt-BL-vyv" firstAttribute="top" secondItem="98g-Sh-LsG" secondAttribute="top" id="Ulj-0n-FYp"/>
                             <constraint firstAttribute="trailing" secondItem="U26-ZO-1Um" secondAttribute="trailing" id="Xsm-eG-HvX"/>
                             <constraint firstAttribute="trailingMargin" secondItem="QUY-H0-coo" secondAttribute="trailing" id="bLb-hv-K9h"/>
                             <constraint firstItem="xcv-Pf-cMj" firstAttribute="centerX" secondItem="98g-Sh-LsG" secondAttribute="centerX" id="cCC-FL-xrK"/>
-                            <constraint firstItem="Uf7-W4-7Sg" firstAttribute="top" secondItem="jfY-j1-ZMq" secondAttribute="bottom" constant="20" id="nL9-rc-k3q"/>
-                            <constraint firstItem="BaX-FG-sQv" firstAttribute="centerX" secondItem="do6-7o-qgl" secondAttribute="centerX" id="rBH-DW-9hN"/>
+                            <constraint firstItem="W0M-Zs-zc7" firstAttribute="centerY" secondItem="98g-Sh-LsG" secondAttribute="centerY" id="dJj-OQ-Jrh"/>
+                            <constraint firstItem="xcv-Pf-cMj" firstAttribute="centerY" secondItem="Uf7-W4-7Sg" secondAttribute="centerY" id="oaI-Pg-fac"/>
                             <constraint firstItem="YWt-BL-vyv" firstAttribute="leading" secondItem="98g-Sh-LsG" secondAttribute="leading" id="tWu-VE-jON"/>
+                            <constraint firstItem="QUY-H0-coo" firstAttribute="centerY" secondItem="0FB-iI-Bq0" secondAttribute="centerY" id="uKw-ir-v8J"/>
+                            <constraint firstItem="W0M-Zs-zc7" firstAttribute="centerX" secondItem="98g-Sh-LsG" secondAttribute="centerX" id="wEj-R6-qma"/>
                             <constraint firstItem="vd9-CM-w7K" firstAttribute="top" secondItem="U26-ZO-1Um" secondAttribute="bottom" id="x1x-RU-2zx"/>
-                            <constraint firstItem="0FB-iI-Bq0" firstAttribute="centerX" secondItem="do6-7o-qgl" secondAttribute="centerX" id="ysV-w8-PvB"/>
                             <constraint firstItem="QUY-H0-coo" firstAttribute="top" secondItem="jfY-j1-ZMq" secondAttribute="bottom" constant="20" id="zWg-4f-89I"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="cameraButton" destination="Uf7-W4-7Sg" id="AuG-IL-dkw"/>
                         <outlet property="height" destination="Akk-ig-QyY" id="t3L-e8-8J4"/>
+                        <outlet property="infoLabel" destination="W0M-Zs-zc7" id="TUz-1a-Kj4"/>
+                        <outlet property="nextButton" destination="wtD-V1-8mm" id="aIn-IY-061"/>
                         <outlet property="photoButton" destination="xcv-Pf-cMj" id="QlS-pX-X5u"/>
                         <outlet property="previewView" destination="U26-ZO-1Um" id="SXd-BW-c1w"/>
                         <outlet property="thumbnail" destination="do6-7o-qgl" id="lZw-nf-ii8"/>
                         <outlet property="thumbnailImage" destination="0FB-iI-Bq0" id="U9q-pc-rvw"/>
                         <outlet property="width" destination="su1-Mh-MY7" id="L5o-pQ-jnK"/>
-                        <segue destination="yNw-u1-LOA" kind="unwind" identifier="unwindToImages" unwindAction="unwindToImagesWithSegue:" id="GyO-bi-n7g"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eJd-hN-4tU" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -898,7 +906,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3983" y="-398"/>
+            <point key="canvasLocation" x="2384.8000000000002" y="-398.05097451274366"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Woy-H8-uLq">
@@ -936,8 +944,8 @@
         <image name="classifiers.png" width="165" height="165"/>
         <image name="create.png" width="90" height="90"/>
         <image name="library.png" width="165" height="165"/>
+        <image name="next.png" width="248" height="131"/>
         <image name="phot" width="31" height="51"/>
-        <image name="reverse.png" width="100" height="100"/>
         <image name="reverse_solid.png" width="165" height="165"/>
         <image name="scrim.png" width="41" height="133"/>
         <image name="select.png" width="36" height="18"/>

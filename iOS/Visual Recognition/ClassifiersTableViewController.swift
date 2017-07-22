@@ -68,7 +68,23 @@ class ClassifiersTableViewController: UITableViewController {
                 self.tableView.endUpdates()
             }
             
+            
+            // Create a new class thats blank
+            let pendingClassClassName: String = String(describing: PendingClass.self)
+            
+            let pendingClass: PendingClass = NSEntityDescription.insertNewObject(forEntityName: pendingClassClassName, into: DatabaseController.getContext()) as! PendingClass
+            
+            pendingClass.name = String()
+            pendingClass.created = Date()
+            
+            pendingClassifier.addToRelationship(pendingClass)
+            
+            self.pendingClassifier = pendingClassifier
+            self.pendingClass = pendingClass
+            
             DatabaseController.saveContext()
+            
+            self.performSegue(withIdentifier: "showSnapper", sender: nil)
         }
         
         // disable the 'save' button initially
@@ -481,11 +497,22 @@ class ClassifiersTableViewController: UITableViewController {
         }
     }
     
+    @IBAction func unwindToClassifiers(segue: UIStoryboardSegue) {
+        // Unwind
+    }
+    
+    var pendingClass = PendingClass()
+    var pendingClassifier = PendingClassifier()
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if pending.count > 0 && segue.identifier == "showClasses" && (tableView.numberOfSections > 1 && tableView.indexPathForSelectedRow?.section == 0),
             let destination = segue.destination as? ClassesCollectionViewController,
             let index = tableView.indexPathForSelectedRow?.item {
             destination.classifier = pending[index]
+        } else if  segue.identifier == "showSnapper",
+            let destination = segue.destination as? SnapperViewController {
+            destination.pendingClass = pendingClass
+            destination.classifier = pendingClassifier
         }
     }
 }

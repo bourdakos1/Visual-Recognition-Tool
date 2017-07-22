@@ -19,6 +19,9 @@ class SnapperViewController: CameraViewController {
     @IBOutlet weak var width: NSLayoutConstraint!
     @IBOutlet weak var height: NSLayoutConstraint!
     
+    @IBOutlet var nextButton: UIButton!
+    @IBOutlet var infoLabel: UITextView!
+    
     // MARK: View Controller Life Cycle
     
     override func viewDidAppear(_ animated: Bool) {
@@ -26,18 +29,22 @@ class SnapperViewController: CameraViewController {
         
         // load the thumbnail of images.
         // This needs to happen in view did appear so it loads in the right spot.
-        let border = UIView()
-        let frame = CGRect(x: self.thumbnailImage.frame.origin.x - 1.0, y: self.thumbnailImage.frame.origin.y - 1.0, width: self.thumbnailImage.frame.size.height + 2.0, height: self.thumbnailImage.frame.size.height + 2.0)
-        border.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.25)
-        border.frame = frame
-        border.layer.cornerRadius = 7.0
-        self.view.insertSubview(border, belowSubview: self.thumbnailImage)
+//        let border = UIView()
+//        let frame = CGRect(x: thumbnail.frame.origin.x - 1.0, y: thumbnail.frame.origin.y - 1.0, width: thumbnail.frame.size.width + 2.0, height: thumbnail.frame.size.height + 2.0)
+//        border.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.25)
+//        border.frame = frame
+//        border.layer.cornerRadius = 7.0
+//        self.view.insertSubview(thumbar, belowSubview: thumbnail)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.thumbnailImage.layer.cornerRadius = 5.0
+        thumbnailImage.layer.cornerRadius = 5.0
+        infoLabel.layer.cornerRadius = 5.0
+        infoLabel.clipsToBounds = true
+        
+        infoLabel.textContainerInset = UIEdgeInsetsMake(20, 20, 20, 20)
         
         grabPhoto()
     }
@@ -65,20 +72,123 @@ class SnapperViewController: CameraViewController {
         }
     }
     
+    var images = [UIImageView]()
     override func captured(image: UIImage) {
         DispatchQueue.main.async { [unowned self] in
-            self.width.constant = 5
-            self.height.constant = 5
-            self.thumbnailImage.image = image
-            self.view.layoutIfNeeded()
-            self.width.constant = 60
-            self.height.constant = 60
-            UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: { () -> Void in
-                self.thumbnailImage.alpha = 1.0
-            }, completion: nil)
-            UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: { () -> Void in
-                self.view.layoutIfNeeded()
-            }, completion: nil)
+            if self.images.count == 0 {
+                let border = UIView()
+                let frame = CGRect(x: self.thumbnail.frame.origin.x - 1.0, y: self.thumbnail.frame.origin.y - 1.0, width: self.thumbnail.frame.size.width + 2.0, height: self.thumbnail.frame.size.height + 2.0)
+                border.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.25)
+                border.frame = frame
+                border.layer.cornerRadius = 7.0
+                self.view.insertSubview(border, belowSubview: self.thumbnail)
+            }
+            self.infoLabel.isHidden = true
+            // 9 because we haven't added the image to the array yet.
+            if self.images.count >= 9 {
+                self.nextButton.isEnabled = true
+            } else {
+                self.nextButton.isEnabled = false
+            }
+            if self.images.count < 10 {
+                let newImageView = UIImageView()
+                self.images.append(newImageView)
+                
+                newImageView.contentMode = .scaleAspectFill
+                newImageView.frame = self.thumbnailImage.frame
+                newImageView.frame.origin.x = newImageView.frame.origin.x + (((self.thumbnail.frame.width - 1) / 10 + 1) * CGFloat(self.images.count - 1)) - CGFloat(self.images.count - 1)
+                newImageView.frame.size.height = 50
+                newImageView.frame.size.width = self.thumbnail.frame.width / 20
+                self.view.insertSubview(newImageView, aboveSubview: self.thumbnail)
+                newImageView.image = image
+                
+                if self.images.count == 1 {
+                    let rect = CGRect(x: 0, y: 0, width: self.thumbnail.frame.width / 10 + 1, height: 60)
+                    let maskPath = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topLeft, .bottomLeft, .topRight, .bottomRight], cornerRadii: CGSize(width: 5.0, height: 5.0))
+                    
+                    let shape = CAShapeLayer()
+                    shape.path = maskPath.cgPath
+                    self.images[0].layer.mask = shape
+                    
+                    let frameLayer = CAShapeLayer()
+                    frameLayer.path = maskPath.cgPath
+                    frameLayer.lineWidth = 1.0
+                    frameLayer.strokeColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6).cgColor
+                    frameLayer.fillColor = nil
+                    if let layers = self.images[0].layer.sublayers {
+                        for layer in layers {
+                            layer.removeFromSuperlayer()
+                        }
+                    }
+                    self.images[0].layer.addSublayer(frameLayer)
+                } else {
+                    let rect = CGRect(x: 0, y: 0, width: self.thumbnail.frame.width / 10 + 1, height: 60)
+                    
+                    for thingy in self.images {
+                        self.images.last!.layer.mask = nil
+                        let maskPath = UIBezierPath(roundedRect: rect, byRoundingCorners: [], cornerRadii: CGSize(width: 5.0, height: 5.0))
+                        
+                        let shape = CAShapeLayer()
+                        shape.path = maskPath.cgPath
+                        thingy.layer.mask = shape
+                        
+                        let frameLayer = CAShapeLayer()
+                        frameLayer.path = maskPath.cgPath
+                        frameLayer.lineWidth = 1.0
+                        frameLayer.strokeColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6).cgColor
+                        frameLayer.fillColor = nil
+                        
+                        if let layers = thingy.layer.sublayers {
+                            for layer in layers {
+                                layer.removeFromSuperlayer()
+                            }
+                        }
+                        thingy.layer.addSublayer(frameLayer)
+                    }
+                    
+                    let maskPath = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topLeft, .bottomLeft], cornerRadii: CGSize(width: 5.0, height: 5.0))
+                    
+                    let shape = CAShapeLayer()
+                    shape.path = maskPath.cgPath
+                    self.images[0].layer.mask = shape
+                    
+                    let frameLayer = CAShapeLayer()
+                    frameLayer.path = maskPath.cgPath
+                    frameLayer.lineWidth = 1.0
+                    frameLayer.strokeColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6).cgColor
+                    frameLayer.fillColor = nil
+                    if let layers = self.images[0].layer.sublayers {
+                        for layer in layers {
+                            layer.removeFromSuperlayer()
+                        }
+                    }
+                    self.images[0].layer.addSublayer(frameLayer)
+                    
+                    let maskPath2 = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topRight, .bottomRight], cornerRadii: CGSize(width: 5.0, height: 5.0))
+                    
+                    let shape2 = CAShapeLayer()
+                    shape2.path = maskPath2.cgPath
+                    self.images.last!.layer.mask = shape2
+                    
+                    let frameLayer2 = CAShapeLayer()
+                    frameLayer2.path = maskPath2.cgPath
+                    frameLayer2.lineWidth = 1.0
+                    frameLayer2.strokeColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6).cgColor
+                    frameLayer2.fillColor = nil
+                    if let layers = self.images.last!.layer.sublayers {
+                        for layer in layers {
+                            layer.removeFromSuperlayer()
+                        }
+                    }
+                    self.images.last!.layer.addSublayer(frameLayer2)
+                }
+                
+                UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: { () -> Void in
+                    newImageView.frame.size.width = self.thumbnail.frame.width / 10 + 1
+                    newImageView.frame.size.height = 60
+                    newImageView.alpha = 1.0
+                }, completion: nil)
+            }
         }
         
         let reducedImage = image.resized(toWidth: 300)!
