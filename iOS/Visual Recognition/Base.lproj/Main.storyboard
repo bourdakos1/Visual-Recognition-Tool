@@ -792,8 +792,8 @@
                                     <outletCollection property="gestureRecognizers" destination="5bX-Sp-W1R" appends="YES" id="cwS-k0-yq3"/>
                                 </connections>
                             </view>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" text="Start by taking at least 10 photos of an object." textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W0M-Zs-zc7">
-                                <rect key="frame" x="6.5" y="315" width="361.5" height="36.5"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" text="Start by taking at least 10 photos, with a variety of lighting and angles, of the first subject you want to classifiy." textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W0M-Zs-zc7">
+                                <rect key="frame" x="20" y="315" width="335" height="36.5"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -859,6 +859,26 @@
                                     <constraint firstAttribute="height" constant="44" id="Zni-8T-o7o"/>
                                 </constraints>
                             </imageView>
+                            <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yqb-of-jAt">
+                                <rect key="frame" x="286" y="22.5" width="24" height="24"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pek-gJ-u0x">
+                                        <rect key="frame" x="6" y="0.0" width="12" height="24"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.47058823529999999" green="0.38823529410000002" blue="0.92549019610000005" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="24" id="9je-vG-4En"/>
+                                    <constraint firstAttribute="height" constant="24" id="Bmc-hB-hGn"/>
+                                    <constraint firstItem="Pek-gJ-u0x" firstAttribute="top" secondItem="Yqb-of-jAt" secondAttribute="top" id="OJt-Lb-tcp"/>
+                                    <constraint firstAttribute="trailing" secondItem="Pek-gJ-u0x" secondAttribute="trailing" constant="6" id="PeG-3c-1gx"/>
+                                    <constraint firstAttribute="bottom" secondItem="Pek-gJ-u0x" secondAttribute="bottom" id="QR8-P3-AUD"/>
+                                    <constraint firstItem="Pek-gJ-u0x" firstAttribute="leading" secondItem="Yqb-of-jAt" secondAttribute="leading" constant="6" id="emt-da-zgf"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -871,18 +891,22 @@
                             <constraint firstItem="QUY-H0-coo" firstAttribute="leading" secondItem="do6-7o-qgl" secondAttribute="trailing" constant="20" id="Cdw-6A-fpu"/>
                             <constraint firstItem="U26-ZO-1Um" firstAttribute="top" secondItem="98g-Sh-LsG" secondAttribute="top" constant="-0.10000000000000001" id="K3H-bO-4qU"/>
                             <constraint firstAttribute="trailingMargin" secondItem="wtD-V1-8mm" secondAttribute="trailing" id="MZB-Q3-Tzy"/>
+                            <constraint firstItem="Yqb-of-jAt" firstAttribute="trailing" secondItem="do6-7o-qgl" secondAttribute="trailing" constant="4" id="MaJ-Jg-DKk"/>
                             <constraint firstAttribute="trailing" secondItem="YWt-BL-vyv" secondAttribute="trailing" id="NYq-G1-DGZ"/>
                             <constraint firstItem="0FB-iI-Bq0" firstAttribute="leading" secondItem="98g-Sh-LsG" secondAttribute="leadingMargin" id="OWs-tk-xgB"/>
+                            <constraint firstItem="Yqb-of-jAt" firstAttribute="top" secondItem="do6-7o-qgl" secondAttribute="top" constant="-4" id="UTI-TY-VLJ"/>
                             <constraint firstItem="YWt-BL-vyv" firstAttribute="top" secondItem="98g-Sh-LsG" secondAttribute="top" id="Ulj-0n-FYp"/>
                             <constraint firstAttribute="trailing" secondItem="U26-ZO-1Um" secondAttribute="trailing" id="Xsm-eG-HvX"/>
                             <constraint firstAttribute="trailingMargin" secondItem="QUY-H0-coo" secondAttribute="trailing" id="bLb-hv-K9h"/>
                             <constraint firstItem="xcv-Pf-cMj" firstAttribute="centerX" secondItem="98g-Sh-LsG" secondAttribute="centerX" id="cCC-FL-xrK"/>
                             <constraint firstItem="W0M-Zs-zc7" firstAttribute="centerY" secondItem="98g-Sh-LsG" secondAttribute="centerY" id="dJj-OQ-Jrh"/>
                             <constraint firstItem="xcv-Pf-cMj" firstAttribute="centerY" secondItem="Uf7-W4-7Sg" secondAttribute="centerY" id="oaI-Pg-fac"/>
+                            <constraint firstItem="W0M-Zs-zc7" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="98g-Sh-LsG" secondAttribute="leading" constant="20" id="oph-DK-X4L"/>
                             <constraint firstItem="YWt-BL-vyv" firstAttribute="leading" secondItem="98g-Sh-LsG" secondAttribute="leading" id="tWu-VE-jON"/>
                             <constraint firstItem="QUY-H0-coo" firstAttribute="centerY" secondItem="0FB-iI-Bq0" secondAttribute="centerY" id="uKw-ir-v8J"/>
                             <constraint firstItem="W0M-Zs-zc7" firstAttribute="centerX" secondItem="98g-Sh-LsG" secondAttribute="centerX" id="wEj-R6-qma"/>
                             <constraint firstItem="vd9-CM-w7K" firstAttribute="top" secondItem="U26-ZO-1Um" secondAttribute="bottom" id="x1x-RU-2zx"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="W0M-Zs-zc7" secondAttribute="trailing" constant="20" id="xDN-wm-vGI"/>
                             <constraint firstItem="QUY-H0-coo" firstAttribute="top" secondItem="jfY-j1-ZMq" secondAttribute="bottom" constant="20" id="zWg-4f-89I"/>
                         </constraints>
                     </view>
@@ -891,6 +915,8 @@
                         <outlet property="height" destination="Akk-ig-QyY" id="t3L-e8-8J4"/>
                         <outlet property="infoLabel" destination="W0M-Zs-zc7" id="TUz-1a-Kj4"/>
                         <outlet property="nextButton" destination="wtD-V1-8mm" id="aIn-IY-061"/>
+                        <outlet property="numLabel" destination="Pek-gJ-u0x" id="8PG-Cb-GbR"/>
+                        <outlet property="numLabelView" destination="Yqb-of-jAt" id="Oz6-95-OtU"/>
                         <outlet property="photoButton" destination="xcv-Pf-cMj" id="QlS-pX-X5u"/>
                         <outlet property="previewView" destination="U26-ZO-1Um" id="SXd-BW-c1w"/>
                         <outlet property="thumbnail" destination="do6-7o-qgl" id="lZw-nf-ii8"/>
