@@ -36,10 +36,10 @@ class ClassifiersTableViewController: UITableViewController {
     weak var AddAlertSaveAction: UIAlertAction?
     
     @IBAction func createClassifier() {
-        let alert = UIAlertController(title: "New Classifier", message: "Enter a name for this classifier.", preferredStyle: .alert)
+        let alert = UIAlertController(title: "New Classifier", message: "What do you want to classify?", preferredStyle: .alert)
         
         alert.addTextField(configurationHandler: {(textField: UITextField) in
-            textField.placeholder = "Title"
+            textField.placeholder = "Classifier Name"
             textField.addTarget(self, action: #selector(self.handleTextDidChange(_:)), for: .editingChanged)
         })
         

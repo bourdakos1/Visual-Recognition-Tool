@@ -212,5 +212,13 @@ class SnapperViewController: CameraViewController {
             print(error.localizedDescription)
         }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if  segue.identifier == "showNameClass",
+            let destination = segue.destination as? NameClassViewController {
+            destination.pendingClass = pendingClass
+            destination.classifier = classifier
+        }
+    }
 }
 
