@@ -26,9 +26,9 @@ class TrainViewController: UIViewController {
         alert.view.addSubview(loadingIndicator)
         present(alert, animated: true, completion: nil)
         classifier.train(completion: { response in
-            self.dismiss(animated: false, completion: nil)
-            self.performSegue(withIdentifier: "unwindToClassifiersFromTrain", sender: self)
-            print(response)
+            self.dismiss(animated: false, completion: {
+                self.performSegue(withIdentifier: "unwindToClassifiersFromTrain", sender: self)
+            })
         })
     }
     

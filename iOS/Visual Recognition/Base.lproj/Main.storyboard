@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13156.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FDT-sa-UqY">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13168.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FDT-sa-UqY">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13137.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13147.4"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -820,7 +820,7 @@
                                 </constraints>
                                 <state key="normal" image="next.png"/>
                                 <connections>
-                                    <segue destination="Uxd-xu-Mdc" kind="show" identifier="showNameClass" id="HAP-bw-7Id"/>
+                                    <segue destination="Uxd-xu-Mdc" kind="showDetail" identifier="showNameClass" action="showViewController:sender:" id="HAP-bw-7Id"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xcv-Pf-cMj">
@@ -862,7 +862,7 @@
                                     <constraint firstAttribute="height" constant="44" id="Zni-8T-o7o"/>
                                 </constraints>
                             </imageView>
-                            <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yqb-of-jAt">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yqb-of-jAt">
                                 <rect key="frame" x="286" y="22.5" width="24" height="24"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pek-gJ-u0x">
@@ -945,7 +945,7 @@
                         <viewControllerLayoutGuide type="top" id="Y0a-xm-zWS"/>
                         <viewControllerLayoutGuide type="bottom" id="CFK-oF-1HQ"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="YES" id="bJw-be-hhW">
+                    <view key="view" contentMode="scaleToFill" id="bJw-be-hhW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -1004,8 +1004,8 @@
                     <connections>
                         <outlet property="container" destination="Biv-rh-fPw" id="7O7-RR-IH9"/>
                         <outlet property="textField" destination="Sll-F4-1i1" id="wZq-8S-675"/>
-                        <segue destination="80G-lb-06F" kind="show" identifier="askToTrain" id="5Ie-v3-Eek"/>
-                        <segue destination="zjM-K8-kVZ" kind="show" identifier="newClass" id="dyL-s0-16q"/>
+                        <segue destination="80G-lb-06F" kind="showDetail" identifier="askToTrain" action="showViewController:sender:" id="5Ie-v3-Eek"/>
+                        <segue destination="yra-Be-iOR" kind="unwind" identifier="newClass" unwindAction="unwindToSnapperFromNameWithSegue:" id="N4h-W4-7pA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yx8-i9-Vnl" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1028,7 +1028,7 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="YES" reuseIdentifier="imageCell" id="ILv-M3-wOW">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="imageCell" id="ILv-M3-wOW">
                                 <rect key="frame" x="0.0" y="0.0" width="171" height="156"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -1066,7 +1066,7 @@
                         <viewControllerLayoutGuide type="top" id="H25-2F-5tq"/>
                         <viewControllerLayoutGuide type="bottom" id="yab-LY-lKG"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="YES" id="SFn-FL-LMe">
+                    <view key="view" contentMode="scaleToFill" id="SFn-FL-LMe">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -1082,7 +1082,7 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="YES" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Bkd-PH-qoV">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Bkd-PH-qoV">
                                 <rect key="frame" x="24" y="237.5" width="326" height="192"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Train your classifier?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mGe-Ak-nL6">
@@ -1091,7 +1091,7 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gd6-T4-6NE">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gd6-T4-6NE">
                                         <rect key="frame" x="43" y="61" width="240" height="10"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -1118,7 +1118,7 @@
                                         <rect key="frame" x="88.5" y="162" width="149" height="30"/>
                                         <state key="normal" title="Add another category"/>
                                         <connections>
-                                            <segue destination="zjM-K8-kVZ" kind="show" identifier="additionalClasses" id="yOG-F6-1Kf"/>
+                                            <segue destination="IV5-Cr-ypJ" kind="unwind" identifier="additionalClasses" unwindAction="unwindToSnapperFromTrainWithSegue:" id="btH-i4-NUu"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -1183,8 +1183,5 @@
         <image name="select.png" width="36" height="18"/>
         <image name="train" width="67" height="51"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="yOG-F6-1Kf"/>
-    </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.47058823529411764" green="0.38823529411764707" blue="0.92549019607843142" alpha="1" colorSpace="calibratedRGB"/>
 </document>

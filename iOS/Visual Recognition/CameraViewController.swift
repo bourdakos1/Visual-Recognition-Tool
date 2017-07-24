@@ -69,7 +69,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
          take a long time. We dispatch session setup to the sessionQueue so
          that the main queue isn't blocked, which keeps the UI responsive.
          */
-        sessionQueue.async { [unowned self] in
+        sessionQueue.async {
             self.configureSession()
         }
     }
@@ -86,7 +86,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 self.isSessionRunning = self.session.isRunning
                 
             case .notAuthorized:
-                DispatchQueue.main.async { [unowned self] in
+                DispatchQueue.main.async {
                     let changePrivacySetting = "AVCam doesn't have permission to use the camera, please change privacy settings"
                     let message = NSLocalizedString(changePrivacySetting, comment: "Alert message when the user has denied access to the camera")
                     let alertController = UIAlertController(title: "AVCam", message: message, preferredStyle: .alert)
@@ -105,7 +105,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 }
                 
             case .configurationFailed:
-                DispatchQueue.main.async { [unowned self] in
+                DispatchQueue.main.async {
                     let alertMsg = "Alert message when something goes wrong during capture session configuration"
                     let message = NSLocalizedString("Unable to capture media", comment: alertMsg)
                     let alertController = UIAlertController(title: "AVCam", message: message, preferredStyle: .alert)
@@ -174,12 +174,12 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             var defaultVideoDevice: AVCaptureDevice?
             
             // Choose the back dual camera if available, otherwise default to a wide angle camera.
-            if let dualCameraDevice = AVCaptureDevice.defaultDevice(withDeviceType: .builtInDualCamera, mediaType: AVMediaTypeVideo, position: .back) {
+            if let dualCameraDevice = AVCaptureDevice.__defaultDevice(withDeviceType: .builtInDualCamera, mediaType: AVMediaTypeVideo, position: .back) {
                 defaultVideoDevice = dualCameraDevice
-            } else if let backCameraDevice = AVCaptureDevice.defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .back) {
+            } else if let backCameraDevice = AVCaptureDevice.__defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .back) {
                 // If the back dual camera is not available, default to the back wide angle camera.
                 defaultVideoDevice = backCameraDevice
-            } else if let frontCameraDevice = AVCaptureDevice.defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .front) {
+            } else if let frontCameraDevice = AVCaptureDevice.__defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .front) {
                 /*
                  In some cases where users break their phones, the back wide angle camera is not available.
                  In this case, we should default to the front wide angle camera.
@@ -254,7 +254,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     }
     
     @IBAction private func resumeInterruptedSession(_ resumeButton: UIButton) {
-        sessionQueue.async { [unowned self] in
+        sessionQueue.async {
             /*
              The session might fail to start running, e.g., if a phone or FaceTime call is still
              using audio or video. A failure to start the session running will be communicated via
@@ -265,7 +265,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             self.session.startRunning()
             self.isSessionRunning = self.session.isRunning
             if !self.session.isRunning {
-                DispatchQueue.main.async { [unowned self] in
+                DispatchQueue.main.async {
                     let message = NSLocalizedString("Unable to resume", comment: "Alert message when unable to resume the session running")
                     let alertController = UIAlertController(title: "AVCam", message: message, preferredStyle: .alert)
                     let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"), style: .cancel, handler: nil)
@@ -280,13 +280,13 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     
     @IBOutlet weak var cameraButton: UIButton!
     
-    private let videoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera], mediaType: AVMediaTypeVideo, position: .unspecified)
+    private let videoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(__deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera], mediaType: AVMediaTypeVideo, position: .unspecified)
     
     @IBAction private func changeCamera(_ cameraButton: UIButton) {
         cameraButton.isEnabled = false
         photoButton.isEnabled = false
         
-        sessionQueue.async { [unowned self] in
+        sessionQueue.async {
             let currentVideoDevice = self.videoDeviceInput.device!
             let currentPosition = currentVideoDevice.position
             
@@ -303,7 +303,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 preferredDeviceType = .builtInWideAngleCamera
             }
             
-            let devices = self.videoDeviceDiscoverySession?.devices
+            let devices = self.videoDeviceDiscoverySession.devices
             var newVideoDevice: AVCaptureDevice? = nil
             
             // First, look for a device with both the preferred position and device type. Otherwise, look for a device with only the preferred position.
@@ -339,7 +339,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 }
             }
             
-            DispatchQueue.main.async { [unowned self] in
+            DispatchQueue.main.async {
                 self.cameraButton.isEnabled = true
                 self.photoButton.isEnabled = true
             }
@@ -353,7 +353,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     }
     
     private func focus(with focusMode: AVCaptureDevice.FocusMode, exposureMode: AVCaptureDevice.ExposureMode, at devicePoint: CGPoint, monitorSubjectAreaChange: Bool) {
-        sessionQueue.async { [unowned self] in
+        sessionQueue.async {
             print("I should monitor changes: \(monitorSubjectAreaChange)")
             let device = self.videoDeviceInput.device!
             do {
@@ -417,15 +417,15 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             }
             
             photoSettings.isHighResolutionPhotoEnabled = true
-            if !photoSettings.availablePreviewPhotoPixelFormatTypes.isEmpty {
-                photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String: photoSettings.availablePreviewPhotoPixelFormatTypes.first!]
+            if !photoSettings.__availablePreviewPhotoPixelFormatTypes.isEmpty {
+                photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String: photoSettings.__availablePreviewPhotoPixelFormatTypes.first!]
             }
             
             // Use a separate object for the photo capture delegate to isolate each capture life cycle.
             let photoCaptureProcessor = PhotoCaptureProcessor(with: photoSettings, willCapturePhotoAnimation: {
-                DispatchQueue.main.async { [unowned self] in
+                DispatchQueue.main.async {
                     self.previewView.videoPreviewLayer.opacity = 0
-                    UIView.animate(withDuration: 0.25) { [unowned self] in
+                    UIView.animate(withDuration: 0.25) {
                         self.previewView.videoPreviewLayer.opacity = 1
                     }
                 }
@@ -439,7 +439,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 self.captured(image: image)
                 
                 // When the capture is complete, remove a reference to the photo capture delegate so it can be deallocated.
-                self.sessionQueue.async { [unowned self] in
+                self.sessionQueue.async {
                         self.inProgressPhotoCaptureDelegates[photoCaptureProcessor.requestedPhotoSettings.uniqueID] = nil
                     }
                 }
@@ -491,7 +491,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             DispatchQueue.main.async { [weak self] in
                 guard let strongSelf = self else { return }
                 // Only enable the ability to change camera if the device has more than one camera.
-                strongSelf.cameraButton.isEnabled = isSessionRunning && strongSelf.videoDeviceDiscoverySession!.uniqueDevicePositionsCount() > 1
+                strongSelf.cameraButton.isEnabled = isSessionRunning && strongSelf.videoDeviceDiscoverySession.uniqueDevicePositionsCount() > 1
                 strongSelf.photoButton.isEnabled = isSessionRunning
             }
         } else {
@@ -520,7 +520,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
          reset and the last start running succeeded.
          */
         if error.code == .mediaServicesWereReset {
-            sessionQueue.async { [unowned self] in
+            sessionQueue.async {
                 if self.isSessionRunning {
                     self.session.startRunning()
                     self.isSessionRunning = self.session.isRunning

@@ -29,58 +29,49 @@ class SnapperViewController: CameraViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         thumbnailImage.layer.cornerRadius = 5.0
         infoLabel.layer.cornerRadius = 5.0
         infoLabel.clipsToBounds = true
-        
         infoLabel.textContainerInset = UIEdgeInsetsMake(20, 20, 20, 20)
-        
         numLabelView.layer.cornerRadius = 12.0
         numLabelView.clipsToBounds = true
-        numLabelView.isHidden = true
-        numLabel.isHidden = true
         
-        grabPhoto()
+        invalidate()
     }
     
-    func grabPhoto() {
-        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    func invalidate() {
+        numLabelView.isHidden = true
+        numLabel.isHidden = true
+        infoLabel.isHidden = false
         
-        do {
-            // Get the directory contents urls (including subfolders urls)
-            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(classifier.id!).appendingPathComponent(pendingClass.id!), includingPropertiesForKeys: nil, options: [])
-            
-            // if you want to filter the directory contents you can do like this:
-            let jpgFile = directoryContents.filter{ $0.pathExtension == "jpg" }
-                .map { url -> (URL, TimeInterval) in
-                    var lastModified = try? url.resourceValues(forKeys: [URLResourceKey.contentModificationDateKey])
-                    return (url, lastModified?.contentModificationDate?.timeIntervalSinceReferenceDate ?? 0)
-                }
-                .sorted(by: { $0.1 > $1.1 }) // sort descending modification dates
-                .map{ $0.0 }.first!
-            
-            thumbnailImage.image = UIImage(contentsOfFile: jpgFile.path)!
-            
-        } catch {
-            print(error.localizedDescription)
+        border.isHidden = true
+        
+        for subview in images {
+            subview.removeFromSuperview()
         }
+        
+        images = [UIImageView]()
     }
     
     var images = [UIImageView]()
+    var border = UIView()
     override func captured(image: UIImage) {
-        DispatchQueue.main.async { [unowned self] in
+        DispatchQueue.main.async {
             let newImageView = UIImageView()
             self.images.append(newImageView)
             
             // Show bar
             if self.images.count == 1 {
-                let border = UIView()
-                let frame = CGRect(x: self.thumbnail.frame.origin.x - 1.0, y: self.thumbnail.frame.origin.y - 1.0, width: self.thumbnail.frame.size.width + 2.0, height: self.thumbnail.frame.size.height + 2.0)
-                border.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.25)
-                border.frame = frame
-                border.layer.cornerRadius = 7.0
-                self.view.insertSubview(border, belowSubview: self.thumbnail)
+                self.border.isHidden = false
+                
+                if !self.view.subviews.contains(self.border) {
+                    let frame = CGRect(x: self.thumbnail.frame.origin.x - 1.0, y: self.thumbnail.frame.origin.y - 1.0, width: self.thumbnail.frame.size.width + 2.0, height: self.thumbnail.frame.size.height + 2.0)
+                    self.border.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.25)
+                    self.border.frame = frame
+                    self.border.layer.cornerRadius = 7.0
+                    
+                    self.view.insertSubview(self.border, belowSubview: self.thumbnail)
+                }
             }
             
             self.numLabelView.isHidden = false
@@ -211,6 +202,20 @@ class SnapperViewController: CameraViewController {
         } catch {
             print(error.localizedDescription)
         }
+    }
+    
+    @IBAction func unwindToSnapperFromName(segue: UIStoryboardSegue) {
+        // Unwind
+        print("unwind")
+        invalidate()
+        infoLabel.text = "Start taking photos of the next item."
+    }
+    
+    @IBAction func unwindToSnapperFromTrain(segue: UIStoryboardSegue) {
+        // Unwind
+        print("unwind")
+        invalidate()
+        infoLabel.isHidden = true
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
