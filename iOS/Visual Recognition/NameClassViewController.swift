@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class NameClassViewController: UIViewController {
     var classifier = PendingClassifier()
@@ -26,7 +27,9 @@ class NameClassViewController: UIViewController {
         container.layer.cornerRadius = 17
         container.clipsToBounds = true
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     func keyboardWillShow(notification: NSNotification) {
@@ -34,8 +37,8 @@ class NameClassViewController: UIViewController {
             let keyboardRectangle = keyboardFrame.cgRectValue
             let keyboardHeight = keyboardRectangle.height
             print("keyboard height: \(keyboardHeight)")
-            if view.frame.size.height == UIWindow().frame.size.height {
-                view.frame.size.height -= keyboardHeight
+            if view.frame.size.height != UIWindow().frame.size.height - keyboardHeight {
+                view.frame.size.height = UIWindow().frame.size.height - keyboardHeight
                 
                 // Uuuhh no idea why I need to do this...?
                 container.frame.size.height = 0
@@ -47,10 +50,41 @@ class NameClassViewController: UIViewController {
         }
     }
     
+    func keyboardWillHide(notification: NSNotification) {
+        if view.frame.size.height != UIWindow().frame.size.height {
+            view.frame.size.height = UIWindow().frame.size.height
+            
+            // Uuuhh no idea why I need to do this...?
+            container.frame.size.height = 0
+            
+            if let tv = childViewControllers[0] as? ThumbCollectionViewController {
+                tv.viewWillAppear(true)
+            }
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if  segue.identifier == "showEmbededCollection",
             let destination = segue.destination as? ThumbCollectionViewController {
             destination.pendingClass = pendingClass
+            destination.classifier = classifier
+        }
+        
+        if  segue.identifier == "newClass",
+            let destination = segue.destination as? SnapperViewController {
+            
+            let pendingClassClassName: String = String(describing: PendingClass.self)
+            
+            let newPendingClass: PendingClass = NSEntityDescription.insertNewObject(forEntityName: pendingClassClassName, into: DatabaseController.getContext()) as! PendingClass
+            
+            newPendingClass.id = UUID().uuidString
+            newPendingClass.name = String()
+            newPendingClass.created = Date()
+            
+            classifier.addToRelationship(newPendingClass)
+            
+            DatabaseController.saveContext()
+            destination.pendingClass = newPendingClass
             destination.classifier = classifier
         }
     }

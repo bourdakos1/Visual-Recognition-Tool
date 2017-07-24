@@ -74,6 +74,7 @@ class ClassifiersTableViewController: UITableViewController {
             
             let pendingClass: PendingClass = NSEntityDescription.insertNewObject(forEntityName: pendingClassClassName, into: DatabaseController.getContext()) as! PendingClass
             
+            pendingClass.id = UUID().uuidString
             pendingClass.name = String()
             pendingClass.created = Date()
             

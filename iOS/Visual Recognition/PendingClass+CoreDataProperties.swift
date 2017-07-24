@@ -17,6 +17,7 @@ extension PendingClass {
     }
 
     @NSManaged public var name: String?
+    @NSManaged public var id: String?
     @NSManaged public var created: Date?
 
 }

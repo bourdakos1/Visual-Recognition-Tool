@@ -65,7 +65,7 @@ class ImagesCollectionViewController: UICollectionViewController, UICollectionVi
         
         do {
             // Get the directory contents urls (including subfolders urls)
-            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(classifier.id!).appendingPathComponent(pendingClass.name!), includingPropertiesForKeys: nil, options: [])
+            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(classifier.id!).appendingPathComponent(pendingClass.id!), includingPropertiesForKeys: nil, options: [])
             
             // if you want to filter the directory contents you can do like this:
             let jpgFiles = directoryContents.filter{ $0.pathExtension == "jpg" }

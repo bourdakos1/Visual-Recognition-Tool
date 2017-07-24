@@ -959,7 +959,11 @@
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <items>
                                     <navigationItem id="Lqg-5a-pJI">
-                                        <barButtonItem key="rightBarButtonItem" title="Next" style="done" id="OXS-yJ-WQJ"/>
+                                        <barButtonItem key="rightBarButtonItem" title="Next" style="done" id="OXS-yJ-WQJ">
+                                            <connections>
+                                                <segue destination="zjM-K8-kVZ" kind="show" identifier="newClass" id="6BA-QU-Sgs"/>
+                                            </connections>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -1090,5 +1094,8 @@
         <image name="select.png" width="36" height="18"/>
         <image name="train" width="67" height="51"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="6BA-QU-Sgs"/>
+    </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.47058823529411764" green="0.38823529411764707" blue="0.92549019607843142" alpha="1" colorSpace="calibratedRGB"/>
 </document>
