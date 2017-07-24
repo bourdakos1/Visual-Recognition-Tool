@@ -121,11 +121,12 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        sessionQueue.async { [unowned self] in
-            if self.setupResult == .success {
-                self.session.stopRunning()
-                self.isSessionRunning = self.session.isRunning
-                self.removeObservers()
+        sessionQueue.async { [weak self] in
+            guard let strongSelf = self else { return }
+            if strongSelf.setupResult == .success {
+                strongSelf.session.stopRunning()
+                strongSelf.isSessionRunning = strongSelf.session.isRunning
+                strongSelf.removeObservers()
             }
         }
         
@@ -487,10 +488,11 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             let newValue = change?[.newKey] as AnyObject?
             guard let isSessionRunning = newValue?.boolValue else { return }
             
-            DispatchQueue.main.async { [unowned self] in
+            DispatchQueue.main.async { [weak self] in
+                guard let strongSelf = self else { return }
                 // Only enable the ability to change camera if the device has more than one camera.
-                self.cameraButton.isEnabled = isSessionRunning && self.videoDeviceDiscoverySession!.uniqueDevicePositionsCount() > 1
-                self.photoButton.isEnabled = isSessionRunning
+                strongSelf.cameraButton.isEnabled = isSessionRunning && strongSelf.videoDeviceDiscoverySession!.uniqueDevicePositionsCount() > 1
+                strongSelf.photoButton.isEnabled = isSessionRunning
             }
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)

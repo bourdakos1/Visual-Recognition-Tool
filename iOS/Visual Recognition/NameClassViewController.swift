@@ -83,6 +83,9 @@ class NameClassViewController: UIViewController {
             
             classifier.addToRelationship(newPendingClass)
             
+            // Save the class name.
+            pendingClass.name = textField.text
+            
             DatabaseController.saveContext()
             destination.pendingClass = newPendingClass
             destination.classifier = classifier
