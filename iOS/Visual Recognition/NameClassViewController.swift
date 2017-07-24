@@ -63,6 +63,19 @@ class NameClassViewController: UIViewController {
         }
     }
     
+    @IBAction func next(sender: UIBarButtonItem) {
+        guard let classCount = classifier.relationship?.count else {
+            return
+        }
+        if classCount >= 2 {
+            print("ask to train")
+            self.performSegue(withIdentifier: "askToTrain", sender: self)
+        } else {
+            print("add second class")
+            self.performSegue(withIdentifier: "newClass", sender: self)
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if  segue.identifier == "showEmbededCollection",
             let destination = segue.destination as? ThumbCollectionViewController {
@@ -88,6 +101,16 @@ class NameClassViewController: UIViewController {
             
             DatabaseController.saveContext()
             destination.pendingClass = newPendingClass
+            destination.classifier = classifier
+        }
+        
+        if  segue.identifier == "askToTrain",
+            let destination = segue.destination as? TrainViewController {
+            
+            // Save the class name.
+            pendingClass.name = textField.text
+            
+            DatabaseController.saveContext()
             destination.classifier = classifier
         }
     }

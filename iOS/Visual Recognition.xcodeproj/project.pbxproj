@@ -50,6 +50,7 @@
 		23AA52301EC0DC550073D4DC /* ClassiferTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AA522F1EC0DC550073D4DC /* ClassiferTableViewCell.swift */; };
 		23AA52321EC0E6240073D4DC /* btn_dropdown.png in Resources */ = {isa = PBXBuildFile; fileRef = 23AA52311EC0E6240073D4DC /* btn_dropdown.png */; };
 		23AA52341EC0E7CD0073D4DC /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 23AA52331EC0E7CD0073D4DC /* checkmark.png */; };
+		23AB6DD41F26832300632FDE /* TrainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AB6DD31F26832300632FDE /* TrainViewController.swift */; };
 		23C62EC21EDDF5BA002A0311 /* select.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C62EC11EDDF5BA002A0311 /* select.png */; };
 		23C875231F1FF91400C3BBE8 /* FaceResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C875221F1FF91300C3BBE8 /* FaceResult.swift */; };
 		23C875251F22F60500C3BBE8 /* next.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C875241F22F5F400C3BBE8 /* next.png */; };
@@ -134,6 +135,7 @@
 		23AA522F1EC0DC550073D4DC /* ClassiferTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassiferTableViewCell.swift; sourceTree = "<group>"; };
 		23AA52311EC0E6240073D4DC /* btn_dropdown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_dropdown.png; sourceTree = "<group>"; };
 		23AA52331EC0E7CD0073D4DC /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
+		23AB6DD31F26832300632FDE /* TrainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainViewController.swift; sourceTree = "<group>"; };
 		23C62EC11EDDF5BA002A0311 /* select.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = select.png; sourceTree = "<group>"; };
 		23C875221F1FF91300C3BBE8 /* FaceResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceResult.swift; sourceTree = "<group>"; };
 		23C875241F22F5F400C3BBE8 /* next.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = next.png; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 				2352A3071F194DDE00458F1F /* SnapperViewController.swift */,
 				23C875281F25469400C3BBE8 /* NameClassViewController.swift */,
 				23C875261F2544D300C3BBE8 /* ThumbCollectionViewController.swift */,
+				23AB6DD31F26832300632FDE /* TrainViewController.swift */,
 				235DD00A1EC63F3A00B8432B /* ClassesCollectionViewController.swift */,
 				235DD00E1EC67B0800B8432B /* ClassCollectionViewCell.swift */,
 				235DD00C1EC6702E00B8432B /* ImagesCollectionViewController.swift */,
@@ -674,6 +677,7 @@
 				233D0B9E1EC13101005E5594 /* Classifiers.xcdatamodeld in Sources */,
 				23C875231F1FF91400C3BBE8 /* FaceResult.swift in Sources */,
 				233D0BB71EC22EB6005E5594 /* PendingClassifier+CoreDataProperties.swift in Sources */,
+				23AB6DD41F26832300632FDE /* TrainViewController.swift in Sources */,
 				23C875271F2544D300C3BBE8 /* ThumbCollectionViewController.swift in Sources */,
 				2389A7381E7CAA7500D7C973 /* ResultTableViewCell.swift in Sources */,
 				2389A7361E7CA9E700D7C973 /* ProgressBar.swift in Sources */,

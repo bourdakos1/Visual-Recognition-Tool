@@ -39,7 +39,7 @@ public class PendingClassifier: NSManagedObject {
                 
                 // Make sure it's actually gone...
                 if !FileManager.default.fileExists(atPath: destination.path) {
-                    try Zip.zipFiles(paths: [documentsUrl.appendingPathComponent(result.name!)], zipFilePath: destination, password: nil, progress: { progress in
+                    try Zip.zipFiles(paths: [documentsUrl.appendingPathComponent(result.id!)], zipFilePath: destination, password: nil, progress: { progress in
                         print("Zipping: \(progress)")
                     })
                 }

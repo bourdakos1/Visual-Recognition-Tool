@@ -966,7 +966,7 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" title="Next" style="done" id="OXS-yJ-WQJ">
                                             <connections>
-                                                <segue destination="zjM-K8-kVZ" kind="show" identifier="newClass" id="6BA-QU-Sgs"/>
+                                                <action selector="nextWithSender:" destination="Uxd-xu-Mdc" id="JJ7-EV-5AK"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -1004,6 +1004,8 @@
                     <connections>
                         <outlet property="container" destination="Biv-rh-fPw" id="7O7-RR-IH9"/>
                         <outlet property="textField" destination="Sll-F4-1i1" id="wZq-8S-675"/>
+                        <segue destination="80G-lb-06F" kind="show" identifier="askToTrain" id="5Ie-v3-Eek"/>
+                        <segue destination="zjM-K8-kVZ" kind="show" identifier="newClass" id="dyL-s0-16q"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yx8-i9-Vnl" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1054,7 +1056,88 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A4d-Zc-Q8c" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4060" y="-398.05097451274366"/>
+            <point key="canvasLocation" x="3297" y="286"/>
+        </scene>
+        <!--Train View Controller-->
+        <scene sceneID="QJW-wG-Y8F">
+            <objects>
+                <viewController id="80G-lb-06F" customClass="TrainViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="H25-2F-5tq"/>
+                        <viewControllerLayoutGuide type="bottom" id="yab-LY-lKG"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="YES" id="SFn-FL-LMe">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" translucent="NO" shadowImage="nil" translatesAutoresizingMaskIntoConstraints="NO" id="oW4-2P-19h">
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <items>
+                                    <navigationItem id="chQ-Nd-4LR">
+                                        <barButtonItem key="leftBarButtonItem" style="plain" systemItem="stop" id="ZXN-5X-D7k">
+                                            <connections>
+                                                <segue destination="IV5-Cr-ypJ" kind="unwind" identifier="unwindToClassifiersFromTrain" unwindAction="unwindToClassifiersWithSegue:" id="xhJ-hw-nuv"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="YES" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Bkd-PH-qoV">
+                                <rect key="frame" x="24" y="237.5" width="326" height="192"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Train your classifier?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mGe-Ak-nL6">
+                                        <rect key="frame" x="0.0" y="0.0" width="326" height="41"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="34"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gd6-T4-6NE">
+                                        <rect key="frame" x="43" y="61" width="240" height="10"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="10" id="9vq-GW-Mz0"/>
+                                        </constraints>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l5y-bG-s5P" customClass="RoundedButton" customModule="Visual_Recognition" customModuleProvider="target">
+                                        <rect key="frame" x="48" y="91" width="230" height="51"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="34"/>
+                                        <inset key="contentEdgeInsets" minX="80" minY="5" maxX="80" maxY="5"/>
+                                        <state key="normal" title="Train">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="color">
+                                                <color key="value" red="0.47058823529999999" green="0.38823529410000002" blue="0.92549019610000005" alpha="1" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="train" destination="80G-lb-06F" eventType="touchUpInside" id="UAp-WJ-SKh"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qSP-TP-cTg">
+                                        <rect key="frame" x="88.5" y="162" width="149" height="30"/>
+                                        <state key="normal" title="Add another category"/>
+                                        <connections>
+                                            <segue destination="zjM-K8-kVZ" kind="show" identifier="additionalClasses" id="yOG-F6-1Kf"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="oW4-2P-19h" firstAttribute="leading" secondItem="SFn-FL-LMe" secondAttribute="leading" id="1GE-bK-f7g"/>
+                            <constraint firstItem="oW4-2P-19h" firstAttribute="top" secondItem="H25-2F-5tq" secondAttribute="bottom" id="GSg-Yu-BVW"/>
+                            <constraint firstItem="Bkd-PH-qoV" firstAttribute="centerY" secondItem="SFn-FL-LMe" secondAttribute="centerY" id="dEN-QH-BtY"/>
+                            <constraint firstItem="Bkd-PH-qoV" firstAttribute="centerX" secondItem="SFn-FL-LMe" secondAttribute="centerX" id="e2d-Nz-NEx"/>
+                            <constraint firstAttribute="trailing" secondItem="oW4-2P-19h" secondAttribute="trailing" id="x8k-TF-drg"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PVK-ck-l4g" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="IV5-Cr-ypJ" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="4223" y="-398"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Woy-H8-uLq">
@@ -1101,7 +1184,7 @@
         <image name="train" width="67" height="51"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="6BA-QU-Sgs"/>
+        <segue reference="yOG-F6-1Kf"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.47058823529411764" green="0.38823529411764707" blue="0.92549019607843142" alpha="1" colorSpace="calibratedRGB"/>
 </document>

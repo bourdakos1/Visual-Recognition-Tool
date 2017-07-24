@@ -447,7 +447,6 @@ class ClassifiersTableViewController: UITableViewController {
                         tableView.deleteSections([0], with: .automatic)
                         tableView.moveSection(1, toSection: 0)
                         tableView.endUpdates()
-                        // This seems to be some kind of weird bug...
                         tableView.setEditing(false, animated: false)
                     } else {
                         tableView.deleteRows(at: [indexPath], with: .automatic)

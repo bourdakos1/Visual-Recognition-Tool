@@ -9,10 +9,9 @@
 import UIKit
 
 class RoundedButton: UIButton {
-    @IBInspectable
-    public var isSolid: Bool = true
+    @IBInspectable public var isSolid: Bool = true
     
-    let color = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+    @IBInspectable public var color: UIColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
     
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
