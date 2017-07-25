@@ -71,6 +71,26 @@ public class PendingClassifier: NSManagedObject {
                     switch encodingResult {
                     case .success(let upload, _, _):
                         upload.responseJSON { response in
+                            let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                            
+                            let path = documentsUrl.appendingPathComponent(self.id!)
+                            
+                            do {
+                                try FileManager.default.removeItem(at: path)
+                                DatabaseController.getContext().delete(self)
+                                DatabaseController.saveContext()
+                            } catch {
+                                // If it fails don't delete the row.
+                                // We don't want it stuck for all eternity.
+                                print("Error: \(error.localizedDescription)")
+                                if FileManager.default.fileExists(atPath: path.path) {
+                                    print("still exists")
+                                } else {
+                                    print("File does not exist")
+                                    DatabaseController.getContext().delete(self)
+                                    DatabaseController.saveContext()
+                                }
+                            }
                             completion(response)
                             debugPrint(response)
                         }

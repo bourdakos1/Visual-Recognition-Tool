@@ -58,15 +58,15 @@ class ClassifiersTableViewController: UITableViewController {
             pendingClassifier.name = textfield.text!
             pendingClassifier.created = Date()
             
-            self.pending.insert(pendingClassifier, at: 0)
-            if self.tableView.numberOfSections == 2 {
-                self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-            } else {
-                self.tableView.beginUpdates()
-                self.tableView.insertSections([0], with: .automatic)
-                self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-                self.tableView.endUpdates()
-            }
+//            self.pending.insert(pendingClassifier, at: 0)
+//            if self.tableView.numberOfSections == 2 {
+//                self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+//            } else {
+//                self.tableView.beginUpdates()
+//                self.tableView.insertSections([0], with: .automatic)
+//                self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+//                self.tableView.endUpdates()
+//            }
             
             
             // Create a new class thats blank
@@ -293,7 +293,7 @@ class ClassifiersTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if tableView.numberOfSections > 1 && section == 0 {
-            return "🏋️‍♀️ training data"
+            return "🍺 drafts"
         } else {
             return "🚀 trained"
         }

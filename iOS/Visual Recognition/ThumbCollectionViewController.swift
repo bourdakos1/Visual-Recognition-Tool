@@ -18,11 +18,6 @@ class ThumbCollectionViewController: UICollectionViewController, UICollectionVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
         images = []
         grabPhotos()
         collectionView?.reloadData()
