@@ -100,8 +100,8 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
         // Load from Watson.
         let apiKey = UserDefaults.standard.string(forKey: "api_key")
         
-        // Just reset it if its not the same.
-        if apiKey == nil && !classifiers.first!.isEqual(Classifier.defaults.first!) && classifiers.count != Classifier.defaults.count {
+        // if the api key is nil and the classifiers arent the default, reset it to the default
+        if apiKey == nil && !(classifiers.first!.isEqual(Classifier.defaults.first!) && classifiers.count == Classifier.defaults.count) {
             classifiers = []
             classifiers.append(contentsOf: Classifier.defaults)
             pickerView.selectItem(0)
@@ -143,6 +143,7 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
                         
                         // If the count and head are the same nothing was deleted or added.
                         if !(self.classifiers.first!.isEqual(classifiers.first!)
+                            && self.classifiers.first!.status == classifiers.first!.status // Ensure status
                             && self.classifiers.count == classifiers.count) {
                             self.classifiers = classifiers
                             
@@ -366,7 +367,6 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
                     
                     label.textColor = UIColor.white
                     label.backgroundColor = label.tintColor
-//                    label.clipsToBounds = true
                     
                     let view = UIView()
                     view.frame.size.width = face.location.width * scale
