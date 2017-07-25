@@ -58,17 +58,6 @@ class ClassifiersTableViewController: UITableViewController {
             pendingClassifier.name = textfield.text!
             pendingClassifier.created = Date()
             
-//            self.pending.insert(pendingClassifier, at: 0)
-//            if self.tableView.numberOfSections == 2 {
-//                self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-//            } else {
-//                self.tableView.beginUpdates()
-//                self.tableView.insertSections([0], with: .automatic)
-//                self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-//                self.tableView.endUpdates()
-//            }
-            
-            
             // Create a new class thats blank
             let pendingClassClassName: String = String(describing: PendingClass.self)
             
@@ -226,6 +215,22 @@ class ClassifiersTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        let fetchRequest:NSFetchRequest<PendingClassifier> = PendingClassifier.fetchRequest()
+        
+        do {
+            let searchResults = try DatabaseController.getContext().fetch(fetchRequest)
+            pending = []
+            for result in searchResults as [PendingClassifier] {
+                pending.append(result)
+            }
+            
+            let epoch = Date().addingTimeInterval(0 - Date().timeIntervalSince1970)
+            pending = pending.sorted(by: { $0.created ?? epoch > $1.created ?? epoch })
+        }
+        catch {
+            print("Error: \(error)")
+        }
+        tableView.reloadData()
         loadClassifiers()
     }
     
@@ -256,8 +261,6 @@ class ClassifiersTableViewController: UITableViewController {
             print(error.localizedDescription)
         }
         
-        
-        // This doesn't need reloaded everytime we show the page
         let fetchRequest:NSFetchRequest<PendingClassifier> = PendingClassifier.fetchRequest()
         
         do {
