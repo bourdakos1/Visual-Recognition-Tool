@@ -8,17 +8,9 @@
 
 import UIKit
 class ClassiferTableViewCell: UITableViewCell {
-    
     @IBOutlet weak var classifierNameLabel: UILabel!
     @IBOutlet weak var classifierIdLabel: UILabel!
     @IBOutlet weak var classifierStatusEmoji: UILabel!
     @IBOutlet weak var checkmark: UIImageView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
-    var tapAction: ((ClassiferTableViewCell) -> Void)?
-    
-    @IBAction func buttonTap(sender: AnyObject) {
-        tapAction?(self)
-    }
-
 }

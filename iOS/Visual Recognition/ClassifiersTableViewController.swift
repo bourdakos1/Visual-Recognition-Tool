@@ -18,8 +18,10 @@ class ClassifiersTableViewController: UITableViewController {
     let VISION_API_KEY: String
     
     var pending = [PendingClassifier]()
-    
     var classifiers = [Classifier]()
+    
+    var pendingClass = PendingClass()
+    var pendingClassifier = PendingClassifier()
     
     required init?(coder aDecoder: NSCoder) {
         var keys: NSDictionary?
@@ -38,7 +40,7 @@ class ClassifiersTableViewController: UITableViewController {
     @IBAction func createClassifier() {
         let alert = UIAlertController(title: "New Classifier", message: "What do you want to classify?", preferredStyle: .alert)
         
-        alert.addTextField(configurationHandler: {(textField: UITextField) in
+        alert.addTextField(configurationHandler: { [unowned self] textField in
             textField.placeholder = "Classifier Name"
             textField.addTarget(self, action: #selector(self.handleTextDidChange(_:)), for: .editingChanged)
         })
@@ -48,7 +50,7 @@ class ClassifiersTableViewController: UITableViewController {
             print("cancel")
         }
         
-        let saveAction = UIAlertAction(title: "Save", style: .default) { action in
+        let saveAction = UIAlertAction(title: "Save", style: .default) { [unowned self] action in
             let textfield = alert.textFields!.first!
             print("saving: \(textfield.text!)")
             let pendingClassifierClassName:String  = String(describing: PendingClassifier.self)
@@ -97,7 +99,7 @@ class ClassifiersTableViewController: UITableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.navigationController?.toolbar.isHidden = true
+        navigationController?.toolbar.isHidden = true
         v.removeFromSuperview()
     }
     
@@ -116,25 +118,22 @@ class ClassifiersTableViewController: UITableViewController {
             return
         }
         
-        // Let's not show the loading indicator.
-        
         let url = "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers"
         let params = [
             "api_key": apiKey!,
             "version": "2016-05-20",
             "verbose": "true"
         ]
-        if self.isLoading {
-            // We are loading something already so escape.
+        if isLoading {
             return
         }
         print("loading from server")
         isLoading = true
         Alamofire.request(url, parameters: params).validate().responseJSON { [weak self] response in
-            guard let strongSelf = self else { return }
-            strongSelf.isLoading = false
+            guard let `self` = self else { return }
+            self.isLoading = false
             print("done")
-            strongSelf.refreshControl?.endRefreshing()
+            self.refreshControl?.endRefreshing()
             switch response.result {
             case .success:
                 if let json = response.result.value as? [String : Any] {
@@ -153,43 +152,43 @@ class ClassifiersTableViewController: UITableViewController {
                         // Instead of blindly reloading the entire list, we should reload/insert/remove row.
                         var indexesToAdd = [IndexPath]()
                         for classifier in classifiers {
-                            if !strongSelf.classifiers.contains(where: { $0.isEqual(classifier) }) {
+                            if !self.classifiers.contains(where: { $0.isEqual(classifier) }) {
                                 print("inserting row \(indexesToAdd.count): \(classifier.name)")
-                                indexesToAdd.append(IndexPath(row: indexesToAdd.count, section: strongSelf.tableView.numberOfSections - 1))
+                                indexesToAdd.append(IndexPath(row: indexesToAdd.count, section: self.tableView.numberOfSections - 1))
                             }
                         }
                         
                         var indexesToDelete = [IndexPath]()
-                        for classifier in strongSelf.classifiers {
+                        for classifier in self.classifiers {
                             if !classifiers.contains(where: { $0.isEqual(classifier)}) {
-                                let itemToDelete = strongSelf.classifiers.index(where: {$0.classifierId == classifier.classifierId})!
+                                let itemToDelete = self.classifiers.index(where: {$0.classifierId == classifier.classifierId})!
                                 print("removing row \(itemToDelete): \(classifier.name)")
-                                indexesToDelete.append(IndexPath(row: itemToDelete, section: strongSelf.tableView.numberOfSections - 1))
+                                indexesToDelete.append(IndexPath(row: itemToDelete, section: self.tableView.numberOfSections - 1))
                             }
                         }
                         
                         var indexesToUpdate = [IndexPath]()
-                        for classifier in strongSelf.classifiers {
+                        for classifier in self.classifiers {
                             // If the new classifier matches one of the old classifiers, but the status is different.
                             if classifiers.contains(where: { $0.isEqual(classifier) && $0.status != classifier.status}) {
-                                let itemToUpdate = strongSelf.classifiers.index(where: {$0.classifierId == classifier.classifierId})!
+                                let itemToUpdate = self.classifiers.index(where: {$0.classifierId == classifier.classifierId})!
                                 print("reloading row \(itemToUpdate): \(classifier.name)")
-                                indexesToUpdate.append(IndexPath(row: itemToUpdate, section: strongSelf.tableView.numberOfSections - 1))
+                                indexesToUpdate.append(IndexPath(row: itemToUpdate, section: self.tableView.numberOfSections - 1))
                             }
                         }
                         
-                        strongSelf.classifiers = classifiers
-                        strongSelf.tableView.beginUpdates()
-                        strongSelf.tableView.insertRows(at: indexesToAdd, with: .automatic)
-                        strongSelf.tableView.deleteRows(at: indexesToDelete, with: .automatic)
-                        strongSelf.tableView.reloadRows(at: indexesToUpdate, with: .automatic)
-                        strongSelf.tableView.endUpdates()
+                        self.classifiers = classifiers
+                        self.tableView.beginUpdates()
+                        self.tableView.insertRows(at: indexesToAdd, with: .automatic)
+                        self.tableView.deleteRows(at: indexesToDelete, with: .automatic)
+                        self.tableView.reloadRows(at: indexesToUpdate, with: .automatic)
+                        self.tableView.endUpdates()
                         
                         // After we update our table, check if anything is still training.
-                        let training = strongSelf.classifiers.filter({ $0.status == .training || $0.status == .training })
+                        let training = self.classifiers.filter({ $0.status == .training || $0.status == .training })
                         if training.count > 0 {
                             // If things are still training recheck in 4 seconds.
-                            strongSelf.reloadClassifiers()
+                            self.reloadClassifiers()
                         }
                     }
                 }
@@ -201,8 +200,8 @@ class ClassifiersTableViewController: UITableViewController {
     
     func reloadClassifiers() {
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(4), execute: { [weak self] in
-            guard let strongSelf = self else { return }
-            strongSelf.loadClassifiers()
+            guard let `self` = self else { return }
+            self.loadClassifiers()
         })
     }
     
@@ -353,38 +352,6 @@ class ClassifiersTableViewController: UITableViewController {
                 cell.classifierIdLabel?.text = "Loading..."
             }
             
-            cell.tapAction = { (cell) in
-                let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                
-                
-                let apiAction = UIAlertAction(title: "API Reference", style: .default, handler: {
-                    (alert: UIAlertAction!) -> Void in
-                    print("API Reference")
-                })
-                
-                let updateAction = UIAlertAction(title: "Update", style: .default, handler: {
-                    (alert: UIAlertAction!) -> Void in
-                    print("Update")
-                })
-                
-                let deleteAction = UIAlertAction(title: "Delete", style: .destructive, handler: {
-                    (alert: UIAlertAction!) -> Void in
-                    print("Delete")
-                })
-                
-                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {
-                    (alert: UIAlertAction!) -> Void in
-                    print("Cancel")
-                })
-                
-                optionMenu.addAction(apiAction)
-                optionMenu.addAction(updateAction)
-                optionMenu.addAction(deleteAction)
-                optionMenu.addAction(cancelAction)
-                
-                self.present(optionMenu, animated: true, completion: nil)
-            }
-            
             let classifierId = UserDefaults.standard.string(forKey: "classifier_id")
             
             if classifierId != nil {
@@ -419,7 +386,7 @@ class ClassifiersTableViewController: UITableViewController {
                 }
             }
         }
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
     
     // Override to support conditional editing of the table view.
@@ -506,15 +473,8 @@ class ClassifiersTableViewController: UITableViewController {
         // Unwind
     }
     
-    var pendingClass = PendingClass()
-    var pendingClassifier = PendingClassifier()
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if pending.count > 0 && segue.identifier == "showClasses" && (tableView.numberOfSections > 1 && tableView.indexPathForSelectedRow?.section == 0),
-            let destination = segue.destination as? ClassesCollectionViewController,
-            let index = tableView.indexPathForSelectedRow?.item {
-            destination.classifier = pending[index]
-        } else if  segue.identifier == "showSnapper",
+        if  segue.identifier == "showSnapper",
             let destination = segue.destination as? SnapperViewController {
             destination.pendingClass = pendingClass
             destination.classifier = pendingClassifier

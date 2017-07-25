@@ -46,7 +46,7 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
     
     override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if let drawer = self.parent as? PulleyViewController {
+        if let drawer = parent as? PulleyViewController {
             // Look in user defaults to see if we have a real key.
             var apiKeyText = UserDefaults.standard.string(forKey: "api_key")
             
@@ -123,7 +123,9 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
             "version": "2016-05-20",
             "verbose": "true"
         ]
-        Alamofire.request(url, parameters: params).validate().responseJSON { response in
+        Alamofire.request(url, parameters: params).validate().responseJSON { [weak self] response in
+            guard let `self` = self else { return }
+            
             switch response.result {
             case .success:
                 if let json = response.result.value as? [String : Any] {
@@ -302,7 +304,9 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
         do {
             let encodedURLRequest = try URLEncoding.queryString.encode(urlRequest, with: parameters)
             
-            Alamofire.upload(UIImageJPEGRepresentation(image, 0.4)!, to: encodedURLRequest.url!).responseJSON { response in
+            Alamofire.upload(UIImageJPEGRepresentation(image, 0.4)!, to: encodedURLRequest.url!).responseJSON { [weak self] response in
+                guard let `self` = self else { return }
+                
                 // Start parsing json, throw error popup if it messed up.
                 guard let json = response.result.value as? [String: Any],
                     let images = json["images"] as? [Any],
@@ -326,22 +330,55 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
                 
                 var myNewData = [FaceResult]()
                 
-                let scale = self.tempImageView.frame.width / 300
+                let imageWidth = (self.tempImageView.image?.size.width)! * self.tempImageView.imageScale.width
+                
+                let imageHeight = (self.tempImageView.image?.size.height)! * self.tempImageView.imageScale.height
+                
+                let scale = imageWidth / 300
+                
+                let nudgeY = (imageHeight - self.tempImageView.frame.height) / 2
+                
+                let nudgeX = (imageWidth - self.tempImageView.frame.width) / 2
+                
+                print(nudgeX)
+                print(nudgeY)
                 print(scale)
                 
                 for case let faceResult in faces {
                     let face = FaceResult(json: faceResult)!
                     myNewData.append(face)
                     
+                    
+                    let label = UILabel()
+                    // This is pretty lame but fine for now...
+                    label.text = "   \(face.gender.sex): age \(face.age.min) - \(face.age.max)"
+                    label.frame.origin.x = face.location.left * scale - nudgeX
+                    label.frame.origin.y = face.location.top * scale - nudgeY - 35
+                    label.frame.size.width = face.location.width * scale
+                    label.frame.size.height = 40
+                    
+                    let rect = CGRect(x: 0, y: 0, width: label.frame.width, height: label.frame.height)
+                    let maskPath = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 5.0, height: 5.0))
+                    
+                    let shape = CAShapeLayer()
+                    shape.path = maskPath.cgPath
+                    label.layer.mask = shape
+                    
+                    label.textColor = UIColor.white
+                    label.backgroundColor = label.tintColor
+//                    label.clipsToBounds = true
+                    
                     let view = UIView()
                     view.frame.size.width = face.location.width * scale
                     view.frame.size.height = face.location.height * scale
-                    view.frame.origin.x = face.location.left * scale
-                    view.frame.origin.y = face.location.top * scale
+                    view.frame.origin.x = face.location.left * scale - nudgeX
+                    view.frame.origin.y = face.location.top * scale - nudgeY
                     view.layer.borderWidth = 5
+                    view.layer.cornerRadius = 5
                     view.layer.borderColor = view.tintColor.cgColor
-                    view.clipsToBounds = false
+                    view.clipsToBounds = true
                     self.tempImageView.addSubview(view)
+                    self.tempImageView.addSubview(label)
                 }
                 
                 print(myNewData)
@@ -368,7 +405,9 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
         do {
             let encodedURLRequest = try URLEncoding.queryString.encode(urlRequest, with: parameters)
             
-            Alamofire.upload(UIImageJPEGRepresentation(image, 0.4)!, to: encodedURLRequest.url!).responseJSON { response in
+            Alamofire.upload(UIImageJPEGRepresentation(image, 0.4)!, to: encodedURLRequest.url!).responseJSON { [weak self] response in
+                guard let `self` = self else { return }
+                
                 // Start parsing json, throw error popup if it messed up.
                 guard let json = response.result.value as? [String: Any],
                     let images = json["images"] as? [Any],
@@ -409,7 +448,7 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
     
     // Convenience method for pushing data to the TableView.
     func push(data: [ClassResult]) {
-        getTableController { tableController, drawer in
+        getTableController { [unowned self] tableController, drawer in
             tableController.classes = data
             self.dismiss(animated: false, completion: nil)
             drawer.setDrawerPosition(position: .partiallyRevealed, animated: true)
@@ -418,12 +457,10 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
     
     // Convenience method for reloading the TableView.
     func getTableController(run: @escaping (_ tableController: ResultsTableViewController, _ drawer: PulleyViewController) -> Void) {
-        if let drawer = self.parent as? PulleyViewController {
+        if let drawer = parent as? PulleyViewController {
             if let tableController = drawer.drawerContentViewController as? ResultsTableViewController {
-                DispatchQueue.main.async {
-                    run(tableController, drawer)
-                    tableController.tableView.reloadData()
-                }
+                run(tableController, drawer)
+                tableController.tableView.reloadData()
             }
         }
     }
@@ -464,7 +501,9 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
             "api_key": key,
             "version": "2016-05-20"
         ]
-        Alamofire.request(url, parameters: params).responseJSON { response in
+        Alamofire.request(url, parameters: params).responseJSON { [weak self] response in
+            guard let `self` = self else { return }
+            
             if let json = response.result.value as? [String : Any] {
                 if json["statusInfo"] as! String == "invalid-api-key" {
                     print("Ivalid api key!")
@@ -499,7 +538,7 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
     }
     
     func addApiKey() {
-        if let drawer = self.parent as? PulleyViewController {
+        if let drawer = parent as? PulleyViewController {
             drawer.navigationController?.navigationBar.isHidden = true
         }
         
@@ -517,7 +556,7 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
     }
     
     @IBAction func apiKeyDone() {
-        if let drawer = self.parent as? PulleyViewController {
+        if let drawer = parent as? PulleyViewController {
             drawer.navigationController?.navigationBar.isHidden = false
         }
         
@@ -540,7 +579,7 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
     @IBAction func logOut() {
         apiKeyDone()
         UserDefaults.standard.set(nil, forKey: "api_key")
-        if let drawer = self.parent as? PulleyViewController {
+        if let drawer = parent as? PulleyViewController {
             (drawer.navigationItem.titleView as! UIButton).setAttributedTitle(NSAttributedString(string: "🔑 API Key", attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
         }
         loadClassifiers()
@@ -555,7 +594,7 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
         classifiersButton.isHidden = false
         pickerView.isHidden = false
         
-        if let drawer = self.parent as? PulleyViewController {
+        if let drawer = parent as? PulleyViewController {
             drawer.navigationController?.navigationBar.isHidden = false
         }
         
@@ -568,7 +607,7 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showClassifiers",
             let destination = segue.destination as? ClassifiersTableViewController {
-            destination.classifiers = self.classifiers
+            destination.classifiers = classifiers
         }
     }
 }
@@ -591,17 +630,45 @@ extension UIImage {
     }
 }
 
+extension UIImageView {
+    var imageScale: CGSize {
+        
+        if let image = self.image {
+            let sx = Double(self.frame.size.width / image.size.width)
+            let sy = Double(self.frame.size.height / image.size.height)
+            var s = 1.0
+            switch (self.contentMode) {
+            case .scaleAspectFit:
+                s = fmin(sx, sy)
+                return CGSize (width: s, height: s)
+                
+            case .scaleAspectFill:
+                s = fmax(sx, sy)
+                return CGSize(width:s, height:s)
+                
+            case .scaleToFill:
+                return CGSize(width:sx, height:sy)
+                
+            default:
+                return CGSize(width:s, height:s)
+            }
+        }
+        
+        return CGSize.zero
+    }
+}
+
 extension UITextField {
     func setLeftPaddingPoints(_ amount:CGFloat){
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
-        self.leftView = paddingView
-        self.leftViewMode = .always
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: frame.size.height))
+        leftView = paddingView
+        leftViewMode = .always
     }
     
     func setRightPaddingPoints(_ amount:CGFloat) {
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
-        self.rightView = paddingView
-        self.rightViewMode = .always
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: frame.size.height))
+        rightView = paddingView
+        rightViewMode = .always
     }
 }
 

@@ -25,7 +25,11 @@ class TrainViewController: UIViewController {
         
         alert.view.addSubview(loadingIndicator)
         present(alert, animated: true, completion: nil)
-        classifier.train(completion: { response in
+        
+        // Not sure if this needs to be weak or unowned. You shouldn't be able to leave the page so we can probably leave it as is...?
+        // Lets do weak to be safe
+        classifier.train(completion: { [weak self] response in
+            guard let `self` = self else { return }
             self.dismiss(animated: false, completion: {
                 self.performSegue(withIdentifier: "unwindToClassifiersFromTrain", sender: self)
             })

@@ -44,6 +44,8 @@ class SnapperViewController: CameraViewController {
         numLabel.isHidden = true
         infoLabel.isHidden = false
         
+        nextButton.isEnabled = false
+        
         border.isHidden = true
         
         for subview in images {
@@ -56,7 +58,9 @@ class SnapperViewController: CameraViewController {
     var images = [UIImageView]()
     var border = UIView()
     override func captured(image: UIImage) {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let `self` = self else { return }
+            
             let newImageView = UIImageView()
             self.images.append(newImageView)
             

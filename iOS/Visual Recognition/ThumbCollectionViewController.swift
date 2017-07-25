@@ -13,8 +13,10 @@ class ThumbCollectionViewController: UICollectionViewController, UICollectionVie
     
     var classifier = PendingClassifier()
     var pendingClass = PendingClass()
-    var classes = [ClassObj]()
     var images = [UIImage]()
+    
+    @IBOutlet weak var trainButton: UIBarButtonItem!
+    @IBOutlet weak var editButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +41,7 @@ class ThumbCollectionViewController: UICollectionViewController, UICollectionVie
         
         return cell
     }
+    
     var dividerSize = CGFloat(9)
     var rows = CGFloat(2)
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -63,13 +66,14 @@ class ThumbCollectionViewController: UICollectionViewController, UICollectionVie
             let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl.appendingPathComponent(classifier.id!).appendingPathComponent(pendingClass.id!), includingPropertiesForKeys: nil, options: [])
             
             // if you want to filter the directory contents you can do like this:
-            let jpgFiles = directoryContents.filter{ $0.pathExtension == "jpg" }
-                .map { url -> (URL, TimeInterval) in
+            let jpgFiles = directoryContents
+                .filter({ $0.pathExtension == "jpg" })
+                .map({ url -> (URL, TimeInterval) in
                     var lastModified = try? url.resourceValues(forKeys: [URLResourceKey.contentModificationDateKey])
                     return (url, lastModified?.contentModificationDate?.timeIntervalSinceReferenceDate ?? 0)
-                }
+                })
                 .sorted(by: { $0.1 > $1.1 }) // sort descending modification dates
-                .map{ $0.0 }
+                .map({ $0.0 })
             
             for file in jpgFiles {
                 images.append(UIImage(contentsOfFile: file.path)!)
@@ -78,8 +82,5 @@ class ThumbCollectionViewController: UICollectionViewController, UICollectionVie
             print(error.localizedDescription)
         }
     }
-    
-    @IBOutlet weak var trainButton: UIBarButtonItem!
-    @IBOutlet weak var editButton: UIBarButtonItem!
 }
 
