@@ -206,7 +206,6 @@
                             <constraint firstItem="KQQ-I6-IMA" firstAttribute="centerY" secondItem="aaW-Uw-VLV" secondAttribute="centerY" id="42c-nR-kxk"/>
                             <constraint firstAttribute="bottom" secondItem="f82-Na-Q0n" secondAttribute="bottom" id="4By-J0-GWU"/>
                             <constraint firstAttribute="trailingMargin" secondItem="3n4-v9-abV" secondAttribute="trailing" id="5il-vD-nEX"/>
-                            <constraint firstItem="KQS-fI-xsI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6Op-bq-ic7"/>
                             <constraint firstAttribute="trailing" secondItem="f82-Na-Q0n" secondAttribute="trailing" id="8UI-ub-WOR"/>
                             <constraint firstItem="beL-ak-Suw" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="9BU-LJ-PaA"/>
                             <constraint firstItem="cgw-ra-nMb" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="9DX-HU-tgs"/>
@@ -216,12 +215,10 @@
                             <constraint firstAttribute="trailing" secondItem="KQS-fI-xsI" secondAttribute="trailing" id="BUu-HX-RNL"/>
                             <constraint firstAttribute="trailing" secondItem="cgw-ra-nMb" secondAttribute="trailing" id="C8n-ri-X6i"/>
                             <constraint firstItem="kcX-nD-Zb0" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="Cp0-WT-XZd"/>
-                            <constraint firstItem="KQS-fI-xsI" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="HWh-hL-tPp"/>
                             <constraint firstItem="usO-SO-NRr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Jaz-UD-2zg"/>
                             <constraint firstItem="Vih-RT-oNx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Nqp-wx-HAJ"/>
                             <constraint firstItem="usO-SO-NRr" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="QFY-5U-VVu"/>
                             <constraint firstItem="hbX-2x-72A" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="25" id="Qeo-ql-kea"/>
-                            <constraint firstItem="usO-SO-NRr" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="RHN-0f-5pi"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="KQS-fI-xsI" secondAttribute="bottom" id="RcB-kF-1B5"/>
                             <constraint firstAttribute="trailing" secondItem="UjN-QC-Tx6" secondAttribute="trailing" id="WWt-mO-N9E"/>
                             <constraint firstItem="KQS-fI-xsI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="X25-4a-USP"/>
@@ -247,7 +244,6 @@
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="usO-SO-NRr" secondAttribute="bottom" id="qyj-PS-QE6"/>
                             <constraint firstItem="aaW-Uw-VLV" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="sTP-M9-kDJ"/>
                             <constraint firstItem="rLC-P0-1KE" firstAttribute="top" secondItem="aaW-Uw-VLV" secondAttribute="bottom" constant="20" id="vpv-Re-ARW"/>
-                            <constraint firstItem="usO-SO-NRr" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xT7-n0-yQu"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="7cZ-Iv-5lE" appends="YES" id="6u9-Lz-q8j"/>
@@ -730,12 +726,12 @@
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <items>
                                     <navigationItem id="Lqg-5a-pJI">
-                                        <barButtonItem key="leftBarButtonItem" style="done" systemItem="stop" id="5lB-Nf-QnD">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="stop" id="5lB-Nf-QnD">
                                             <connections>
                                                 <segue destination="yra-Be-iOR" kind="unwind" unwindAction="unwindToClassifiersWithSegue:" id="M0g-tr-dZf"/>
                                             </connections>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" title="Next" style="done" id="OXS-yJ-WQJ">
+                                        <barButtonItem key="rightBarButtonItem" title="Next" id="OXS-yJ-WQJ">
                                             <connections>
                                                 <action selector="nextWithSender:" destination="Uxd-xu-Mdc" id="JJ7-EV-5AK"/>
                                             </connections>
@@ -838,7 +834,7 @@
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <items>
                                     <navigationItem id="chQ-Nd-4LR">
-                                        <barButtonItem key="leftBarButtonItem" style="done" systemItem="stop" id="ZXN-5X-D7k">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="stop" id="ZXN-5X-D7k">
                                             <connections>
                                                 <segue destination="IV5-Cr-ypJ" kind="unwind" identifier="unwindToClassifiersFromTrain" unwindAction="unwindToClassifiersWithSegue:" id="xhJ-hw-nuv"/>
                                             </connections>
