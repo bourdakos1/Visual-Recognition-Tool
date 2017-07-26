@@ -15,9 +15,6 @@ class ThumbCollectionViewController: UICollectionViewController, UICollectionVie
     var pendingClass = PendingClass()
     var images = [UIImage]()
     
-    @IBOutlet weak var trainButton: UIBarButtonItem!
-    @IBOutlet weak var editButton: UIBarButtonItem!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         images = []

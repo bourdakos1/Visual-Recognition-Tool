@@ -16,8 +16,6 @@ class SnapperViewController: CameraViewController {
     
     @IBOutlet var thumbnail: UIView!
     @IBOutlet var thumbnailImage: UIImageView!
-    @IBOutlet weak var width: NSLayoutConstraint!
-    @IBOutlet weak var height: NSLayoutConstraint!
     
     @IBOutlet var nextButton: UIButton!
     @IBOutlet var infoLabel: UITextView!

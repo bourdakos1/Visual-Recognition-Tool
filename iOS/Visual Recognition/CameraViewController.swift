@@ -173,12 +173,12 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             var defaultVideoDevice: AVCaptureDevice?
             
             // Choose the back dual camera if available, otherwise default to a wide angle camera.
-            if let dualCameraDevice = AVCaptureDevice.__defaultDevice(withDeviceType: .builtInDualCamera, mediaType: AVMediaTypeVideo, position: .back) {
+            if let dualCameraDevice = AVCaptureDevice.defaultDevice(withDeviceType: .builtInDualCamera, mediaType: AVMediaTypeVideo, position: .back) {
                 defaultVideoDevice = dualCameraDevice
-            } else if let backCameraDevice = AVCaptureDevice.__defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .back) {
+            } else if let backCameraDevice = AVCaptureDevice.defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .back) {
                 // If the back dual camera is not available, default to the back wide angle camera.
                 defaultVideoDevice = backCameraDevice
-            } else if let frontCameraDevice = AVCaptureDevice.__defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .front) {
+            } else if let frontCameraDevice = AVCaptureDevice.defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .front) {
                 /*
                  In some cases where users break their phones, the back wide angle camera is not available.
                  In this case, we should default to the front wide angle camera.
@@ -279,7 +279,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
     
     @IBOutlet weak var cameraButton: UIButton!
     
-    private let videoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(__deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera], mediaType: AVMediaTypeVideo, position: .unspecified)
+    private let videoDeviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInDualCamera], mediaType: AVMediaTypeVideo, position: .unspecified)
     
     @IBAction private func changeCamera(_ cameraButton: UIButton) {
         cameraButton.isEnabled = false
@@ -302,7 +302,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
                 preferredDeviceType = .builtInWideAngleCamera
             }
             
-            let devices = self.videoDeviceDiscoverySession.devices
+            let devices = self.videoDeviceDiscoverySession?.devices
             var newVideoDevice: AVCaptureDevice? = nil
             
             // First, look for a device with both the preferred position and device type. Otherwise, look for a device with only the preferred position.
@@ -416,8 +416,8 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             }
             
             photoSettings.isHighResolutionPhotoEnabled = true
-            if !photoSettings.__availablePreviewPhotoPixelFormatTypes.isEmpty {
-                photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String: photoSettings.__availablePreviewPhotoPixelFormatTypes.first!]
+            if !photoSettings.availablePreviewPhotoPixelFormatTypes.isEmpty {
+                photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String: photoSettings.availablePreviewPhotoPixelFormatTypes.first!]
             }
             
             // Use a separate object for the photo capture delegate to isolate each capture life cycle.
@@ -489,7 +489,7 @@ class CameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDele
             
             DispatchQueue.main.async { [unowned self] in
                 // Only enable the ability to change camera if the device has more than one camera.
-                self.cameraButton.isEnabled = isSessionRunning && self.videoDeviceDiscoverySession.uniqueDevicePositionsCount() > 1
+                self.cameraButton.isEnabled = isSessionRunning && self.videoDeviceDiscoverySession!.uniqueDevicePositionsCount() > 1
                 self.photoButton.isEnabled = isSessionRunning
             }
         } else {
