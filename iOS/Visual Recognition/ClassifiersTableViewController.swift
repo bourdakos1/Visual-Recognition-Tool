@@ -20,7 +20,6 @@ class ClassifiersTableViewController: UITableViewController {
     var pending = [PendingClassifier]()
     var classifiers = [Classifier]()
     
-    var pendingClass = PendingClass()
     var pendingClassifier = PendingClassifier()
     
     required init?(coder aDecoder: NSCoder) {
@@ -431,5 +430,12 @@ class ClassifiersTableViewController: UITableViewController {
     
     @IBAction func unwindToClassifiers(segue: UIStoryboardSegue) {
         // Unwind
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "newClassifier",
+            let destination = segue.destination as? ClassesViewController {
+            destination.classifier = pendingClassifier
+        }
     }
 }

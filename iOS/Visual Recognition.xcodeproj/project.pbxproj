@@ -13,6 +13,9 @@
 		232B9F8C1E80885900407BB8 /* scrim.png in Resources */ = {isa = PBXBuildFile; fileRef = 232B9F8B1E80885900407BB8 /* scrim.png */; };
 		232B9F8E1E808EA500407BB8 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B9F8D1E808EA500407BB8 /* RoundedButton.swift */; };
 		232B9F901E80A5AD00407BB8 /* ClassifiersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B9F8F1E80A5AD00407BB8 /* ClassifiersTableViewController.swift */; };
+		23369D6F1F2BF9ED00033907 /* ClassCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23369D6E1F2BF9DB00033907 /* ClassCollectionViewCell.swift */; };
+		23369D701F2BF9ED00033907 /* ClassesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23369D6D1F2BF9DB00033907 /* ClassesCollectionViewController.swift */; };
+		23369D721F2C005A00033907 /* ClassesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23369D711F2C005A00033907 /* ClassesViewController.swift */; };
 		233D0B9E1EC13101005E5594 /* Classifiers.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 233D0B9C1EC13101005E5594 /* Classifiers.xcdatamodeld */; };
 		233D0BA01EC17C53005E5594 /* DatabaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233D0B9F1EC17C53005E5594 /* DatabaseController.swift */; };
 		233D0BB61EC22EB6005E5594 /* PendingClassifier+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233D0BB21EC22EB6005E5594 /* PendingClassifier+CoreDataClass.swift */; };
@@ -88,6 +91,9 @@
 		232B9F8B1E80885900407BB8 /* scrim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scrim.png; sourceTree = "<group>"; };
 		232B9F8D1E808EA500407BB8 /* RoundedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		232B9F8F1E80A5AD00407BB8 /* ClassifiersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassifiersTableViewController.swift; sourceTree = "<group>"; };
+		23369D6D1F2BF9DB00033907 /* ClassesCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassesCollectionViewController.swift; sourceTree = "<group>"; };
+		23369D6E1F2BF9DB00033907 /* ClassCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassCollectionViewCell.swift; sourceTree = "<group>"; };
+		23369D711F2C005A00033907 /* ClassesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassesViewController.swift; sourceTree = "<group>"; };
 		233D0B9D1EC13101005E5594 /* Classifiers.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Classifiers.xcdatamodel; sourceTree = "<group>"; };
 		233D0B9F1EC17C53005E5594 /* DatabaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseController.swift; sourceTree = "<group>"; };
 		233D0BB21EC22EB6005E5594 /* PendingClassifier+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PendingClassifier+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -240,6 +246,9 @@
 				23742B5F1F1D29EB00F52C1B /* ClassifyViewController.swift */,
 				232B9F8F1E80A5AD00407BB8 /* ClassifiersTableViewController.swift */,
 				23AA522F1EC0DC550073D4DC /* ClassiferTableViewCell.swift */,
+				23369D711F2C005A00033907 /* ClassesViewController.swift */,
+				23369D6D1F2BF9DB00033907 /* ClassesCollectionViewController.swift */,
+				23369D6E1F2BF9DB00033907 /* ClassCollectionViewCell.swift */,
 				2352A3071F194DDE00458F1F /* SnapperViewController.swift */,
 				23C875281F25469400C3BBE8 /* NameClassViewController.swift */,
 				23C875261F2544D300C3BBE8 /* ThumbCollectionViewController.swift */,
@@ -642,6 +651,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23369D721F2C005A00033907 /* ClassesViewController.swift in Sources */,
+				23369D6F1F2BF9ED00033907 /* ClassCollectionViewCell.swift in Sources */,
+				23369D701F2BF9ED00033907 /* ClassesCollectionViewController.swift in Sources */,
 				2389A7301E7C79CA00D7C973 /* PulleyViewController.swift in Sources */,
 				23742B601F1D29EB00F52C1B /* ClassifyViewController.swift in Sources */,
 				2389A6FE1E7C65A100D7C973 /* AppDelegate.swift in Sources */,
