@@ -38,58 +38,18 @@ class ClassifiersTableViewController: UITableViewController {
     weak var AddAlertSaveAction: UIAlertAction?
     
     @IBAction func createClassifier() {
-        let alert = UIAlertController(title: "New Classifier", message: "What do you want to classify?", preferredStyle: .alert)
+        let pendingClassifierClassName: String = String(describing: PendingClassifier.self)
+
+        let pendingClassifier:PendingClassifier = NSEntityDescription.insertNewObject(forEntityName: pendingClassifierClassName, into: DatabaseController.getContext()) as! PendingClassifier
+        pendingClassifier.id = UUID().uuidString
+        pendingClassifier.name = "Untitled Classifier"
+        pendingClassifier.created = Date()
         
-        alert.addTextField(configurationHandler: { [unowned self] textField in
-            textField.placeholder = "Classifier Name"
-            textField.addTarget(self, action: #selector(self.handleTextDidChange(_:)), for: .editingChanged)
-        })
+        self.pendingClassifier = pendingClassifier
         
-        // Create the actions.
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { action in
-            print("cancel")
-        }
+        DatabaseController.saveContext()
         
-        let saveAction = UIAlertAction(title: "Save", style: .default) { [unowned self] action in
-            let textfield = alert.textFields!.first!
-            print("saving: \(textfield.text!)")
-            let pendingClassifierClassName:String  = String(describing: PendingClassifier.self)
-    
-            let pendingClassifier:PendingClassifier = NSEntityDescription.insertNewObject(forEntityName: pendingClassifierClassName, into: DatabaseController.getContext()) as! PendingClassifier
-            pendingClassifier.id = UUID().uuidString
-            pendingClassifier.name = textfield.text!
-            pendingClassifier.created = Date()
-            
-            // Create a new class thats blank
-            let pendingClassClassName: String = String(describing: PendingClass.self)
-            
-            let pendingClass: PendingClass = NSEntityDescription.insertNewObject(forEntityName: pendingClassClassName, into: DatabaseController.getContext()) as! PendingClass
-            
-            pendingClass.id = UUID().uuidString
-            pendingClass.name = String()
-            pendingClass.created = Date()
-            
-            pendingClassifier.addToRelationship(pendingClass)
-            
-            self.pendingClassifier = pendingClassifier
-            self.pendingClass = pendingClass
-            
-            DatabaseController.saveContext()
-            
-            self.performSegue(withIdentifier: "showSnapper", sender: nil)
-        }
-        
-        // disable the 'save' button initially
-        saveAction.isEnabled = false
-        
-        // save the save action to toggle the enabled/disabled state when the text changed.
-        AddAlertSaveAction = saveAction
-        
-        // Add the actions.
-        alert.addAction(cancelAction)
-        alert.addAction(saveAction)
-        
-        present(alert, animated: true, completion: nil)
+        self.performSegue(withIdentifier: "newClassifier", sender: nil)
     }
     
     func handleTextDidChange(_ sender:UITextField) {
@@ -471,13 +431,5 @@ class ClassifiersTableViewController: UITableViewController {
     
     @IBAction func unwindToClassifiers(segue: UIStoryboardSegue) {
         // Unwind
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if  segue.identifier == "showSnapper",
-            let destination = segue.destination as? SnapperViewController {
-            destination.pendingClass = pendingClass
-            destination.classifier = pendingClassifier
-        }
     }
 }
