@@ -610,9 +610,6 @@
                                     <constraint firstAttribute="width" constant="33" id="U7R-tt-hmW"/>
                                 </constraints>
                                 <state key="normal" image="cancel.png"/>
-                                <connections>
-                                    <segue destination="yNw-u1-LOA" kind="unwind" unwindAction="unwindToClassifiersWithSegue:" id="FYL-85-ygN"/>
-                                </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="scrim.png" translatesAutoresizingMaskIntoConstraints="NO" id="YWt-BL-vyv">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -684,14 +681,13 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eJd-hN-4tU" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="yNw-u1-LOA" userLabel="Exit" sceneMemberID="exit"/>
                 <tapGestureRecognizer id="5bX-Sp-W1R">
                     <connections>
                         <action selector="focusAndExposeTap:" destination="zjM-K8-kVZ" id="P3B-Ru-uUA"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2985" y="1126"/>
+            <point key="canvasLocation" x="3161" y="-398"/>
         </scene>
         <!--Name Class View Controller-->
         <scene sceneID="9Da-2X-Krl">
@@ -727,11 +723,7 @@
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <items>
                                     <navigationItem id="Lqg-5a-pJI">
-                                        <barButtonItem key="leftBarButtonItem" systemItem="stop" id="5lB-Nf-QnD">
-                                            <connections>
-                                                <segue destination="yra-Be-iOR" kind="unwind" unwindAction="unwindToClassifiersWithSegue:" id="M0g-tr-dZf"/>
-                                            </connections>
-                                        </barButtonItem>
+                                        <barButtonItem key="leftBarButtonItem" systemItem="stop" id="5lB-Nf-QnD"/>
                                         <barButtonItem key="rightBarButtonItem" title="Next" id="OXS-yJ-WQJ">
                                             <connections>
                                                 <action selector="nextWithSender:" destination="Uxd-xu-Mdc" id="JJ7-EV-5AK"/>
@@ -761,14 +753,11 @@
                     <connections>
                         <outlet property="container" destination="Biv-rh-fPw" id="7O7-RR-IH9"/>
                         <outlet property="textField" destination="Sll-F4-1i1" id="wZq-8S-675"/>
-                        <segue destination="80G-lb-06F" kind="showDetail" identifier="askToTrain" action="showViewController:sender:" id="5Ie-v3-Eek"/>
-                        <segue destination="yra-Be-iOR" kind="unwind" identifier="newClass" unwindAction="unwindToSnapperFromNameWithSegue:" id="N4h-W4-7pA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yx8-i9-Vnl" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="yra-Be-iOR" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3865" y="1126"/>
+            <point key="canvasLocation" x="4041" y="-398"/>
         </scene>
         <!--Classes View Controller-->
         <scene sceneID="L7d-af-Jum">
@@ -811,9 +800,16 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z8I-I0-cNf">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z8I-I0-cNf" customClass="RoundedButton" customModule="Visual_Recognition" customModuleProvider="target">
                                 <rect key="frame" x="20" y="617" width="335" height="30"/>
-                                <state key="normal" title="Train"/>
+                                <state key="normal" title="Train">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="color">
+                                        <color key="value" red="0.47058823529999999" green="0.38823529410000002" blue="0.92549019610000005" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -833,6 +829,9 @@
                             <constraint firstItem="Fg8-Ed-1ju" firstAttribute="top" secondItem="Jct-4J-qzK" secondAttribute="bottom" constant="20" id="zNu-xT-a0U"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <segue destination="zjM-K8-kVZ" kind="presentation" identifier="showSnapper" id="gKb-JU-ebP"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4xy-m9-2Eh" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="2OQ-W3-4iC" userLabel="Exit" sceneMemberID="exit"/>
@@ -1004,88 +1003,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A4d-Zc-Q8c" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3865" y="1873"/>
-        </scene>
-        <!--Train View Controller-->
-        <scene sceneID="QJW-wG-Y8F">
-            <objects>
-                <viewController id="80G-lb-06F" customClass="TrainViewController" customModule="Visual_Recognition" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="H25-2F-5tq"/>
-                        <viewControllerLayoutGuide type="bottom" id="yab-LY-lKG"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="SFn-FL-LMe">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" shadowImage="select.png" translatesAutoresizingMaskIntoConstraints="NO" id="oW4-2P-19h">
-                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
-                                <items>
-                                    <navigationItem id="chQ-Nd-4LR">
-                                        <barButtonItem key="leftBarButtonItem" systemItem="stop" id="ZXN-5X-D7k">
-                                            <connections>
-                                                <segue destination="IV5-Cr-ypJ" kind="unwind" identifier="unwindToClassifiersFromTrain" unwindAction="unwindToClassifiersWithSegue:" id="xhJ-hw-nuv"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Bkd-PH-qoV">
-                                <rect key="frame" x="24" y="237.5" width="326" height="192"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Train your classifier?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mGe-Ak-nL6">
-                                        <rect key="frame" x="0.0" y="0.0" width="326" height="41"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="34"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gd6-T4-6NE">
-                                        <rect key="frame" x="43" y="61" width="240" height="10"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="10" id="9vq-GW-Mz0"/>
-                                        </constraints>
-                                    </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l5y-bG-s5P" customClass="RoundedButton" customModule="Visual_Recognition" customModuleProvider="target">
-                                        <rect key="frame" x="48" y="91" width="230" height="51"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="34"/>
-                                        <inset key="contentEdgeInsets" minX="80" minY="5" maxX="80" maxY="5"/>
-                                        <state key="normal" title="Train">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="color">
-                                                <color key="value" red="0.47058823529999999" green="0.38823529410000002" blue="0.92549019610000005" alpha="1" colorSpace="calibratedRGB"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="train" destination="80G-lb-06F" eventType="touchUpInside" id="UAp-WJ-SKh"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qSP-TP-cTg">
-                                        <rect key="frame" x="88.5" y="162" width="149" height="30"/>
-                                        <state key="normal" title="Add another category"/>
-                                        <connections>
-                                            <segue destination="IV5-Cr-ypJ" kind="unwind" identifier="additionalClasses" unwindAction="unwindToSnapperFromTrainWithSegue:" id="btH-i4-NUu"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                            </stackView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="oW4-2P-19h" firstAttribute="leading" secondItem="SFn-FL-LMe" secondAttribute="leading" id="1GE-bK-f7g"/>
-                            <constraint firstItem="oW4-2P-19h" firstAttribute="top" secondItem="H25-2F-5tq" secondAttribute="bottom" id="GSg-Yu-BVW"/>
-                            <constraint firstItem="Bkd-PH-qoV" firstAttribute="centerY" secondItem="SFn-FL-LMe" secondAttribute="centerY" id="dEN-QH-BtY"/>
-                            <constraint firstItem="Bkd-PH-qoV" firstAttribute="centerX" secondItem="SFn-FL-LMe" secondAttribute="centerX" id="e2d-Nz-NEx"/>
-                            <constraint firstAttribute="trailing" secondItem="oW4-2P-19h" secondAttribute="trailing" id="x8k-TF-drg"/>
-                        </constraints>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="PVK-ck-l4g" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="IV5-Cr-ypJ" userLabel="Exit" sceneMemberID="exit"/>
-            </objects>
-            <point key="canvasLocation" x="4822" y="1126"/>
+            <point key="canvasLocation" x="4041" y="349"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Woy-H8-uLq">

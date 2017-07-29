@@ -82,6 +82,10 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
             
             cell.classImageImageView.layer.cornerRadius = 5
             cell.classImageImageView.clipsToBounds = true
+            
+            cell.classImageImageView.layer.borderColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
+            cell.classImageImageView.layer.borderWidth = 1.0 / UIScreen.main.scale
+            
             cell.classNameLabel.text = classes[indexPath.item].pendingClass.name
             cell.classImageCountLabel.text = String(describing: classes[indexPath.item].imageCount)
             return cell
@@ -89,6 +93,8 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "newClassCell", for: indexPath)
             cell.viewWithTag(1)?.layer.cornerRadius = 5
             cell.viewWithTag(1)?.clipsToBounds = true
+            cell.viewWithTag(1)?.layer.borderColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
+            cell.viewWithTag(1)?.layer.borderWidth = 1.0 / UIScreen.main.scale
             return cell
         }
     }
@@ -108,7 +114,7 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsetsMake(CGFloat(20.0), CGFloat(20.0), CGFloat(20.0), CGFloat(20.0))
+        return UIEdgeInsetsMake(CGFloat(70.0), CGFloat(20.0), CGFloat(70.0), CGFloat(20.0))
     }
     
     func grabPhoto(for pendingClass: PendingClass) -> ClassObj {
