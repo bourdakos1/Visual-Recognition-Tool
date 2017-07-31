@@ -16,7 +16,7 @@ struct ClassObj {
     var imageCount: Int
 }
 
-class ClassesCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class ClassesCollectionViewController: UICollectionViewController {
     
     var classifier = PendingClassifier()
     var classes = [ClassObj]()
@@ -97,24 +97,6 @@ class ClassesCollectionViewController: UICollectionViewController, UICollectionV
             cell.viewWithTag(1)?.layer.borderWidth = 1.0 / UIScreen.main.scale
             return cell
         }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (collectionView.frame.width - 40) / 2 - 10
-
-        return CGSize(width: width, height: width + 50)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return CGFloat(10.0)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return CGFloat(10.0)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsetsMake(CGFloat(70.0), CGFloat(20.0), CGFloat(70.0), CGFloat(20.0))
     }
     
     func grabPhoto(for pendingClass: PendingClass) -> ClassObj {

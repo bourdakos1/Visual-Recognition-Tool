@@ -16,12 +16,15 @@
 		23369D6F1F2BF9ED00033907 /* ClassCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23369D6E1F2BF9DB00033907 /* ClassCollectionViewCell.swift */; };
 		23369D701F2BF9ED00033907 /* ClassesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23369D6D1F2BF9DB00033907 /* ClassesCollectionViewController.swift */; };
 		23369D721F2C005A00033907 /* ClassesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23369D711F2C005A00033907 /* ClassesViewController.swift */; };
+		23369D741F2C0F5900033907 /* train_send.png in Resources */ = {isa = PBXBuildFile; fileRef = 23369D731F2C0F4100033907 /* train_send.png */; };
 		233D0B9E1EC13101005E5594 /* Classifiers.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 233D0B9C1EC13101005E5594 /* Classifiers.xcdatamodeld */; };
 		233D0BA01EC17C53005E5594 /* DatabaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233D0B9F1EC17C53005E5594 /* DatabaseController.swift */; };
 		233D0BB61EC22EB6005E5594 /* PendingClassifier+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233D0BB21EC22EB6005E5594 /* PendingClassifier+CoreDataClass.swift */; };
 		233D0BB71EC22EB6005E5594 /* PendingClassifier+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233D0BB31EC22EB6005E5594 /* PendingClassifier+CoreDataProperties.swift */; };
 		233D0BB81EC22EB6005E5594 /* PendingClass+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233D0BB41EC22EB6005E5594 /* PendingClass+CoreDataClass.swift */; };
 		233D0BB91EC22EB6005E5594 /* PendingClass+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233D0BB51EC22EB6005E5594 /* PendingClass+CoreDataProperties.swift */; };
+		234BAF031F2FA54C007524C8 /* bottom_scrim_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 234BAF021F2FA541007524C8 /* bottom_scrim_white.png */; };
+		234BAF041F2FA54C007524C8 /* scrim_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 234BAF011F2FA541007524C8 /* scrim_white.png */; };
 		2352A3081F194DDE00458F1F /* SnapperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2352A3071F194DDE00458F1F /* SnapperViewController.swift */; };
 		23609DBB1EBA727800FD03FC /* Keys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 23609DBA1EBA727800FD03FC /* Keys.plist */; };
 		236273581F10B03E0090F4F5 /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 236273571F10B0290090F4F5 /* camera.png */; };
@@ -94,12 +97,15 @@
 		23369D6D1F2BF9DB00033907 /* ClassesCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassesCollectionViewController.swift; sourceTree = "<group>"; };
 		23369D6E1F2BF9DB00033907 /* ClassCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassCollectionViewCell.swift; sourceTree = "<group>"; };
 		23369D711F2C005A00033907 /* ClassesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassesViewController.swift; sourceTree = "<group>"; };
+		23369D731F2C0F4100033907 /* train_send.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = train_send.png; sourceTree = "<group>"; };
 		233D0B9D1EC13101005E5594 /* Classifiers.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Classifiers.xcdatamodel; sourceTree = "<group>"; };
 		233D0B9F1EC17C53005E5594 /* DatabaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseController.swift; sourceTree = "<group>"; };
 		233D0BB21EC22EB6005E5594 /* PendingClassifier+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PendingClassifier+CoreDataClass.swift"; sourceTree = "<group>"; };
 		233D0BB31EC22EB6005E5594 /* PendingClassifier+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PendingClassifier+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		233D0BB41EC22EB6005E5594 /* PendingClass+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PendingClass+CoreDataClass.swift"; sourceTree = "<group>"; };
 		233D0BB51EC22EB6005E5594 /* PendingClass+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PendingClass+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		234BAF011F2FA541007524C8 /* scrim_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scrim_white.png; sourceTree = "<group>"; };
+		234BAF021F2FA541007524C8 /* bottom_scrim_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bottom_scrim_white.png; sourceTree = "<group>"; };
 		2352A3071F194DDE00458F1F /* SnapperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapperViewController.swift; sourceTree = "<group>"; };
 		23609DBA1EBA727800FD03FC /* Keys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Keys.plist; sourceTree = "<group>"; };
 		236273561F10B0290090F4F5 /* photos.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photos.png; sourceTree = "<group>"; };
@@ -305,8 +311,11 @@
 			children = (
 				236DCB6A1E7DAA54009AE6D6 /* capture.png */,
 				236DCB6C1E7DAE04009AE6D6 /* cancel.png */,
+				234BAF021F2FA541007524C8 /* bottom_scrim_white.png */,
+				234BAF011F2FA541007524C8 /* scrim_white.png */,
 				23C875241F22F5F400C3BBE8 /* next.png */,
 				2362735E1F122E660090F4F5 /* reverse.png */,
+				23369D731F2C0F4100033907 /* train_send.png */,
 				231D6FE11EBAA8E0003DDE56 /* classifiers.png */,
 				23742B621F1D370A00F52C1B /* reverse_solid.png */,
 				236273571F10B0290090F4F5 /* camera.png */,
@@ -466,6 +475,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				234BAF031F2FA54C007524C8 /* bottom_scrim_white.png in Resources */,
+				234BAF041F2FA54C007524C8 /* scrim_white.png in Resources */,
+				23369D741F2C0F5900033907 /* train_send.png in Resources */,
 				23C875251F22F60500C3BBE8 /* next.png in Resources */,
 				23742B631F1D377200F52C1B /* reverse_solid.png in Resources */,
 				239DF1961F1701B600CECED9 /* bottom_scrim.png in Resources */,
