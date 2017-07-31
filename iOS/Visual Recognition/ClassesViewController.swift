@@ -101,6 +101,9 @@ class ClassesViewController: UIViewController, UICollectionViewDelegateFlowLayou
     }
     
     func keyboardWillHide(notification: NSNotification) {
+        classifier.name = classifierName.text
+        DatabaseController.saveContext()
+        
         if lastContentOffset <= 0 {
             animateShadow(opacity: 0, offset: CGSize(width: 0, height: 0))
         }
