@@ -178,8 +178,10 @@ export default class WorkSpace extends React.Component {
     create = (onProgress, onFinished) => {
         if (this.props.match) {
             var req = request.put('/api/classifiers/' + this.props.match.params.classifierID)
+            amplitude.getInstance().logEvent('Retrain-classifier')
         } else {
             var req = request.post('/api/classifiers')
+            amplitude.getInstance().logEvent('Create-classifier')
         }
 
         var self = this
@@ -205,7 +207,7 @@ export default class WorkSpace extends React.Component {
             }
         })
 
-        req.then(function(res, err) {
+        req.then((res, err) => {
             console.log(res)
             if (res.body == null) {
                 alert(Strings.generic_error);

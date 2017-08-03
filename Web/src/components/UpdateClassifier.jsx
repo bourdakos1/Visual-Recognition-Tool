@@ -27,11 +27,13 @@ export default class UpdateClassifier extends React.Component {
         var classes = []
 
         var req = request.get('/api/classifiers/' + this.props.match.params.classifierID)
+        amplitude.getInstance().logEvent('List-classifier')
+        
         req.use(nocache)
 
         req.query({ api_key: localStorage.getItem('api_key') })
 
-        req.end(function(err, res) {
+        req.end((err, res) => {
             if (err != null) {
                 console.error('Server error')
             }

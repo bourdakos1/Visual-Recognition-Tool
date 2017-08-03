@@ -36,11 +36,13 @@ export default class Classifiers extends React.Component {
         var self = this
 
         var req = request.get('/api/classifiers/' + classifier_id)
+        amplitude.getInstance().logEvent('List-classifier')
+
         req.use(nocache)
 
         req.query({ api_key: localStorage.getItem('api_key') })
 
-        req.end(function(err, res) {
+        req.end((err, res) => {
             if (res.body == null) {
                 alert(Strings.generic_error)
             } else if (res.body.error != null) {
@@ -66,6 +68,7 @@ export default class Classifiers extends React.Component {
         console.log(localStorage.getItem('api_key'))
 
         var req = request.get('/api/classifiers')
+        amplitude.getInstance().logEvent('List-classifiers')
         req.use(nocache)
 
         req.query({ api_key: localStorage.getItem('api_key') })

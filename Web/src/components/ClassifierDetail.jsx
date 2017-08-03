@@ -36,6 +36,7 @@ export default class ClassifierDetail extends React.Component {
         e.preventDefault()
         if (confirm('Delete ' + this.props.name + '?') == true) {
             var req = request.del('/api/classifiers/' + this.props.classifierID)
+            amplitude.getInstance().logEvent('Delete-classifier')
             var self = this
             req.query({api_key: localStorage.getItem('api_key')})
             req.end(function(err, res) {
@@ -71,6 +72,12 @@ export default class ClassifierDetail extends React.Component {
             req = request.post('/api/classify')
             req.query({classifier_ids: [this.props.classifierID || this.props.name.toLowerCase()]})
             req.query({threshold: 0.0})
+        }
+
+        if (this.props.classifierID == null) {
+            amplitude.getInstance().logEvent('Classify-' + this.props.name.toLowerCase())
+        } else {
+            amplitude.getInstance().logEvent('Classify-custom')
         }
 
         if (files[0]) {
@@ -137,6 +144,12 @@ export default class ClassifierDetail extends React.Component {
             req = request.get('/api/classify')
             req.query({classifier_ids: [this.props.classifierID || this.props.name.toLowerCase()]})
             req.query({threshold: 0.0})
+        }
+
+        if (this.props.classifierID == null) {
+            amplitude.getInstance().logEvent('Classify-' + this.props.name.toLowerCase())
+        } else {
+            amplitude.getInstance().logEvent('Classify-custom')
         }
 
         req.query({url: link})
