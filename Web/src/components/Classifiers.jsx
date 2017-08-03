@@ -80,7 +80,26 @@ export default class Classifiers extends React.Component {
             var classifiers = []
 
             if (res.body == null) {
-                alert(Strings.generic_error)
+                if (res.text != null) {
+                    // Fix invalid json with double commas
+                    try {
+                        classifiers = JSON.parse(res.text.replace(/(,)([ ,\n]*)(,)/g, ',')).classifiers
+
+                        classifiers.sort((a, b) => {
+                            return new Date(b.created) - new Date(a.created)
+                        })
+
+                        classifiers.push(
+                            {name: Strings.classifier_general, status: Strings.status_ready},
+                            {name: Strings.classifier_food, status: Strings.status_ready},
+                            {name: Strings.classifier_face, status: Strings.status_ready}
+                        )
+                    } catch(err) {
+                        alert(err)
+                    }
+                } else {
+                    alert(Strings.generic_error)
+                }
             } else if (res.body.error != null) {
                 alert(res.body.error)
             } else {
