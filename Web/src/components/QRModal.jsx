@@ -89,15 +89,12 @@ export default class CredentialsModal extends React.Component {
         return (
             <Modal id={'credentials-modal'} isOpen={this.state.modal} toggle={this.toggle}>
                 <div className={'modal-header'}>
-                    <div style={title}>Top Secret</div>
+                    <div style={title}></div>
                     <button onClick={this.toggle} style={deleteStyle} />
                 </div>
                 <ModalBody>
-                    <div style={[textStyles.base, {marginTop: '5px', marginBottom: '5px'}]}>
-                        Special feature coming soon.
-                    </div>
-                    <div style={{width: '200px', margin: 'auto', marginTop: '60px', marginBottom: '30px'}} >
-                        <QRCode size={200} value={localStorage.getItem('api_key')} />
+                    <div style={{width: '300px', margin: 'auto', marginTop: '30px', marginBottom: '30px'}} >
+                        <QRCode size={300} value={localStorage.getItem('api_key')} />
                     </div>
                 </ModalBody>
             </Modal>
