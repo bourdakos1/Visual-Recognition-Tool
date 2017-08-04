@@ -71,11 +71,6 @@ export default class WorkSpace extends React.Component {
                 errors = true
                 titleError = Strings.classifier_name_required_error
                 this.setState({errors: errors, titleError: titleError})
-            } else if (/[*\\|{}$/'`"\-]/.test(this.state.classifier.name)) {
-                errors = true
-                var invalidChars = this.state.classifier.name.match(/[*\\|{}$/'`"\-]/g)
-                titleError = Strings.invalid_chars_error + invalidChars.join(' ')
-                this.setState({errors: errors, titleError: titleError})
             }
 
             var validClasses = 0
@@ -116,9 +111,9 @@ export default class WorkSpace extends React.Component {
                 if (c.name != null && c.name != '') {
                     dupes[c.name] = 1
                     classCount++
-                    if (/[*\\|{}$/'`"\-]/.test(c.name)) {
+                    if (/[*\\[\]\|{}$/'`"\-]/.test(c.name)) {
                         errors = true
-                        var invalidChars = c.name.match(/[*\\|{}$/'`"\-]/g)
+                        var invalidChars = c.name.match(/[*\\[\]\|{}$/'`"\-]/g)
                         error = Strings.invalid_chars_error + invalidChars.join(' ')
                         self.setState({errors: errors, error: error})
                     }
