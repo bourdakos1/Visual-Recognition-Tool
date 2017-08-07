@@ -10,8 +10,6 @@ export default class Base extends React.Component {
             margin: 'auto'
         }
 
-        amplitude.getInstance().setUserId(localStorage.getItem('api_key'))
-
         return (
             <div>
                 <TitleBar showModal={this.props.showModal}/>

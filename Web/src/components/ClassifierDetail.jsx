@@ -36,7 +36,14 @@ export default class ClassifierDetail extends React.Component {
         e.preventDefault()
         if (confirm('Delete ' + this.props.name + '?') == true) {
             var req = request.del('/api/classifiers/' + this.props.classifierID)
-            amplitude.getInstance().logEvent('Delete-classifier')
+
+            window.bluemixAnalytics.trackEvent('Deleted Object',{
+                productTitle: 'Visual Recognition Tooling',
+                category: 'Testing (Visual Recognition Tooling)',
+                object: this.props.classifierID,
+                objectType: 'Classifier'
+            });
+
             var self = this
             req.query({api_key: localStorage.getItem('api_key')})
             req.end(function(err, res) {
@@ -74,11 +81,13 @@ export default class ClassifierDetail extends React.Component {
             req.query({threshold: 0.0})
         }
 
-        if (this.props.classifierID == null) {
-            amplitude.getInstance().logEvent('Classify-' + this.props.name.toLowerCase())
-        } else {
-            amplitude.getInstance().logEvent('Classify-custom')
-        }
+        window.bluemixAnalytics.trackEvent('Custom Event',{
+            productTitle: 'Visual Recognition Tooling',
+            category: 'Testing (Visual Recognition Tooling)',
+            action: 'Classified Object',
+            object: this.props.classifierID || this.props.name.toLowerCase(),
+            objectType: 'Image'
+        });
 
         if (files[0]) {
             req.attach('file', files[0])
@@ -146,11 +155,13 @@ export default class ClassifierDetail extends React.Component {
             req.query({threshold: 0.0})
         }
 
-        if (this.props.classifierID == null) {
-            amplitude.getInstance().logEvent('Classify-' + this.props.name.toLowerCase())
-        } else {
-            amplitude.getInstance().logEvent('Classify-custom')
-        }
+        window.bluemixAnalytics.trackEvent('Custom Event',{
+            productTitle: 'Visual Recognition Tooling',
+            category: 'Testing (Visual Recognition Tooling)',
+            action: 'Classified Object',
+            object: this.props.classifierID || this.props.name.toLowerCase(),
+            objectType: 'Image'
+        });
 
         req.query({url: link})
 

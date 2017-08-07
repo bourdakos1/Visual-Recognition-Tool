@@ -27,8 +27,14 @@ export default class UpdateClassifier extends React.Component {
         var classes = []
 
         var req = request.get('/api/classifiers/' + this.props.match.params.classifierID)
-        amplitude.getInstance().logEvent('List-classifier')
-        
+
+        window.bluemixAnalytics.trackEvent('Read Object',{
+            productTitle: 'Visual Recognition Tooling',
+            category: 'Testing (Visual Recognition Tooling)',
+            object: this.props.match.params.classifierID,
+            objectType: 'Classifier'
+        });
+
         req.use(nocache)
 
         req.query({ api_key: localStorage.getItem('api_key') })
