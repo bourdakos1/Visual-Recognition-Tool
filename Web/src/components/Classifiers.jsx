@@ -36,7 +36,13 @@ export default class Classifiers extends React.Component {
         var self = this
 
         var req = request.get('/api/classifiers/' + classifier_id)
-        amplitude.getInstance().logEvent('List-classifier')
+
+        window.bluemixAnalytics.trackEvent('Read Object',{
+            productTitle: 'Visual Recognition Tooling',
+            category: 'Testing (Visual Recognition Tooling)',
+            object: classifier_id,
+            objectType: 'Classifier'
+        });
 
         req.use(nocache)
 
@@ -68,7 +74,14 @@ export default class Classifiers extends React.Component {
         console.log(localStorage.getItem('api_key'))
 
         var req = request.get('/api/classifiers')
-        amplitude.getInstance().logEvent('List-classifiers')
+
+        window.bluemixAnalytics.trackEvent('Read Object',{
+            productTitle: 'Visual Recognition Tooling',
+            category: 'Testing (Visual Recognition Tooling)',
+            object: 'List',
+            objectType: 'Classifier List'
+        });
+
         req.use(nocache)
 
         req.query({ api_key: localStorage.getItem('api_key') })
