@@ -15,82 +15,15 @@ export default class ClassifierDetail extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            tooltipOpen: false
+            tooltipOpen: false,
+            error: this.props.failError
         }
     }
 
-    toggle = () => {
-        this.setState({
-            tooltipOpen: !this.state.tooltipOpen
-        })
-    }
-
-    stateChanged = () => {
-        this.setState({
-            tooltipOpen: false
-        })
-        this.props.reDraw()
-    }
-
-    deleteClassifier = (e) => {
-        e.preventDefault()
-        if (confirm('Delete ' + this.props.name + '?') == true) {
-            var req = request.del('/api/classifiers/' + this.props.classifierID)
-
-            window.bluemixAnalytics.trackEvent('Deleted Object',{
-                productTitle: 'Visual Recognition Tooling',
-                category: 'Testing (Visual Recognition Tooling)',
-                object: this.props.classifierID,
-                objectType: 'Classifier'
-            });
-
-            var self = this
-            req.query({api_key: localStorage.getItem('api_key')})
-            req.end(function(err, res) {
-                console.log('deleted')
-                if (res.body.error != null) {
-                    alert(res.body.error)
-                }
-                self.props.reData()
-            })
-        }
-    }
-
-    onDrop = (files, rejects, onFinished, onProgress) => {
+    classify = (req, uploadedImage, onProgress, onFinished) => {
         var self = this
-        var req
-
-        self.setState({ error: null }, self.stateChanged)
-
-        if (files == null || files.length <= 0) {
-            if (rejects != null && rejects[0].size > 2 * 1024 * 1024
-                && (rejects[0].type == 'image/jpeg'
-                || rejects[0].type == 'image/png')) {
-                self.setState({ error: Strings.mb2_error }, self.stateChanged)
-                return
-            }
-            self.setState({ error: Strings.invalid_image_error }, self.stateChanged)
-            return
-        }
-
-        if (this.props.classifierID == null && this.props.name == Strings.classifier_face) {
-            req = request.post('/api/faces')
-        } else {
-            req = request.post('/api/classify')
-            req.query({classifier_ids: [this.props.classifierID || this.props.name.toLowerCase()]})
-            req.query({threshold: 0.0})
-        }
-
-        window.bluemixAnalytics.trackEvent('Custom Event',{
-            productTitle: 'Visual Recognition Tooling',
-            category: 'Testing (Visual Recognition Tooling)',
-            action: 'Classified Object',
-            object: this.props.classifierID || this.props.name.toLowerCase(),
-            objectType: 'Image'
-        });
-
-        if (files[0]) {
-            req.attach('file', files[0])
+        if (uploadedImage) {
+            req.attach('file', uploadedImage)
         }
 
         req.query({api_key: localStorage.getItem('api_key')})
@@ -127,8 +60,6 @@ export default class ClassifierDetail extends React.Component {
                         self.setState({ error: res.body.images[0].error.description }, self.stateChanged)
                     }
                 }
-            } else if (res.body.code == 'LIMIT_FILE_SIZE') {
-                self.setState({ error: Strings.mb2_error }, self.stateChanged)
             } else if (res.body.error != null) {
                 var error = res.body.error
                 self.setState({ error: error }, self.stateChanged)
@@ -136,9 +67,129 @@ export default class ClassifierDetail extends React.Component {
                 var error = Strings.unknown_error
                 self.setState({ error: error }, self.stateChanged)
             }
-            self.setState({ file: files[0], results: results, link: null }, self.stateChanged)
+            self.setState({ file: uploadedImage, results: results, link: null }, self.stateChanged)
             onFinished()
         })
+    }
+
+    toggle = () => {
+        this.setState({
+            tooltipOpen: !this.state.tooltipOpen
+        })
+    }
+
+    stateChanged = () => {
+        this.setState({
+            tooltipOpen: false
+        })
+        this.props.reDraw()
+    }
+
+    deleteClassifier = (e) => {
+        e.preventDefault()
+        if (confirm('Delete ' + this.props.name + '?') == true) {
+            var req = request.del('/api/classifiers/' + this.props.classifierID)
+            amplitude.getInstance().logEvent('Delete-classifier')
+            var self = this
+            req.query({api_key: localStorage.getItem('api_key')})
+            req.end(function(err, res) {
+                console.log('deleted')
+                if (res.body.error != null) {
+                    alert(res.body.error)
+                }
+                self.props.reData()
+            })
+        }
+    }
+
+    getName = () => {
+      if (this.props.name == 'default') {
+        return Strings.classifier_general
+      } else if (this.props.name == 'food') {
+        return Strings.classifier_food
+      } else {
+        return this.props.name
+      }
+    }
+
+    resizeImage = (image, uploadedImage) => {
+        var c = window.document.createElement('canvas')
+        var ctx = c.getContext('2d')
+        var ratio = image.width / image.height
+        var maxSize = 1000
+
+        if (image.width < maxSize && image.height < maxSize) {
+           c.width = image.width
+           c.height = image.height
+        } else {
+           c.width = (ratio > 1 ? maxSize : maxSize * ratio)
+           c.height = (ratio > 1 ? maxSize / ratio : maxSize)
+        }
+
+        ctx.drawImage(image, 0, 0, c.width, c.height)
+        return c.toDataURL('image/jpeg')
+    }
+
+    convertDataURLtoFile = (imageDataURL, fileName) => {
+        var imageType = imageDataURL.substring(imageDataURL.indexOf(':') + 1, imageDataURL.indexOf(';'))
+        var imageDataBase64 = imageDataURL.substring(imageDataURL.indexOf(',') + 1, imageDataURL.length)
+        var byteCharacters = atob(imageDataBase64)
+        var byteNumbers = new Array(byteCharacters.length)
+        for (var i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i)
+        }
+        var byteArray = new Uint8Array(byteNumbers)
+        var blob = new Blob([byteArray], {type: imageType})
+
+        return new File([blob], fileName, {type: imageType, lastModified: Date.now()})
+    }
+
+    onDrop = (files, rejects, onFinished, onProgress) => {
+        var self = this
+        var req
+
+        self.clearClassifier()
+        self.setState({ error: null }, self.stateChanged)
+
+        if (files == null || files.length <= 0) {
+            self.setState({ error: Strings.invalid_image_error }, self.stateChanged)
+            return
+        }
+
+        if (this.props.classifierID == null && this.props.name == Strings.classifier_face) {
+            req = request.post('/api/faces')
+        } else {
+            req = request.post('/api/classify')
+            req.query({classifier_ids: [this.props.classifierID || this.props.name.toLowerCase()]})
+            req.query({threshold: 0.0})
+        }
+
+        if (this.props.classifierID == null) {
+            amplitude.getInstance().logEvent('Classify-' + this.props.name.toLowerCase())
+        } else {
+            amplitude.getInstance().logEvent('Classify-custom')
+        }
+
+        var uploadedImage = files[0]
+        this.setState({filePreview: files[0].preview})
+
+        // resize uploaded image if greater than 2MB
+        if (files[0].size > 2000000) {
+            var name = files[0].name
+            var reader = new FileReader()
+            reader.onload = () => {
+                var image = new Image()
+                image.src = reader.result
+                image.onload = () => {
+                    uploadedImage = this.convertDataURLtoFile(this.resizeImage(image), name)
+                    this.classify(req, uploadedImage, onProgress, onFinished)
+                }
+            }
+            reader.readAsDataURL(files[0])
+
+        } else {
+            this.classify(req, uploadedImage, onProgress, onFinished)
+        }
     }
 
     onLink = (link, onFinished, onProgress) => {
@@ -155,13 +206,11 @@ export default class ClassifierDetail extends React.Component {
             req.query({threshold: 0.0})
         }
 
-        window.bluemixAnalytics.trackEvent('Custom Event',{
-            productTitle: 'Visual Recognition Tooling',
-            category: 'Testing (Visual Recognition Tooling)',
-            action: 'Classified Object',
-            object: this.props.classifierID || this.props.name.toLowerCase(),
-            objectType: 'Image'
-        });
+        if (this.props.classifierID == null) {
+            amplitude.getInstance().logEvent('Classify-' + this.props.name.toLowerCase())
+        } else {
+            amplitude.getInstance().logEvent('Classify-custom')
+        }
 
         req.query({url: link})
 
@@ -274,12 +323,12 @@ export default class ClassifierDetail extends React.Component {
 
         return(
             <Card style={{maxWidth:'30rem'}}>
-                {this.props.classifierID ?
+                {this.props.classifierID !== 'default' && this.props.classifierID !== 'food' && this.props.classifierID !== null && this.props.classifierID !== undefined ?
                     <DropDown className='dropdown--classifier-detail' delete={this.deleteClassifier} classifierID={this.props.classifierID}/>:
                     null
                 }
 
-                <div style={titleStyle}>{this.props.name}</div>
+                <div style={titleStyle}>{this.getName()}</div>
                 <div style={textStyle}>{this.props.classifierID}</div>
                 <div style={textStyle}><div style={[status, {background: color}]}/>{this.props.status}</div>
 
@@ -308,7 +357,6 @@ export default class ClassifierDetail extends React.Component {
                         id={this.props.classifierID || this.props.name}
                         className='dropzone--classifier-detail'
                         accept={'image/jpeg, image/png, .jpg, .jpeg, .png'}
-                        maxSize={2 * 1024 * 1024}
                         upload={true}
                         onLink={this.onLink}
                         onDrop={this.onDrop}
@@ -333,6 +381,7 @@ export default class ClassifierDetail extends React.Component {
                         id={this.props.classifierID || this.props.name}
                         clearClassifier={this.clearClassifier}
                         file={this.state.file}
+                        filePreview={this.state.filePreview}
                         link={this.state.link}
                         results={this.state.results}/> :
                         null

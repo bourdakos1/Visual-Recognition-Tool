@@ -36,13 +36,7 @@ export default class Classifiers extends React.Component {
         var self = this
 
         var req = request.get('/api/classifiers/' + classifier_id)
-
-        window.bluemixAnalytics.trackEvent('Read Object',{
-            productTitle: 'Visual Recognition Tooling',
-            category: 'Testing (Visual Recognition Tooling)',
-            object: classifier_id,
-            objectType: 'Classifier'
-        });
+        amplitude.getInstance().logEvent('List-classifier')
 
         req.use(nocache)
 
@@ -71,17 +65,9 @@ export default class Classifiers extends React.Component {
 
     loadClassifiers = () => {
         var self = this
-        console.log(localStorage.getItem('api_key'))
 
         var req = request.get('/api/classifiers')
-
-        window.bluemixAnalytics.trackEvent('Read Object',{
-            productTitle: 'Visual Recognition Tooling',
-            category: 'Testing (Visual Recognition Tooling)',
-            object: 'List',
-            objectType: 'Classifier List'
-        });
-
+        amplitude.getInstance().logEvent('List-classifiers')
         req.use(nocache)
 
         req.query({ api_key: localStorage.getItem('api_key') })
@@ -103,8 +89,8 @@ export default class Classifiers extends React.Component {
                         })
 
                         classifiers.push(
-                            {name: Strings.classifier_general, status: Strings.status_ready},
-                            {name: Strings.classifier_food, status: Strings.status_ready},
+                            {name: 'default', classifier_id: 'default', status: Strings.status_ready},
+                            {name: 'food', classifier_id: 'food', status: Strings.status_ready},
                             {name: Strings.classifier_face, status: Strings.status_ready}
                         )
                     } catch(err) {
@@ -122,8 +108,8 @@ export default class Classifiers extends React.Component {
                 })
 
                 classifiers.push(
-                    {name: Strings.classifier_general, status: Strings.status_ready},
-                    {name: Strings.classifier_food, status: Strings.status_ready},
+                    {name: 'default', classifier_id: 'default', status: Strings.status_ready},
+                    {name: 'food', classifier_id: 'food', status: Strings.status_ready},
                     {name: Strings.classifier_face, status: Strings.status_ready}
                 )
             }
@@ -188,7 +174,8 @@ export default class Classifiers extends React.Component {
                                 status={c.status}
                                 reDraw={self.reDraw}
                                 reData={self.reData}
-                                key={c.classifier_id || c.name}/>
+                                key={c.classifier_id || c.name}
+                                failError={c.explanation}/>
                         )
                     })}
                 </StackGrid>

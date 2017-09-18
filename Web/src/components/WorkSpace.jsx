@@ -173,21 +173,10 @@ export default class WorkSpace extends React.Component {
     create = (onProgress, onFinished) => {
         if (this.props.match) {
             var req = request.put('/api/classifiers/' + this.props.match.params.classifierID)
-            window.bluemixAnalytics.trackEvent('Custom Event',{
-                productTitle: 'Visual Recognition Tooling',
-                category: 'Testing (Visual Recognition Tooling)',
-                action: 'Retrained Object',
-                object: this.props.match.params.classifierID,
-                objectType: 'Classifier'
-            });
+            amplitude.getInstance().logEvent('Retrain-classifier')
         } else {
             var req = request.post('/api/classifiers')
-            window.bluemixAnalytics.trackEvent('Created Object',{
-                productTitle: 'Visual Recognition Tooling',
-                category: 'Testing (Visual Recognition Tooling)',
-                object: 'Classifier',
-                objectType: 'Classifier'
-            });
+            amplitude.getInstance().logEvent('Create-classifier')
         }
 
         var self = this
