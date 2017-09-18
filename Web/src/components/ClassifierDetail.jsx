@@ -141,10 +141,9 @@ export default class ClassifierDetail extends React.Component {
         var byteArray = new Uint8Array(byteNumbers)
         var blob = new Blob([byteArray], {type: imageType})
 
-        var file = new File([blob], fileName, {type: imageType, lastModified: Date.now()})
-        file.preview = preview
+        blob.preview = preview
 
-        return file
+        return blob
     }
 
     onDrop = (files, rejects, onFinished, onProgress) => {
