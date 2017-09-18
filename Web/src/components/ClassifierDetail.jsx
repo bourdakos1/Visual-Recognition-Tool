@@ -130,7 +130,7 @@ export default class ClassifierDetail extends React.Component {
         return c.toDataURL('image/jpeg')
     }
 
-    convertDataURLtoFile = (imageDataURL, fileName) => {
+    convertDataURLtoFile = (imageDataURL, fileName, preview) => {
         var imageType = imageDataURL.substring(imageDataURL.indexOf(':') + 1, imageDataURL.indexOf(';'))
         var imageDataBase64 = imageDataURL.substring(imageDataURL.indexOf(',') + 1, imageDataURL.length)
         var byteCharacters = atob(imageDataBase64)
@@ -141,7 +141,10 @@ export default class ClassifierDetail extends React.Component {
         var byteArray = new Uint8Array(byteNumbers)
         var blob = new Blob([byteArray], {type: imageType})
 
-        return new File([blob], fileName, {type: imageType, lastModified: Date.now()})
+        var file = new File([blob], fileName, {type: imageType, lastModified: Date.now()})
+        file.preview = preview
+
+        return file
     }
 
     onDrop = (files, rejects, onFinished, onProgress) => {
@@ -175,12 +178,13 @@ export default class ClassifierDetail extends React.Component {
         // resize uploaded image if greater than 2MB
         if (files[0].size > 2000000) {
             var name = files[0].name
+            var preview = files[0].preview
             var reader = new FileReader()
             reader.onload = () => {
                 var image = new Image()
                 image.src = reader.result
                 image.onload = () => {
-                    uploadedImage = this.convertDataURLtoFile(this.resizeImage(image), name)
+                    uploadedImage = this.convertDataURLtoFile(this.resizeImage(image), name, preview)
                     this.classify(req, uploadedImage, onProgress, onFinished)
                 }
             }
