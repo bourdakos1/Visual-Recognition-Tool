@@ -171,7 +171,6 @@ export default class ClassifierDetail extends React.Component {
         }
 
         var uploadedImage = files[0]
-        this.setState({filePreview: files[0].preview})
 
         // resize uploaded image if greater than 2MB
         if (files[0].size > 2000000) {
@@ -202,11 +201,11 @@ export default class ClassifierDetail extends React.Component {
             req = request.get('/api/faces')
         } else {
             req = request.get('/api/classify')
-            req.query({classifier_ids: [this.props.classifierID || this.props.name.toLowerCase()]})
+            req.query({classifier_ids: [this.props.classifierID]})
             req.query({threshold: 0.0})
         }
 
-        if (this.props.classifierID == null) {
+        if (this.props.name == Strings.classifier_general || this.props.name == Strings.classifier_food || this.props.name == Strings.classifier_face) {
             amplitude.getInstance().logEvent('Classify-' + this.props.name.toLowerCase())
         } else {
             amplitude.getInstance().logEvent('Classify-custom')
@@ -381,7 +380,6 @@ export default class ClassifierDetail extends React.Component {
                         id={this.props.classifierID || this.props.name}
                         clearClassifier={this.clearClassifier}
                         file={this.state.file}
-                        filePreview={this.state.filePreview}
                         link={this.state.link}
                         results={this.state.results}/> :
                         null

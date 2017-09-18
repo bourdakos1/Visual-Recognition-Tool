@@ -368,7 +368,7 @@ export default class ResultList extends React.Component {
                 {this.props.file ?
                     <div style={{position: 'relative'}}>
                         {faces}
-                        <img style={imgStyle} src={this.props.filePreview}/>
+                        <img style={imgStyle} src={this.props.file.preview}/>
                         <button id='button--results--clear' style={deleteStyle}
                             onClick={this.props.clearClassifier}>
                         </button>
