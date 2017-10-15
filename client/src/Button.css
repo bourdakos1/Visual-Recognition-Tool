@@ -1,0 +1,44 @@
+.Button-base {
+  display: flex;
+  border-radius: 15px;
+  border-color: var(--color-primary);
+  border-width: thin;
+  border-style: solid;
+  height: 30px;
+  padding: 0px 21px;
+  align-items: center;
+}
+
+.Button-thin {
+  color: var(--color-primary);
+  background: none;
+  border-color: var(--color-primary);
+}
+
+.Button-thin:hover {
+  color: white;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.Button-bold {
+  color: white;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.Button-bold:hover {
+  color: white;
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+.Button-image {
+  padding: 0px 4px 0px 21px;
+}
+
+.Button-imgStyle {
+  width: 21px;
+  height: 21px;
+  margin-left: 21px;
+}

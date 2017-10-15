@@ -1,0 +1,6 @@
+:root {
+  --color-primary: #785ef0;
+  --color-primary-dark: #5a3ec8;
+  --color-text: rgba(64, 64, 64, .65);
+  --color-text-dark: rgba(64, 64, 64, 1);
+}

@@ -1,0 +1,17 @@
+{
+  "name": "vision-server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "node server.js",
+    "client": "node start-client.js"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.0"
+  }
+}

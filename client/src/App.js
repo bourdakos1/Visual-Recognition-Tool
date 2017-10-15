@@ -1,0 +1,31 @@
+import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
+
+import './App.css'
+import LoginPage from './LoginPage'
+import Tooling from './Tooling'
+
+function RenderPage() {
+  // Mock login/logout.
+  localStorage.setItem('api_key', '2xxxxx123')
+  // localStorage.clear()
+
+  if (
+    localStorage.getItem('api_key') == null ||
+    localStorage.getItem('api_key') === ''
+  ) {
+    return <LoginPage />
+  } else {
+    return <Tooling />
+  }
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <RenderPage />
+    </BrowserRouter>
+  )
+}
+
+export default App

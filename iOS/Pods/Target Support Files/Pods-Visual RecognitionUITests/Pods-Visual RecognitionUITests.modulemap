@@ -1,6 +1,0 @@
-framework module Pods_Visual_RecognitionUITests {
-  umbrella header "Pods-Visual RecognitionUITests-umbrella.h"
-
-  export *
-  module * { export * }
-}

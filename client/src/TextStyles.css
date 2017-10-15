@@ -1,0 +1,15 @@
+.TextStyles-title {
+    font: bold 1.65em Helvetica, sans-serif;
+}
+
+.TextStyles-header {
+    font: bold 1.5em Helvetica, sans-serif;
+}
+
+.TextStyles-bold {
+    font: 500 1em Helvetica, sans-serif;
+}
+
+.TextStyles-default {
+    font: normal 1em Helvetica, sans-serif;
+}

@@ -1,7 +1,0 @@
----
-applications:
-- name: visual-recognition-tooling
-  buildpack: sdk-for-nodejs
-  path: .
-  memory: 512M
-  instances: 1

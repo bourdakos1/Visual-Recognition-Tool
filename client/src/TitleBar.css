@@ -1,0 +1,64 @@
+.TitleBar-shadow {
+  position: fixed;
+  z-index: 1000;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  background: #fff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.TitleBar-contentWrapper {
+  display: flex;
+  max-width: 1000px;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  align-items: center;
+}
+
+.TitleBar-height {
+  height: 65px;
+  line-height: 65px;
+}
+
+.TitleBar-logo {
+  height: 60px;
+}
+
+.TitleBar-title {
+  color: var(--color-text-dark);
+  margin-right: auto;
+  text-decoration: none;
+  flex: none;
+}
+
+.TitleBar-api-key {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--color-text);
+  min-width: 0px;
+  margin-left: 20px;
+  margin-right: 12px;
+}
+
+.TitleBar-key-button {
+  border: 0;
+  padding: 0;
+  background: none;
+  padding-right: 4px;
+}
+
+#TitleBar-key-middle {
+  font-size: 0em;
+}
+
+#TitleBar-key-middle:before {
+  content: '•••••••••••••••••••••••••••••••••••••';
+  font-size: 16px;
+}
+
+.TitleBar-button {
+  flex: none;
+}
