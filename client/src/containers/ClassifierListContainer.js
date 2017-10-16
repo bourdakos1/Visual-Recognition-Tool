@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
-import StackGrid from 'react-stack-grid'
-import { Link } from 'react-router-dom'
 
-import './styles/Classifiers.css'
-import createButton from 'images/btn_create.png'
 import api from 'api'
-import Button from 'components/Button'
+import './styles/ClassifierListContainer.css'
+import ClassifierList from 'components/ClassifierList'
 
-class Classifiers extends Component {
+class ClassifierListContainer extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -76,25 +73,8 @@ class Classifiers extends Component {
   }
 
   render() {
-    return (
-      <div>
-        <Link to="/create_classifier">
-          <Button className="Classifiers-button" icon={createButton} bold>
-            Create classifier
-          </Button>
-        </Link>
-        <StackGrid
-          className="Classifier-grid"
-          columnWidth={300}
-          gutterWidth={50}
-        >
-          {this.state.classifiers.map(c => {
-            return <div>{c.name}</div>
-          })}
-        </StackGrid>
-      </div>
-    )
+    return <ClassifierList classifiers={this.state.classifiers} />
   }
 }
 
-export default Classifiers
+export default ClassifierListContainer

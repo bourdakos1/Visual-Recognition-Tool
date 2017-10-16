@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom'
 
 import './styles/Tooling.css'
 import TitleBar from 'components/TitleBar'
-import Classifiers from 'containers/Classifiers'
+import ClassifierListContainer from 'containers/ClassifierListContainer'
 
 function CreateClassifier() {
   return <div>Create Classifier</div>
@@ -20,7 +20,7 @@ function Tooling() {
       <TitleBar apiKey={key}>Visual Recognition Tool</TitleBar>
       <main className="Tooling-wrapper">
         <Switch>
-          <Route exact path="/" component={Classifiers} />
+          <Route exact path="/" component={ClassifierListContainer} />
           <Route exact path="/create_classifier" component={CreateClassifier} />
           <Route
             exact
