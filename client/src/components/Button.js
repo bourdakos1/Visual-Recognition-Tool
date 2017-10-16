@@ -7,7 +7,6 @@ const Button = ({ className, bold, icon, children }) => {
   return (
     <button
       className={
-        (className ? className + ' ' : '') +
         'font-default Button-base' +
         (bold ? ' Button-bold' : ' Button-thin') +
         (icon ? ' Button-image' : '')

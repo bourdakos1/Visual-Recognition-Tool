@@ -8,10 +8,8 @@ import StatusIndicator from 'components/StatusIndicator'
 const ClassifierDetail = ({ name, classifierId, status }) => {
   return (
     <Card>
-      <div className="ClassifierDetail-text ClassifierDetail-name font-header">
-        {name}
-      </div>
-      <div className="ClassifierDetail-text ClassifierDetail-classifier-id font-default">
+      <div className="ClassifierDetail-name font-header">{name}</div>
+      <div className="ClassifierDetail-classifier-id font-default">
         {classifierId}
       </div>
       <StatusIndicator status={status} />

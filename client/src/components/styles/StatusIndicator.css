@@ -1,0 +1,29 @@
+.StatusIndicator {
+  margin-bottom: -1px;
+  margin-right: 5px;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+}
+
+.StatusIndicator-ready {
+  background-color: #64dd17;
+}
+
+.StatusIndicator-training {
+  background-color: #ffab00;
+}
+
+.StatusIndicator-failed {
+  background-color: #f44336;
+}
+
+.StatusIndicator-text {
+  padding-top: 5px;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--color-text);
+}

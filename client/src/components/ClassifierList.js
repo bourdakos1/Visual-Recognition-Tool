@@ -11,9 +11,11 @@ const ClassifierList = ({ classifiers }) => {
   return (
     <div>
       <Link to="/create_classifier">
-        <Button className="ClassifierList-button" icon={createButton} bold>
-          Create classifier
-        </Button>
+        <div className="ClassifierList-button">
+          <Button icon={createButton} bold>
+            Create classifier
+          </Button>
+        </div>
       </Link>
       <StackGrid
         className="ClassifierList-grid"
