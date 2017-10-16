@@ -1,3 +1,8 @@
 .Classifiers-button {
   margin: 21px 0;
 }
+
+.Classifier-grid {
+  margin-left: -10px;
+  margin-right: -10px;
+}

@@ -7,7 +7,7 @@ import Tooling from './Tooling'
 
 function RenderPage() {
   // Mock login/logout.
-  localStorage.setItem('api_key', '2xxxxx123')
+  localStorage.setItem('api_key', '2d7f02e6708f3562a043ebf31159ff849d94d123')
   // localStorage.clear()
 
   if (
