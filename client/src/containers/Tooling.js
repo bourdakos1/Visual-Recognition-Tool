@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 
-import 'containers/Tooling.css'
+import './styles/Tooling.css'
 import TitleBar from 'components/TitleBar'
 import Classifiers from 'containers/Classifiers'
 
@@ -14,9 +14,10 @@ function UpdateClassifier() {
 }
 
 function Tooling() {
+  var key = localStorage.getItem('api_key')
   return (
     <div>
-      <TitleBar />
+      <TitleBar apiKey={key}>Visual Recognition Tool</TitleBar>
       <main className="Tooling-wrapper">
         <Switch>
           <Route exact path="/" component={Classifiers} />

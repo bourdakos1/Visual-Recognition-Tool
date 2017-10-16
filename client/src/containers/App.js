@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
-import 'containers/App.css'
+import './styles/App.css'
 import LoginPage from 'containers/LoginPage'
 import Tooling from 'containers/Tooling'
 

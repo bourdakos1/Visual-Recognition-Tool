@@ -1,6 +1,6 @@
 import React from 'react'
 
-import 'containers/LoginPage.css'
+import './styles/LoginPage.css'
 
 function LoginPage() {
   return <div>Please Log In!</div>

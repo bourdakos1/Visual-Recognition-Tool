@@ -1,13 +1,13 @@
-import React from 'react'
+import React, { Component } from 'react'
 import StackGrid from 'react-stack-grid'
 import { Link } from 'react-router-dom'
 
-import 'containers/Classifiers.css'
+import './styles/Classifiers.css'
 import createButton from 'images/btn_create.png'
 import api from 'api'
 import Button from 'components/Button'
 
-class Classifiers extends React.Component {
+class Classifiers extends Component {
   constructor(props) {
     super(props)
     this.state = {

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import 'components/Button.css'
+import './styles/Button.css'
 import 'styles/fonts.css'
 
 function Button(props) {
