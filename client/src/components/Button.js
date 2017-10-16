@@ -1,14 +1,14 @@
 import React from 'react'
 
-import './Button.css'
-import './TextStyles.css'
+import 'components/Button.css'
+import 'styles/fonts.css'
 
 function Button(props) {
   return (
     <button
       className={
         (props.className ? props.className + ' ' : '') +
-        'TextStyles-default Button-base' +
+        'font-default Button-base' +
         (props.bold ? ' Button-bold' : ' Button-thin') +
         (props.icon ? ' Button-image' : '')
       }

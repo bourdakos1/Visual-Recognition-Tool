@@ -2,10 +2,10 @@ import React from 'react'
 import StackGrid from 'react-stack-grid'
 import { Link } from 'react-router-dom'
 
-import './Classifiers.css'
-import createButton from './btn_create.png'
-import api from './api'
-import Button from './Button'
+import 'containers/Classifiers.css'
+import createButton from 'images/btn_create.png'
+import api from 'api'
+import Button from 'components/Button'
 
 class Classifiers extends React.Component {
   constructor(props) {

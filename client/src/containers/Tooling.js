@@ -1,9 +1,9 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 
-import './Tooling.css'
-import TitleBar from './TitleBar'
-import Classifiers from './Classifiers'
+import 'containers/Tooling.css'
+import TitleBar from 'components/TitleBar'
+import Classifiers from 'containers/Classifiers'
 
 function CreateClassifier() {
   return <div>Create Classifier</div>

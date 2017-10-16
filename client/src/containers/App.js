@@ -1,9 +1,9 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
-import './App.css'
-import LoginPage from './LoginPage'
-import Tooling from './Tooling'
+import 'containers/App.css'
+import LoginPage from 'containers/LoginPage'
+import Tooling from 'containers/Tooling'
 
 function RenderPage() {
   // Mock login/logout.

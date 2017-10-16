@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import './normalize.css'
+import './styles/normalize.css'
+import './styles/colors.css' // Import colors into the project.
 import './index.css'
-import './color-styles.css' // Import colors into the project.
-import App from './App'
+import App from './containers/App'
 import registerServiceWorker from './registerServiceWorker'
 
 ReactDOM.render(<App />, document.getElementById('root'))
