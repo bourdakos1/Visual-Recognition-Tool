@@ -3,20 +3,18 @@ import React from 'react'
 import './styles/Button.css'
 import 'styles/fonts.css'
 
-function Button(props) {
+const Button = ({ className, bold, icon, children }) => {
   return (
     <button
       className={
-        (props.className ? props.className + ' ' : '') +
+        (className ? className + ' ' : '') +
         'font-default Button-base' +
-        (props.bold ? ' Button-bold' : ' Button-thin') +
-        (props.icon ? ' Button-image' : '')
+        (bold ? ' Button-bold' : ' Button-thin') +
+        (icon ? ' Button-image' : '')
       }
     >
-      {props.children}
-      {props.icon && (
-        <img className="Button-imgStyle" src={props.icon} alt="" />
-      )}
+      {children}
+      {icon && <img className="Button-imgStyle" src={icon} alt="" />}
     </button>
   )
 }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import StackGrid from 'react-stack-grid'
 import { Link } from 'react-router-dom'
 
@@ -6,7 +6,7 @@ import './styles/ClassifierList.css'
 import createButton from 'images/btn_create.png'
 import Button from 'components/Button'
 
-function ClassifierList(props) {
+const ClassifierList = ({ classifiers }) => {
   return (
     <div>
       <Link to="/create_classifier">
@@ -19,7 +19,7 @@ function ClassifierList(props) {
         columnWidth={300}
         gutterWidth={50}
       >
-        {props.classifiers.map(c => {
+        {classifiers.map(c => {
           return <div>{c.name}</div>
         })}
       </StackGrid>

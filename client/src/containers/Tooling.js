@@ -5,15 +5,15 @@ import './styles/Tooling.css'
 import TitleBar from 'components/TitleBar'
 import ClassifierListContainer from 'containers/ClassifierListContainer'
 
-function CreateClassifier() {
+const CreateClassifier = () => {
   return <div>Create Classifier</div>
 }
 
-function UpdateClassifier() {
+const UpdateClassifier = () => {
   return <div>Update Classifier</div>
 }
 
-function Tooling() {
+const Tooling = () => {
   var key = localStorage.getItem('api_key')
   return (
     <div>

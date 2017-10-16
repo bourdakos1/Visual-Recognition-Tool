@@ -2,7 +2,7 @@ import React from 'react'
 
 import './styles/LoginPage.css'
 
-function LoginPage() {
+const LoginPage = () => {
   return <div>Please Log In!</div>
 }
 

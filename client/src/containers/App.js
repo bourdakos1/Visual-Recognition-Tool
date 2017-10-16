@@ -5,7 +5,7 @@ import './styles/App.css'
 import LoginPage from 'containers/LoginPage'
 import Tooling from 'containers/Tooling'
 
-function RenderPage() {
+const RenderPage = () => {
   // Mock login/logout.
   localStorage.setItem('api_key', '2d7f02e6708f3562a043ebf31159ff849d94d123')
   // localStorage.clear()
@@ -20,7 +20,7 @@ function RenderPage() {
   }
 }
 
-function App() {
+const App = () => {
   return (
     <BrowserRouter>
       <RenderPage />
