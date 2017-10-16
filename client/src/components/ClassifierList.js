@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import './styles/ClassifierList.css'
 import createButton from 'images/btn_create.png'
 import Button from 'components/Button'
+import ClassifierDetail from 'components/ClassifierDetail'
 
 const ClassifierList = ({ classifiers }) => {
   return (
@@ -20,7 +21,13 @@ const ClassifierList = ({ classifiers }) => {
         gutterWidth={50}
       >
         {classifiers.map(c => {
-          return <div>{c.name}</div>
+          return (
+            <ClassifierDetail
+              name={c.name}
+              classifierId={c.classifier_id}
+              status={c.status}
+            />
+          )
         })}
       </StackGrid>
     </div>
