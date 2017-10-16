@@ -1,0 +1,15 @@
+.ClassifierDetail-text {
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ClassifierDetail-name {
+  color: var(--color-text-dark);
+}
+
+.ClassifierDetail-classifier-id {
+  padding-top: 5px;
+  color: var(--color-text);
+}
