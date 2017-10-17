@@ -12,13 +12,11 @@ const Indicator = ({ status }) => {
   }
 }
 
-const StatusIndicator = ({ status }) => {
-  return (
-    <div className="StatusIndicator-text">
-      <Indicator status={status} />
-      {status}
-    </div>
-  )
-}
+const StatusIndicator = ({ status }) => (
+  <div className="StatusIndicator-text">
+    <Indicator status={status} />
+    {status}
+  </div>
+)
 
 export default StatusIndicator

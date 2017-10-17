@@ -20,12 +20,10 @@ const RenderPage = () => {
   }
 }
 
-const App = () => {
-  return (
-    <BrowserRouter>
-      <RenderPage />
-    </BrowserRouter>
-  )
-}
+const App = () => (
+  <BrowserRouter>
+    <RenderPage />
+  </BrowserRouter>
+)
 
 export default App

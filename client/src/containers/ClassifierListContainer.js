@@ -5,12 +5,9 @@ import './styles/ClassifierListContainer.css'
 import ClassifierList from 'components/ClassifierList'
 
 class ClassifierListContainer extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      classifiers: [],
-      training: []
-    }
+  state = {
+    classifiers: [],
+    training: []
   }
 
   componentDidMount() {

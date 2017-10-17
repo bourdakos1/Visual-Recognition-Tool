@@ -5,13 +5,9 @@ import './styles/Tooling.css'
 import TitleBar from 'components/TitleBar'
 import ClassifierListContainer from 'containers/ClassifierListContainer'
 
-const CreateClassifier = () => {
-  return <div>Create Classifier</div>
-}
+const CreateClassifier = () => <div>Create Classifier</div>
 
-const UpdateClassifier = () => {
-  return <div>Update Classifier</div>
-}
+const UpdateClassifier = () => <div>Update Classifier</div>
 
 const Tooling = () => {
   var key = localStorage.getItem('api_key')

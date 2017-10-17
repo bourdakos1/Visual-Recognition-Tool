@@ -7,33 +7,31 @@ import createButton from 'images/btn_create.png'
 import Button from 'components/Button'
 import ClassifierDetail from 'components/ClassifierDetail'
 
-const ClassifierList = ({ classifiers }) => {
-  return (
-    <div>
-      <Link to="/create_classifier">
-        <div className="ClassifierList-button">
-          <Button icon={createButton} bold>
-            Create classifier
-          </Button>
-        </div>
-      </Link>
-      <StackGrid
-        className="ClassifierList-grid"
-        columnWidth={300}
-        gutterWidth={50}
-      >
-        {classifiers.map(c => {
-          return (
-            <ClassifierDetail
-              name={c.name}
-              classifierId={c.classifier_id}
-              status={c.status}
-            />
-          )
-        })}
-      </StackGrid>
-    </div>
-  )
-}
+const ClassifierList = ({ classifiers }) => (
+  <div>
+    <Link to="/create_classifier">
+      <div className="ClassifierList-button">
+        <Button icon={createButton} bold>
+          Create classifier
+        </Button>
+      </div>
+    </Link>
+    <StackGrid
+      className="ClassifierList-grid"
+      columnWidth={300}
+      gutterWidth={50}
+    >
+      {classifiers.map(c => {
+        return (
+          <ClassifierDetail
+            name={c.name}
+            classifierId={c.classifier_id}
+            status={c.status}
+          />
+        )
+      })}
+    </StackGrid>
+  </div>
+)
 
 export default ClassifierList
