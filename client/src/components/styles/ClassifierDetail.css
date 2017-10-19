@@ -1,3 +1,7 @@
+.ClassifierDetail {
+  max-width: 30em;
+}
+
 .ClassifierDetail-name {
   text-decoration: none;
   white-space: nowrap;
@@ -13,4 +17,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--color-text);
+}
+
+.ClassifierDetail-spacer {
+  height: 1em;
+  margin-top: 2px;
 }

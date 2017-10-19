@@ -1,4 +1,9 @@
 import React, { Component } from 'react'
+import Dropzone from 'react-dropzone'
+import { string, object } from 'prop-types'
+
+import './styles/DropButton.css'
+import 'styles/fonts.css'
 
 class DropButton extends Component {
   state = {
@@ -11,19 +16,45 @@ class DropButton extends Component {
   }
 
   static propTypes = {
-    model: object.isRequired,
-    title: string
+    accept: string,
+    explanationText: string,
+    manualChoiceText: string,
+    style: object
   }
 
   static defaultProps = {
-    model: {
-      id: 0
-    },
-    title: 'Your Name'
+    accept: '',
+    explanationText: 'Drag file here to upload',
+    manualChoiceText: 'choose your file',
+    style: {}
+  }
+
+  onDrop = () => {
+    console.log('dropped!')
   }
 
   render() {
-    return <div />
+    return (
+      <Dropzone
+        style={this.props.style}
+        className="DropButton-dropzone"
+        preventDropOnDocument={false}
+        accept={this.props.accept}
+        onDrop={this.onDrop}
+        multiple={false}
+      >
+        <div className="DropButton-explanation-text font-bold">
+          {this.props.explanationText}
+        </div>
+
+        <div className="DropButton-manual-choice-text font-default">
+          <span>Or </span>
+          <span className="DropButton-manual-choice-link">
+            {this.props.manualChoiceText}
+          </span>
+        </div>
+      </Dropzone>
+    )
   }
 }
 
