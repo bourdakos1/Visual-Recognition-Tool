@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import 'styles/normalize.css'
+import 'styles/normalize.min.css'
 import 'styles/colors.css' // Import colors into the project.
 import 'styles/index.css'
 import App from 'containers/App'
