@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { string, object } from 'prop-types'
+import MagicDropzone from 'react-magic-dropzone'
 
 import './styles/CustomDropButton.css'
 import 'styles/fonts.css'
-import MagicDropzone from 'components/MagicDropzone'
 
 class CustomDropButton extends Component {
   state = {
@@ -29,22 +29,18 @@ class CustomDropButton extends Component {
     style: {}
   }
 
-  onDrop = x => {
-    console.log('File: ' + x)
-  }
-
-  onLink = x => {
-    console.log('Link: ' + x)
+  onDrop = (accepted, rejected, links) => {
+    console.log('Accepted: ' + accepted)
+    console.log('Rejected: ' + rejected)
+    console.log('links: ' + links.length)
+    links.forEach(v => {
+      console.log(v)
+    })
   }
 
   render() {
     return (
-      <MagicDropzone
-        accept={this.props.accept}
-        acceptLinks=".jpg, .jpeg, .png"
-        onDrop={this.onDrop}
-        onLink={this.onLink}
-      >
+      <MagicDropzone accept={this.props.accept} onDrop={this.onDrop}>
         <div className="CustomDropButton">
           <div className="CustomDropButton-explanation-text font-bold">
             {this.props.explanationText}

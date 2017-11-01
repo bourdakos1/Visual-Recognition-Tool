@@ -74,10 +74,6 @@ attempt-x@^1.1.0, attempt-x@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/attempt-x/-/attempt-x-1.1.1.tgz#fba64e96ce03c3e0bd92c92622061c4df387cb76"
 
-attr-accept@^1.0.3:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/attr-accept/-/attr-accept-1.1.0.tgz#b5cd35227f163935a8f1de10ed3eba16941f6be6"
-
 aws-sign2@~0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.6.0.tgz#14342dd38dbcc94d0e5b87d763cd63612c0e794f"
@@ -922,7 +918,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.10, prop-types@^15.5.6, prop-types@^15.5.7:
+prop-types@^15.5.10, prop-types@^15.5.6:
   version "15.6.0"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.0.tgz#ceaf083022fc46b4a35f69e13ef75aed0d639856"
   dependencies:
@@ -969,12 +965,9 @@ raw-body@2.3.2:
     iconv-lite "0.4.19"
     unpipe "1.0.0"
 
-react-dropzone@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-4.2.0.tgz#8554f93f821155f229b46c5d160667fd1b5c3dcc"
-  dependencies:
-    attr-accept "^1.0.3"
-    prop-types "^15.5.7"
+react-magic-dropzone@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/react-magic-dropzone/-/react-magic-dropzone-0.0.1.tgz#61ed897c794cbd387fd7dc627a0dcb1499f83afd"
 
 react-sizeme@^2.2.0:
   version "2.3.6"
