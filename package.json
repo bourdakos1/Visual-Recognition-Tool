@@ -5,8 +5,6 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.16.2",
-    "react-magic-dropzone": "^0.0.2",
-    "react-stack-grid": "^0.5.0",
     "watson-developer-cloud": "^2.41.1"
   },
   "scripts": {
