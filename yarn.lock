@@ -965,9 +965,9 @@ raw-body@2.3.2:
     iconv-lite "0.4.19"
     unpipe "1.0.0"
 
-react-magic-dropzone@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/react-magic-dropzone/-/react-magic-dropzone-0.0.1.tgz#61ed897c794cbd387fd7dc627a0dcb1499f83afd"
+react-magic-dropzone@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/react-magic-dropzone/-/react-magic-dropzone-0.0.2.tgz#fa0de49665e62e29620c3cd590135d33c4ed0b6a"
 
 react-sizeme@^2.2.0:
   version "2.3.6"
