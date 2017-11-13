@@ -9,9 +9,10 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--color-text-dark)
 }
 
-.ClassifierDetail-link {
+.ClassifierDetail-link .ClassifierDetail-name {
   color: #705dcc;
 }
 
