@@ -32,6 +32,6 @@
   text-decoration: none;
 }
 
-.CustomDropButton-dropzone:hover .CustomDropButton-manual-choice-link {
+.CustomDropButton:hover .CustomDropButton-manual-choice-link {
   text-decoration: underline;
 }

@@ -31,49 +31,59 @@ const ClassifierDetail = ({ name, classifierId, status }) => {
   return (
     <div className="ClassifierDetail">
       <Card>
-        <Link className="ClassifierDetail-link" to={'/' + classifierId}>
-          <div className="ClassifierDetail-name font-title">{name}</div>
-        </Link>
-        <div className="ClassifierDetail-classifier-id font-body1">
-          {classifierId}
-          {classifierId && (
-            <span>
-              <div className="ClassifierDetail-tooltip">
-                <button
-                  className="ClassifierDetail-copy-button"
-                  onClick={copyTextToClipboard}
-                >
-                  <img
-                    className="ClassifierDetail-copy"
-                    src={copy}
-                    alt="copy"
-                  />
-                <span className="ClassifierDetail-tooltiptext ClassifierDetail-copy">
-                    Copy classifier_id
-                  </span>
-                  <span className="ClassifierDetail-tooltiptext ClassifierDetail-copied">
-                    Copied!
-                  </span>
-                </button>
-              </div>
-            </span>
-          )}
-        </div>
-        <StatusIndicator status={status} />
-
-        {!classifierId && <div className="ClassifierDetail-spacer" />}
-
-        {status == 'failed' ? (
-          <div className="ClassifierDetail-failed font-body2">
-            Could not train classifier. Verify there are at least 10 positive
-            training images for at least 1 class and at least 10 other unique
-            training images.
+        {status === 'failed' ? (
+          <div>
+            <div className="ClassifierDetail-name font-title">{name}</div>
+            <br />
+            <StatusIndicator status={status} />
+            <div className="ClassifierDetail-failed-message font-body2">
+              Could not train classifier. Verify there are at least 10 positive
+              training images for at least 1 class and at least 10 other unique
+              training images.
+            </div>
+            <div className="ClassifierDetail-failed font-body2">Dismiss</div>
           </div>
         ) : (
-          <CustomDropButton
-            accept="image/jpeg, image/png, .jpg, .jpeg, .png"
-            explanationText="Drag images here to classify them"
-          />
+          <div>
+            {!classifierId || classifierId === 'food' || classifierId === 'default' ? (
+              <div className="ClassifierDetail-name font-title">{name}</div>
+            ) : (
+              <Link className="ClassifierDetail-link" to={'/' + classifierId}>
+                <div className="ClassifierDetail-name font-title">{name}</div>
+              </Link>
+            )}
+            <div className="ClassifierDetail-classifier-id font-body1">
+              {classifierId}
+              {classifierId && (
+                <span>
+                  <div className="ClassifierDetail-tooltip">
+                    <button
+                      className="ClassifierDetail-copy-button"
+                      onClick={copyTextToClipboard}
+                    >
+                      <img
+                        className="ClassifierDetail-copy"
+                        src={copy}
+                        alt="copy"
+                      />
+                      <span className="ClassifierDetail-tooltiptext ClassifierDetail-copy">
+                        Copy classifier_id
+                      </span>
+                      <span className="ClassifierDetail-tooltiptext ClassifierDetail-copied">
+                        Copied!
+                      </span>
+                    </button>
+                  </div>
+                </span>
+              )}
+            </div>
+
+            <StatusIndicator status={status} />
+            <CustomDropButton
+              accept="image/jpeg, image/png, .jpg, .jpeg, .png"
+              explanationText="Drag images here to classify them"
+            />
+          </div>
         )}
       </Card>
     </div>
