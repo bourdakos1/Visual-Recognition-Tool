@@ -1,0 +1,10 @@
+{
+  "services": {
+    "create-server-demo": {
+      "url": "http://localhost:8080",
+      "routes": {
+        "/": "/"
+      }
+    }
+  }
+}

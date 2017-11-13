@@ -1,15 +1,19 @@
 .font-title {
-    font: bold 1.65em Helvetica, sans-serif;
+  font: bold 20px "IBM Helvetica", "Helvetica Neue", HelveticaNeue, Helvetica, sans-serif;
 }
 
-.font-header {
-    font: bold 1.5em Helvetica, sans-serif;
+.font-subheading {
+  font: normal 16px "IBM Helvetica", "Helvetica Neue", HelveticaNeue, Helvetica, sans-serif;
 }
 
-.font-bold {
-    font: 500 1em Helvetica, sans-serif;
+.font-body2 {
+  font: bold 14px "IBM Helvetica", "Helvetica Neue", HelveticaNeue, Helvetica, sans-serif;
 }
 
-.font-default {
-    font: normal 1em Helvetica, sans-serif;
+.font-body1 {
+  font: normal 14px "IBM Helvetica", "Helvetica Neue", HelveticaNeue, Helvetica, sans-serif;
+}
+
+.font-caption {
+  font: normal 12px "IBM Helvetica", "Helvetica Neue", HelveticaNeue, Helvetica, sans-serif;
 }

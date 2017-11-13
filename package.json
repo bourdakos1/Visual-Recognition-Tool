@@ -4,7 +4,9 @@
   "main": "server.js",
   "license": "MIT",
   "dependencies": {
+    "@console/create-bluemix-server": "^1.1.1",
     "express": "^4.16.2",
+    "reactstrap": "^5.0.0-alpha.3",
     "watson-developer-cloud": "^2.41.1"
   },
   "scripts": {

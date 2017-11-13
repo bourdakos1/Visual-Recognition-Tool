@@ -42,11 +42,11 @@ class CustomDropButton extends Component {
     return (
       <MagicDropzone accept={this.props.accept} onDrop={this.onDrop}>
         <div className="CustomDropButton">
-          <div className="CustomDropButton-explanation-text font-bold">
+          <div className="CustomDropButton-explanation-text font-body2">
             {this.props.explanationText}
           </div>
 
-          <div className="CustomDropButton-manual-choice-text font-default">
+          <div className="CustomDropButton-manual-choice-text font-body1">
             <span>Or </span>
             <span className="CustomDropButton-manual-choice-link">
               {this.props.manualChoiceText}

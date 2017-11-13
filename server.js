@@ -23,3 +23,23 @@ const port = process.env.PORT || 3001
 app.listen(port, function() {
   console.log('Server listening on port ' + port)
 })
+
+// const setup = require('@console/create-bluemix-server').default
+// const bluemixHelpers = require('@console/create-bluemix-server').bluemixHelpers
+//
+// const app = setup.createBluemixExpressApp({
+//   appConfig: {
+//     context: '/',
+//     port: 8080
+//   }
+// })
+//
+// const render = setup.getTemplateRenderFunction()
+//
+// // This helper returns the context from appConfig.
+// const context = bluemixHelpers.getContextRoot()
+//
+// app.get(context, render('index'))
+//
+// // Starts the server at http://localhost:4895 (uses the port from appConfig).
+// setup.startServer(app)

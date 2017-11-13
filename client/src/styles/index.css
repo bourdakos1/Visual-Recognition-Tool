@@ -1,6 +1,6 @@
 html {
   background: #fafafa;
-  font-size: 14px;
+  /*font-size: 14px;*/
 }
 
 body {
@@ -14,5 +14,9 @@ body {
 }
 
 a {
-  text-decoration: none !important;
+  text-decoration: none;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
 }

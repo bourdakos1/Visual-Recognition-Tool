@@ -1,10 +1,10 @@
 .StatusIndicator {
-  margin-bottom: -1px;
-  margin-right: 5px;
+  position: relative;
+  top: 1px;
   display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 100%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
 }
 
 .StatusIndicator-ready {
@@ -20,10 +20,10 @@
 }
 
 .StatusIndicator-text {
-  padding-top: 5px;
+  line-height: 18px;
   text-decoration: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--color-text);
+  color: rgb(88, 96, 105);
 }

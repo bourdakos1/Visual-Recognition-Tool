@@ -3,20 +3,24 @@ import { Link } from 'react-router-dom'
 
 import './styles/TitleBar.css'
 import 'styles/fonts.css'
-import logo from 'images/watson_color.png'
+import logo from 'images/watson.svg'
+import user from 'images/user.svg'
 import Button from 'components/Button'
 
 const TitleBar = ({ apiKey, children }) => (
   <div>
-    <div className="TitleBar-shadow TitleBar-height">
+    <div className="TitleBar-status">
+      <img src={user} className="TitleBar-user" alt="User" />
+    </div>
+    <div className="TitleBar-shadow">
       <div className="TitleBar-contentWrapper">
-        <Link to="/" className="TitleBar-logo">
+        <Link to="/" className="TitleBar-link">
           <img src={logo} className="TitleBar-logo" alt="Logo" />
+          <h1 className="TitleBar-h1">IBM</h1>
+          <span className="TitleBar-span">Watson</span>
         </Link>
 
-        <Link to="/" className="TitleBar-title font-title">
-          {children}
-        </Link>
+        <h4 className="TitleBar-h4">Visual Recognition</h4>
 
         <div className="TitleBar-api-key font-default">
           <button className="TitleBar-key-button">
@@ -33,7 +37,7 @@ const TitleBar = ({ apiKey, children }) => (
         <Button className="TitleBar-button">Update key</Button>
       </div>
     </div>
-    <div className="TitleBar-height" />
+    <div className="TitleBar-height-blank" />
   </div>
 )
 

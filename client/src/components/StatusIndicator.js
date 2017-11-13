@@ -12,10 +12,13 @@ const Indicator = ({ status }) => {
   }
 }
 
+function ucfirst(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
 const StatusIndicator = ({ status }) => (
-  <div className="StatusIndicator-text">
-    <Indicator status={status} />
-    {status}
+  <div className="StatusIndicator-text font-caption">
+    <Indicator status={status} /> {ucfirst(status)}{' '}
   </div>
 )
 

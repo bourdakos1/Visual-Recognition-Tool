@@ -1,0 +1,7 @@
+{>"../node_modules/@console/create-bluemix-server/template-base"/}
+
+{<appMarkup}
+  <div class="bluemix-app">
+    <h1>This page was rendered by the Bluemix server.</h1>
+  </div>
+{/appMarkup}

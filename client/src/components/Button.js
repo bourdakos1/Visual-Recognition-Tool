@@ -6,7 +6,7 @@ import 'styles/fonts.css'
 const Button = ({ className, bold, icon, children }) => (
   <button
     className={
-      'font-default Button-base' +
+      'font-body1 Button-base' +
       (bold ? ' Button-bold' : ' Button-thin') +
       (icon ? ' Button-image' : '')
     }
