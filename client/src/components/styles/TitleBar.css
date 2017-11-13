@@ -8,7 +8,7 @@
   height: 36px;
   background-color: rgb(15, 33, 46);
   align-items: center;
-  padding-right: 16px;
+  padding: 0 16px;
 }
 
 .TitleBar-shadow {
@@ -20,6 +20,7 @@
   height: 50px;
   background-color: #162934;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  padding: 0 16px;
 }
 
 .TitleBar-contentWrapper {
@@ -34,7 +35,7 @@
 .TitleBar-link {
   display: flex;
   color: #ffffff;
-  margin-left: 20px;
+  margin-left: 4px;
   align-items: center;
   padding-left: 8px;
   padding-right: 8px;
@@ -50,8 +51,18 @@
 
 .TitleBar-user {
   height: 28px;
+  margin: 0 20px;
+}
+
+.TitleBar-user-container {
+  display: flex;
+  align-items: center;
   margin-left: auto;
-  width: 68px;
+  height: 36px;
+}
+
+.TitleBar-user-container:hover {
+  background-color: rgb(45, 63, 73);
 }
 
 .TitleBar-h1 {
@@ -82,6 +93,23 @@
   font-weight: 400;
   color: #9b82ff;
   margin-right: auto;
+}
+
+.TitleBar-doc-item {
+  font-family: 'IBM Helvetica', 'Helvetica Neue', HelveticaNeue, Helvetica,
+    sans-serif;
+  height: 50px;
+  line-height: 50px;
+  font-size: 0.875rem;
+  vertical-align: baseline;
+  font-weight: 700;
+  padding-left: 16px;
+  padding-right: 16px;
+  color: white;
+}
+
+.TitleBar-doc-item:hover {
+  color: #b890ff;
 }
 
 .TitleBar-api-key {
