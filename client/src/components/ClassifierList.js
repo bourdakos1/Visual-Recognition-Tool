@@ -3,19 +3,21 @@ import StackGrid from 'react-stack-grid'
 import { Link } from 'react-router-dom'
 
 import './styles/ClassifierList.css'
-import createButton from 'images/btn_create.png'
+import createButton from 'images/btn_create.svg'
 import Button from 'components/Button'
 import ClassifierDetail from 'components/ClassifierDetail'
 
 const ClassifierList = ({ classifiers }) => (
   <div>
-    <Link to="/create_classifier">
-      <div className="ClassifierList-button">
+    <div className="ClassifierList-top">
+      <div className="ClassifierList-your">Your classifiers</div>
+      <Link to="/create_classifier">
         <Button icon={createButton} bold>
-          Create classifier
+          Create a classifier
         </Button>
-      </div>
-    </Link>
+      </Link>
+    </div>
+
     <StackGrid
       className="ClassifierList-grid"
       columnWidth={300}

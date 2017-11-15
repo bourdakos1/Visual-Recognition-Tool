@@ -5,7 +5,6 @@ import './styles/TitleBar.css'
 import 'styles/fonts.css'
 import logo from 'images/watson.svg'
 import user from 'images/user.svg'
-import Button from 'components/Button'
 
 const TitleBar = ({ apiKey, children }) => (
   <div>

@@ -6,6 +6,7 @@ import 'styles/fonts.css'
 import Card from 'components/Card'
 import CustomDropButton from 'components/CustomDropButton'
 import StatusIndicator from 'components/StatusIndicator'
+import ThreeDotMenu from 'components/ThreeDotMenu'
 import copy from 'images/copy.svg'
 
 const ClassifierDetail = ({ name, classifierId, status }) => {
@@ -45,12 +46,17 @@ const ClassifierDetail = ({ name, classifierId, status }) => {
           </div>
         ) : (
           <div>
-            {!classifierId || classifierId === 'food' || classifierId === 'default' ? (
+            {!classifierId ||
+            classifierId === 'food' ||
+            classifierId === 'default' ? (
               <div className="ClassifierDetail-name font-title">{name}</div>
             ) : (
-              <Link className="ClassifierDetail-link" to={'/' + classifierId}>
-                <div className="ClassifierDetail-name font-title">{name}</div>
-              </Link>
+              <div>
+                <ThreeDotMenu />
+                <Link className="ClassifierDetail-link" to={'/' + classifierId}>
+                  <div className="ClassifierDetail-name font-title">{name}</div>
+                </Link>
+              </div>
             )}
             <div className="ClassifierDetail-classifier-id font-body1">
               {classifierId}

@@ -1,5 +1,19 @@
-.ClassifierList-button {
-  margin: 21px 0;
+.ClassifierList-top {
+  display: flex;
+  margin: 60px 0 40px 0;
+  align-items: center;
+}
+
+.ClassifierList-your {
+  margin-right: auto;
+  color: var(--color-text-dark);
+  font-family: 'IBM Helvetica', 'Helvetica Neue', HelveticaNeue, Helvetica,
+    sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 32px;
+  line-height: 1.04;
+  letter-spacing: -0.028em;
 }
 
 .ClassifierList-grid {
