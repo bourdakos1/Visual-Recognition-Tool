@@ -18,22 +18,29 @@
   font-size: 1.125rem;
 }
 
-.TitleBar-leftw {
-  display: flex;
-  align-items: center;
-}
-
 .TitleBar-left {
   display: flex;
   align-items: center;
+  margin: 0 0 0 20px;
+}
+
+.TitleBar-link-logo {
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 8px;
+  margin: 0;
 }
 
 .TitleBar-link {
   display: flex;
   color: #ffffff;
   align-items: center;
-  padding: 0 8px 0 8px;
+  padding: 0 8px 0 0;
   margin: 0;
+}
+
+.TitleBar-link-logo:hover + .TitleBar-text-wrapper .TitleBar-link {
+  color: #b8b4ff;
 }
 
 .TitleBar-link:hover {
@@ -47,49 +54,30 @@
   padding: 0;
 }
 
-.TitleBar-user {
-  height: 24px;
-  margin: 0 16px;
-}
-
-.TitleBar-user-container:hover {
-  background-color: rgb(45, 63, 73);
+.TitleBar-text-wrapper {
+  display: flex;
+  align-items: baseline;
 }
 
 .TitleBar-h1 {
   font-size: 1.125rem;
-  letter-spacing: 0.5px;
   font-weight: 400;
   margin: 0 0 0 8px;
 }
 
 .TitleBar-span {
-  letter-spacing: 0.5px;
+  font-size: 1.125rem;
   font-weight: 700;
   margin: 0;
   padding: 0;
 }
 
 .TitleBar-h4 {
+  font-size: 1.125rem;
   font-weight: 400;
   color: #9b82ff;
   margin: 0;
   padding: 0;
-}
-
-.TitleBar-doc-item {
-  font-family: 'IBM Helvetica', 'Helvetica Neue', HelveticaNeue, Helvetica,
-    sans-serif;
-  height: 50px;
-  font-size: 0.875rem;
-  font-weight: 700;
-  padding-left: 16px;
-  padding-right: 16px;
-  color: white;
-}
-
-.TitleBar-doc-item:hover {
-  color: #b890ff;
 }
 
 .TitleBar-height-blank {
