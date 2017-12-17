@@ -1,44 +1,39 @@
-.TitleBar-status {
-  display: flex;
+.TitleBar-shadow {
   position: fixed;
   z-index: 1000;
   top: 0px;
   left: 0px;
   right: 0px;
-  height: 36px;
-  background-color: rgb(15, 33, 46);
-  align-items: center;
-  padding: 0 16px;
-}
-
-.TitleBar-shadow {
-  position: fixed;
-  z-index: 1000;
-  top: 36px;
-  left: 0px;
-  right: 0px;
   height: 50px;
   background-color: #162934;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-  padding: 0 16px;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  font-family: 'IBM Helvetica', 'Helvetica Neue', HelveticaNeue, Helvetica,
+    sans-serif;
+  font-size: 1.125rem;
 }
 
-.TitleBar-contentWrapper {
+.TitleBar-leftw {
   display: flex;
-  /*max-width: 1000px;*/
-  width: 100%;
-  height: 100%;
-  /*margin: auto;*/
+  align-items: center;
+}
+
+.TitleBar-left {
+  display: flex;
   align-items: center;
 }
 
 .TitleBar-link {
   display: flex;
   color: #ffffff;
-  margin-left: 4px;
   align-items: center;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding: 0 8px 0 8px;
+  margin: 0;
 }
 
 .TitleBar-link:hover {
@@ -47,18 +42,14 @@
 
 .TitleBar-logo {
   height: 28px;
+  width: 32px;
+  margin: 0;
+  padding: 0;
 }
 
 .TitleBar-user {
-  height: 28px;
-  margin: 0 20px;
-}
-
-.TitleBar-user-container {
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-  height: 36px;
+  height: 24px;
+  margin: 0 16px;
 }
 
 .TitleBar-user-container:hover {
@@ -66,42 +57,31 @@
 }
 
 .TitleBar-h1 {
-  font-family: 'IBM Helvetica', 'Helvetica Neue', HelveticaNeue, Helvetica,
-    sans-serif;
   font-size: 1.125rem;
-  vertical-align: baseline;
   letter-spacing: 0.5px;
   font-weight: 400;
-  margin-left: 8px;
+  margin: 0 0 0 8px;
 }
 
 .TitleBar-span {
-  font-family: 'IBM Helvetica', 'Helvetica Neue', HelveticaNeue, Helvetica,
-    sans-serif;
-  font-size: 1.125rem;
-  vertical-align: baseline;
   letter-spacing: 0.5px;
   font-weight: 700;
-  margin-left: 4px;
+  margin: 0;
+  padding: 0;
 }
 
 .TitleBar-h4 {
-  font-family: 'IBM Helvetica', 'Helvetica Neue', HelveticaNeue, Helvetica,
-    sans-serif;
-  vertical-align: baseline;
-  font-size: 1.125rem;
   font-weight: 400;
   color: #9b82ff;
-  margin-right: auto;
+  margin: 0;
+  padding: 0;
 }
 
 .TitleBar-doc-item {
   font-family: 'IBM Helvetica', 'Helvetica Neue', HelveticaNeue, Helvetica,
     sans-serif;
   height: 50px;
-  line-height: 50px;
   font-size: 0.875rem;
-  vertical-align: baseline;
   font-weight: 700;
   padding-left: 16px;
   padding-right: 16px;
@@ -112,32 +92,6 @@
   color: #b890ff;
 }
 
-.TitleBar-api-key {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--color-text);
-  min-width: 0px;
-  margin-left: 20px;
-  margin-right: 12px;
-}
-
-.TitleBar-key-button {
-  border: 0;
-  padding: 0;
-  background: none;
-  padding-right: 4px;
-}
-
-#TitleBar-key-middle {
-  font-size: 0em;
-}
-
-#TitleBar-key-middle:before {
-  content: '•••••••••••••••••••••••••••••••••••••';
-  font-size: 16px;
-}
-
 .TitleBar-height-blank {
-  height: 86px;
+  height: 50px;
 }
