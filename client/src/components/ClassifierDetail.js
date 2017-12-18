@@ -68,7 +68,7 @@ const ClassifierDetail = ({ name, classifierId, status }) => {
                       onClick={copyTextToClipboard}
                     >
                       <img
-                        className="ClassifierDetail-copy"
+                        className="ClassifierDetail-copy-icon"
                         src={copy}
                         alt="copy"
                       />

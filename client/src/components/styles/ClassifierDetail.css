@@ -18,6 +18,7 @@
 
 .ClassifierDetail-link:hover {
   text-decoration: underline;
+  color: #705dcc;
 }
 
 .ClassifierDetail-classifier-id {
@@ -30,7 +31,7 @@
   color: rgb(88, 96, 105);
 }
 
-.ClassifierDetail-copy {
+.ClassifierDetail-copy-icon {
   height: 18px;
 }
 
@@ -105,7 +106,7 @@
 .ClassifierDetail-tooltip:active .ClassifierDetail-tooltiptext.ClassifierDetail-copied {
   visibility: visible;
   opacity: 1;
-  transition: visibility 0s linear 0s, opacity 150ms linear 0s;
+  transition: visibility 0s linear 0s, opacity 10ms linear 0s;
 }
 
 .ClassifierDetail-failed {
