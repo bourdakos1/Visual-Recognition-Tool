@@ -25,10 +25,10 @@ class TitleBar extends Component {
   }
 
   handleOutsideClick = e => {
-    // ignore clicks on the component itself
-    // if (this.node.contains(e.target)) {
-    //   return
-    // }
+    // Ignore clicks on the dropdown itself.
+    if (this.accountDetails.contains(e.target)) {
+      return
+    }
 
     this.handleClick()
   }
@@ -63,7 +63,8 @@ class TitleBar extends Component {
             <Link
               to="/"
               onClick={this.handleClick}
-              className={`TitleBar-overflow-item TitleBar-highlight ${this.state.showLogout
+              className={`TitleBar-overflow-item TitleBar-highlight ${this.state
+                .showLogout
                 ? 'TitleBar-highlight-active'
                 : ''}`}
             >
@@ -73,9 +74,14 @@ class TitleBar extends Component {
               className={`TitleBar-account-details ${this.state.showLogout
                 ? 'TitleBar-account-details-show'
                 : 'TitleBar-account-details-hide'}`}
+              ref={input => {
+                this.accountDetails = input
+              }}
             >
               <div className="TitleBar-section-logout">
-                <Link to="/" className="TitleBar-logout">Log Out</Link>
+                <Link to="/" className="TitleBar-logout">
+                  Log Out
+                </Link>
               </div>
             </div>
           </div>
