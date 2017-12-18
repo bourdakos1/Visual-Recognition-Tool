@@ -80,6 +80,35 @@
   padding: 0;
 }
 
+.TitleBar-right {
+  height: 100%;
+  display: flex;
+}
+
+.TitleBar-overflow-item {
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  font-family: 'IBM Helvetica', 'Helvetica Neue', HelveticaNeue, Helvetica,
+    sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  line-height: 14px;
+}
+
+.TitleBar-overflow-item:hover {
+  color: #b890ff;
+}
+
+.TitleBar-highlight:hover {
+  background-color: rgb(45, 63, 73);
+}
+
+.TitleBar-user {
+  height: 24px;
+}
+
 .TitleBar-height-blank {
   height: 50px;
 }

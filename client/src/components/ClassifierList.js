@@ -13,7 +13,7 @@ const ClassifierList = ({ classifiers }) => (
       <div className="ClassifierList-your">Your classifiers</div>
       <Link to="/create_classifier">
         <Button icon={createButton} bold>
-          Create a classifier
+          New classifier
         </Button>
       </Link>
     </div>

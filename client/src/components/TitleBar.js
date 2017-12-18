@@ -10,7 +10,6 @@ const TitleBar = ({ apiKey, children }) => (
   <div>
     <div className="TitleBar-shadow">
       <div className="TitleBar-left">
-
         <Link to="/" className="TitleBar-link-logo">
           <img src={logo} className="TitleBar-logo" alt="Logo" />
         </Link>
@@ -26,7 +25,11 @@ const TitleBar = ({ apiKey, children }) => (
       </div>
 
       <div className="TitleBar-right">
-
+        <Link to="/" className="TitleBar-overflow-item">Docs</Link>
+        <Link to="/" className="TitleBar-overflow-item">API Reference</Link>
+        <Link to="/" className="TitleBar-overflow-item TitleBar-highlight">
+          <img src={user} className="TitleBar-user" alt="User" />
+        </Link>
       </div>
     </div>
     <div className="TitleBar-height-blank" />

@@ -1,19 +1,19 @@
 .font-title {
-  font: bold 20px "IBM Helvetica", "Helvetica Neue", HelveticaNeue, Helvetica, sans-serif;
+  font: bold 20px -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "IBM Helvetica", "Helvetica Neue", HelveticaNeue, Helvetica, sans-serif;
 }
 
 .font-subheading {
-  font: normal 16px "IBM Helvetica", "Helvetica Neue", HelveticaNeue, Helvetica, sans-serif;
+  font: normal 16px -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "IBM Helvetica", "Helvetica Neue", HelveticaNeue, Helvetica, sans-serif;
 }
 
 .font-body2 {
-  font: bold 14px "IBM Helvetica", "Helvetica Neue", HelveticaNeue, Helvetica, sans-serif;
+  font: bold 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "IBM Helvetica", "Helvetica Neue", HelveticaNeue, Helvetica, sans-serif;
 }
 
 .font-body1 {
-  font: normal 14px "IBM Helvetica", "Helvetica Neue", HelveticaNeue, Helvetica, sans-serif;
+  font: normal 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "IBM Helvetica", "Helvetica Neue", HelveticaNeue, Helvetica, sans-serif;
 }
 
 .font-caption {
-  font: normal 12px "IBM Helvetica", "Helvetica Neue", HelveticaNeue, Helvetica, sans-serif;
+  font: normal 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "IBM Helvetica", "Helvetica Neue", HelveticaNeue, Helvetica, sans-serif;
 }

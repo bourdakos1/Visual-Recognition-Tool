@@ -1,11 +1,11 @@
 .Button-base {
   display: flex;
-  border-radius: 5px;
+  border-radius: 2px;
   border-color: var(--color-primary);
   border-width: thin;
   border-style: solid;
-  height: 30px;
   padding: 0px 21px;
+  line-height: 20px;
   align-items: center;
 }
 
@@ -34,7 +34,7 @@
 }
 
 .Button-image {
-  padding: 0px 6px 0px 16px;
+  padding: 6px 7px 6px 12px;
 }
 
 .Button-imgStyle {
