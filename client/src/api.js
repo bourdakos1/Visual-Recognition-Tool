@@ -16,6 +16,12 @@ function listClassifiers(cb) {
         return new Date(b.created) - new Date(a.created)
       })
 
+      classifiers.unshift({
+        name: 'Test',
+        classifier_id: 'foobar',
+        status: 'training'
+      })
+
       classifiers.push(
         { name: 'General', classifier_id: 'default', status: 'ready' },
         { name: 'Food', classifier_id: 'food', status: 'ready' },

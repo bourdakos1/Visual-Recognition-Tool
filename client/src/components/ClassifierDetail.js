@@ -6,8 +6,10 @@ import 'styles/fonts.css'
 import Card from 'components/Card'
 import CustomDropButton from 'components/CustomDropButton'
 import StatusIndicator from 'components/StatusIndicator'
+import LoadingIndicator from 'components/LoadingIndicator'
 import ThreeDotMenu from 'components/ThreeDotMenu'
 import copy from 'images/copy.svg'
+import error from 'images/ic_error_white.svg'
 
 const ClassifierDetail = ({ name, classifierId, status }) => {
   function copyTextToClipboard() {
@@ -34,15 +36,22 @@ const ClassifierDetail = ({ name, classifierId, status }) => {
       <Card>
         {status === 'failed' ? (
           <div>
-            <div className="ClassifierDetail-name font-title">{name}</div>
-            <br />
-            <StatusIndicator status={status} />
-            <div className="ClassifierDetail-failed-message font-body2">
-              Could not train classifier. Verify there are at least 10 positive
-              training images for at least 1 class and at least 10 other unique
-              training images.
+            <div className="ClassifierDetail-failed font-body2">
+              <img
+                className="ClassifierDetail-failed-icon"
+                src={error}
+                alt="error"
+              />
+              <span>Failed</span>
             </div>
-            <div className="ClassifierDetail-failed font-body2">Dismiss</div>
+            <div className="ClassifierDetail-name font-title">{name}</div>
+            <div className="ClassifierDetail-failed-message-header font-body2">
+              The classifier could not be trained.
+            </div>
+            <div className="ClassifierDetail-failed-message font-body1">
+              Verify the usage of at least 10 unique training images per class
+              and at least 2 classes.
+            </div>
           </div>
         ) : (
           <div>
@@ -58,6 +67,7 @@ const ClassifierDetail = ({ name, classifierId, status }) => {
                 </Link>
               </div>
             )}
+
             <div className="ClassifierDetail-classifier-id font-body1">
               {classifierId}
               {classifierId && (
@@ -84,11 +94,19 @@ const ClassifierDetail = ({ name, classifierId, status }) => {
               )}
             </div>
 
-            <StatusIndicator status={status} />
-            <CustomDropButton
-              accept="image/jpeg, image/png, .jpg, .jpeg, .png"
-              explanationText="Drag images here to classify them"
-            />
+            {status === 'training' ? (
+              <div className="ClassifierDetail-training">
+                <div className="ClassifierDetail-training-text font-body2">
+                  Training
+                </div>
+                <LoadingIndicator />
+              </div>
+            ) : (
+              <CustomDropButton
+                accept="image/jpeg, image/png, .jpg, .jpeg, .png"
+                explanationText="Drag images here to classify them"
+              />
+            )}
           </div>
         )}
       </Card>

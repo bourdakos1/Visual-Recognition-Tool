@@ -14,11 +14,11 @@
 
 .ClassifierDetail-link .ClassifierDetail-name {
   color: #705dcc;
+  display: inline-block;
 }
 
-.ClassifierDetail-link:hover {
+.ClassifierDetail-link .ClassifierDetail-name:hover {
   text-decoration: underline;
-  color: #705dcc;
 }
 
 .ClassifierDetail-classifier-id {
@@ -48,7 +48,6 @@
 .ClassifierDetail-copy-button:hover {
   background-color: #f0f0f0;
   border-radius: 2px;
-  /* #1f1f1f */
 }
 
 .ClassifierDetail-spacer {
@@ -110,22 +109,47 @@
 }
 
 .ClassifierDetail-failed {
+  display: flex;
+  align-items: center;
   background: #f44336;
-  cursor: pointer;
-  padding: 16px;
+  padding: 0 12px;
+  height: 48px;
 
   color: #fff;
-  text-align: center;
 
-  border-radius: 0 0 2px 2px;
-  margin-top: 20px;
-  margin-bottom: -17px;
-  margin-left: -17px;
-  margin-right: -17px;
+  border-radius: 2px 2px 0 0;
+  margin: -17px -17px 15px -17px;
+}
+
+.ClassifierDetail-failed-icon {
+  margin-right: 20px;
+}
+
+.ClassifierDetail-failed-message-header {
+  margin-top: 21px;
+  color: #f44336;
+  color: rgb(88, 96, 105);
 }
 
 .ClassifierDetail-failed-message {
-  padding-top: 18px;
+  margin-top: 6px;
+  margin-bottom: 5px;
   color: #f44336;
+  color: rgb(88, 96, 105);
+}
+
+.ClassifierDetail-training {
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-top: solid thin #ededed;
+  margin-top: 20px;
+}
+
+.ClassifierDetail-training-text {
+  margin-bottom: 21px;
+  align-self: center;
   color: rgb(88, 96, 105);
 }

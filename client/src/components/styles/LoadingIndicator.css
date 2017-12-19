@@ -1,0 +1,211 @@
+.LoadingIndicator-container {
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+}
+
+.LoadingIndicator-dots {
+  width: 8px;
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+}
+
+.LoadingIndicator-dots:not(:last-child) {
+  margin-right: 9px;
+}
+
+.LoadingIndicator-dots:before, .LoadingIndicator-dots:after {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.LoadingIndicator-dots:nth-child(1):before {
+  transform: translateY(-200%);
+  animation: animBefore 1s linear infinite;
+  animation-delay: -0.9s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(1):after {
+  transform: translateY(200%);
+  animation: animAfter 1s linear infinite;
+  animation-delay: -0.9s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(2):before {
+  transform: translateY(-200%);
+  animation: animBefore 1s linear infinite;
+  animation-delay: -1.8s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(2):after {
+  transform: translateY(200%);
+  animation: animAfter 1s linear infinite;
+  animation-delay: -1.8s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(3):before {
+  transform: translateY(-200%);
+  animation: animBefore 1s linear infinite;
+  animation-delay: -2.7s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(3):after {
+  transform: translateY(200%);
+  animation: animAfter 1s linear infinite;
+  animation-delay: -2.7s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(4):before {
+  transform: translateY(-200%);
+  animation: animBefore 1s linear infinite;
+  animation-delay: -3.6s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(4):after {
+  transform: translateY(200%);
+  animation: animAfter 1s linear infinite;
+  animation-delay: -3.6s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(5):before {
+  transform: translateY(-200%);
+  animation: animBefore 1s linear infinite;
+  animation-delay: -4.5s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(5):after {
+  transform: translateY(200%);
+  animation: animAfter 1s linear infinite;
+  animation-delay: -4.5s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(6):before {
+  transform: translateY(-200%);
+  animation: animBefore 1s linear infinite;
+  animation-delay: -5.4s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(6):after {
+  transform: translateY(200%);
+  animation: animAfter 1s linear infinite;
+  animation-delay: -5.4s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(7):before {
+  transform: translateY(-200%);
+  animation: animBefore 1s linear infinite;
+  animation-delay: -6.3s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(7):after {
+  transform: translateY(200%);
+  animation: animAfter 1s linear infinite;
+  animation-delay: -6.3s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(8):before {
+  transform: translateY(-200%);
+  animation: animBefore 1s linear infinite;
+  animation-delay: -7.2s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(8):after {
+  transform: translateY(200%);
+  animation: animAfter 1s linear infinite;
+  animation-delay: -7.2s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(9):before {
+  transform: translateY(-200%);
+  animation: animBefore 1s linear infinite;
+  animation-delay: -8.1s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(9):after {
+  transform: translateY(200%);
+  animation: animAfter 1s linear infinite;
+  animation-delay: -8.1s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(10):before {
+  transform: translateY(-200%);
+  animation: animBefore 1s linear infinite;
+  animation-delay: -9s;
+  background-color: #fdaa29;
+}
+
+.LoadingIndicator-dots:nth-child(10):after {
+  transform: translateY(200%);
+  animation: animAfter 1s linear infinite;
+  animation-delay: -9s;
+  background-color: #fdaa29;
+}
+
+@keyframes animBefore {
+  0% {
+    transform: scale(1) translateY(-200%);
+    z-index: 1;
+  }
+  25% {
+    transform: scale(1.3) translateY(0);
+    z-index: 1;
+  }
+  50% {
+    transform: scale(1) translateY(200%);
+    z-index: -1;
+  }
+  75% {
+    transform: scale(0.7) translateY(0);
+    z-index: -1;
+  }
+  100% {
+    transform: scale(1) translateY(-200%);
+    z-index: -1;
+  }
+}
+
+@keyframes animAfter {
+  0% {
+    transform: scale(1) translateY(200%);
+    z-index: -1;
+  }
+  25% {
+    transform: scale(0.7) translateY(0);
+    z-index: -1;
+  }
+  50% {
+    transform: scale(1) translateY(-200%);
+    z-index: 1;
+  }
+  75% {
+    transform: scale(1.3) translateY(0);
+    z-index: 1;
+  }
+  100% {
+    transform: scale(1) translateY(200%);
+    z-index: 1;
+  }
+}
