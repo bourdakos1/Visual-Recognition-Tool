@@ -17,6 +17,30 @@ function listClassifiers(cb) {
       })
 
       classifiers.unshift({
+        name: 'Test This REALLLYY long name t o s e e how it goes',
+        classifier_id: 'foobar_and_an_even_longer_classifier_id123456789',
+        status: 'ready'
+      })
+
+      classifiers.unshift({
+        name: 'AAAAAABBBBBBBBCCCCCCCCCDDDDDDDDEEEEEEEEFFFFFFFFGGGGGGG',
+        classifier_id: 'foobar_and_an_even_longer_classifier_id123456789',
+        status: 'ready'
+      })
+
+      classifiers.unshift({
+        name: 'Test This REALLLYY long name t o s e e how it goes',
+        classifier_id: 'foobar_and_an_even_longer_classifier_id123456789',
+        status: 'failed'
+      })
+
+      classifiers.unshift({
+        name: 'AAAAAABBBBBBBBCCCCCCCCCDDDDDDDDEEEEEEEEFFFFFFFFGGGGGGG',
+        classifier_id: 'foobar_and_an_even_longer_classifier_id123456789',
+        status: 'failed'
+      })
+
+      classifiers.unshift({
         name: 'Test',
         classifier_id: 'foobar',
         status: 'training'
