@@ -5,8 +5,9 @@ import 'styles/fonts.css'
 import dots from 'images/btn_dropdown.png'
 
 const ThreeDotMenu = () => {
-  function dropdown() {
-    document.getElementById('myDropdown').classList.toggle('ThreeDotMenu-show')
+  function dropdown(e) {
+    console.log(e.target)
+    e.target.nextSibling.classList.toggle('ThreeDotMenu-show')
   }
 
   return (
@@ -23,8 +24,12 @@ const ThreeDotMenu = () => {
         <a className="ThreeDotMenu-aStyle" key="1" href="#">
           Update
         </a>
-        <div className="ThreeDotMenu-divider"></div>
-        <a className="ThreeDotMenu-aStyle ThreeDotMenu-destructive" key="2" href="#">
+        <div className="ThreeDotMenu-divider" />
+        <a
+          className="ThreeDotMenu-aStyle ThreeDotMenu-destructive"
+          key="2"
+          href="#"
+        >
           Delete
         </a>
       </div>
