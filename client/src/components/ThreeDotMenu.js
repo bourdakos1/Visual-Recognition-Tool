@@ -31,11 +31,8 @@ class ThreeDotMenu extends Component {
     this.handleClick()
   }
 
-  // dropdown = e => {
-  //   e.target.nextSibling.classList.toggle('ThreeDotMenu-show')
-  // }
-
   render() {
+    const { options } = this.props
     return (
       <div className="ThreeDotMenu-dropdown">
         <button
@@ -50,28 +47,22 @@ class ThreeDotMenu extends Component {
             this.dropdownContent = input
           }}
         >
-          <a
-            className="ThreeDotMenu-aStyle ThreeDotMenu-disabled"
-            key="0"
-            href="#"
-          >
-            Test
-          </a>
-          <a
-            className="ThreeDotMenu-aStyle ThreeDotMenu-disabled"
-            key="1"
-            href="#"
-          >
-            Update
-          </a>
-          <div className="ThreeDotMenu-divider" />
-          <a
-            className="ThreeDotMenu-aStyle ThreeDotMenu-destructive"
-            key="2"
-            href="#"
-          >
-            Delete
-          </a>
+          {options.map(item => (
+            <div>
+              {item.name ? (
+                <a
+                  className={`ThreeDotMenu-aStyle ${item.disabled &&
+                    'ThreeDotMenu-disabled'} ${item.distructive &&
+                    'ThreeDotMenu-destructive'}`}
+                  href={item.link}
+                >
+                  {item.name}
+                </a>
+              ) : (
+                <div className="ThreeDotMenu-divider" />
+              )}
+            </div>
+          ))}
         </div>
       </div>
     )

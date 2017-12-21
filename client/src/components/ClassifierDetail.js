@@ -31,6 +31,20 @@ const ClassifierDetail = ({ name, classifierId, status }) => {
     document.body.removeChild(textArea)
   }
 
+  var optionsDefault = [
+    { name: 'Test', link: '#' },
+    { name: 'Update', link: '#' },
+    {}, // Divider.
+    { name: 'Delete', link: '#', distructive: true }
+  ]
+
+  var optionsTraining = [
+    { name: 'Test', link: '#', disabled: true },
+    { name: 'Update', link: '#', disabled: true },
+    {}, // Divider.
+    { name: 'Delete', link: '#', distructive: true }
+  ]
+
   return (
     <div className="ClassifierDetail">
       <Card>
@@ -61,7 +75,11 @@ const ClassifierDetail = ({ name, classifierId, status }) => {
               <div className="ClassifierDetail-name font-title">{name}</div>
             ) : (
               <div>
-                <ThreeDotMenu />
+                <ThreeDotMenu
+                  options={
+                    status === 'training' ? optionsTraining : optionsDefault
+                  }
+                />
                 <Link className="ClassifierDetail-link" to={'/' + classifierId}>
                   <div className="ClassifierDetail-name font-title">{name}</div>
                 </Link>
