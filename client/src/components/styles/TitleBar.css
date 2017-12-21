@@ -39,11 +39,13 @@
 }
 
 .TitleBar-link-logo:hover + .TitleBar-text-wrapper .TitleBar-link {
-  color: #b8b4ff;
+  /* color: #b8b4ff; */
+  color: #5aaafa;
 }
 
 .TitleBar-link:hover {
-  color: #b8b4ff;
+  /* color: #b8b4ff; */
+  color: #5aaafa;
 }
 
 .TitleBar-logo {
@@ -74,7 +76,7 @@
 .TitleBar-h4 {
   font-size: 1.125rem;
   font-weight: 400;
-  color: #9b82ff;
+  color: #5596e6;
   margin: 0;
   padding: 0;
 }
@@ -104,7 +106,7 @@
 }
 
 .TitleBar-overflow-item:hover {
-  color: #b890ff;
+  color: #5aaafa;
 }
 
 .TitleBar-highlight:hover {
@@ -159,7 +161,7 @@
 }
 
 .TitleBar-logout:hover {
-  color: #9b82ff;
+  color: #5596e6;
 }
 
 .TitleBar-height-blank {
