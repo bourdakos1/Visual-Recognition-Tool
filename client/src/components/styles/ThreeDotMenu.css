@@ -101,3 +101,13 @@
   height: 1px;
   margin: 8px 1px 8px 1px;
 }
+
+.ThreeDotMenu-disabled {
+  cursor: default;
+  color: rgba(36, 41, 46, 0.20);
+}
+
+.ThreeDotMenu-disabled:hover {
+  background-color: transparent;
+  color: rgba(36, 41, 46, 0.20);
+}

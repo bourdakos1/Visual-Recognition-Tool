@@ -18,10 +18,10 @@ const ThreeDotMenu = () => {
         className="ThreeDotMenu-dropbtn"
       />
       <div id="myDropdown" className="ThreeDotMenu-dropdownContent">
-        <a className="ThreeDotMenu-aStyle" key="0" href="#">
+        <a className="ThreeDotMenu-aStyle ThreeDotMenu-disabled" key="0" href="#">
           Test
         </a>
-        <a className="ThreeDotMenu-aStyle" key="1" href="#">
+        <a className="ThreeDotMenu-aStyle ThreeDotMenu-disabled" key="1" href="#">
           Update
         </a>
         <div className="ThreeDotMenu-divider" />
