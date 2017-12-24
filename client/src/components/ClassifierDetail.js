@@ -58,7 +58,9 @@ const ClassifierDetail = ({ name, classifierId, status }) => {
               />
               <span>Failed</span>
             </div>
-            <div className="ClassifierDetail-name font-title">{name}</div>
+            <div className="ClassifierDetail-truncate">
+              <div className="ClassifierDetail-name font-title">{name}</div>
+            </div>
             <div className="ClassifierDetail-failed-message-header font-body2">
               The classifier could not be trained.
             </div>
@@ -87,7 +89,10 @@ const ClassifierDetail = ({ name, classifierId, status }) => {
             )}
 
             <div className="ClassifierDetail-classifier-id font-body1">
-              {classifierId}
+              <div className="ClassifierDetail-classifier-id-text">
+                {classifierId}
+              </div>
+
               {classifierId && (
                 <span>
                   <div className="ClassifierDetail-tooltip">

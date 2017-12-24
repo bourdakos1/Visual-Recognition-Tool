@@ -3,18 +3,21 @@
 }
 
 .ClassifierDetail-name {
+  display: inline-block;
   height: 22px;
   line-height: 21px;
   text-decoration: none;
+  color: var(--color-text-dark);
+
+  /* max-width: calc(100% - 28px); */
+  max-width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--color-text-dark)
 }
 
 .ClassifierDetail-link .ClassifierDetail-name {
   color: #705dcc;
-  display: inline-block;
 }
 
 .ClassifierDetail-link .ClassifierDetail-name:hover {
@@ -25,10 +28,17 @@
   line-height: 18px;
   margin-bottom: 16px;
   margin-top: 8px;
-  text-decoration: none;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  white-space: nowrap; /* keeps the button on the same line */
   color: rgb(88, 96, 105);
+}
+
+.ClassifierDetail-classifier-id-text {
+  max-width: calc(100% - 48px);
+  display: inline;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0px;
 }
 
 .ClassifierDetail-copy-icon {
@@ -86,23 +96,27 @@
   border-color: #162934 transparent transparent transparent;
 }
 
-.ClassifierDetail-tooltip:hover .ClassifierDetail-tooltiptext.ClassifierDetail-copy {
+.ClassifierDetail-tooltip:hover
+  .ClassifierDetail-tooltiptext.ClassifierDetail-copy {
   visibility: visible;
   opacity: 1;
   transition: visibility 0s linear 500ms, opacity 150ms linear 500ms;
 }
 
-.ClassifierDetail-tooltip:active .ClassifierDetail-tooltiptext.ClassifierDetail-copy {
+.ClassifierDetail-tooltip:active
+  .ClassifierDetail-tooltiptext.ClassifierDetail-copy {
   visibility: hidden;
   opacity: 0;
   transition: visibility 0s linear 0s, opacity 150ms linear 0s;
 }
 
-.ClassifierDetail-tooltip .ClassifierDetail-tooltiptext.ClassifierDetail-copied {
+.ClassifierDetail-tooltip
+  .ClassifierDetail-tooltiptext.ClassifierDetail-copied {
   transition: visibility 300ms linear 500ms, opacity 300ms linear 500ms;
 }
 
-.ClassifierDetail-tooltip:active .ClassifierDetail-tooltiptext.ClassifierDetail-copied {
+.ClassifierDetail-tooltip:active
+  .ClassifierDetail-tooltiptext.ClassifierDetail-copied {
   visibility: visible;
   opacity: 1;
   transition: visibility 0s linear 0s, opacity 10ms linear 0s;
