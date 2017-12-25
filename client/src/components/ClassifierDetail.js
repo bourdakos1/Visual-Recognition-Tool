@@ -35,8 +35,8 @@ const Failed = ({ name }) => (
       <span>Failed</span>
     </div>
 
-    <div className="ClassifierDetail-truncate">
-      <div className="ClassifierDetail-name font-title">{name}</div>
+    <div className="ClassifierDetail-name font-title ClassifierDetail-fail">
+      {name}
     </div>
 
     <div className="ClassifierDetail-failed-message-header font-body2">
@@ -69,11 +69,12 @@ const ReadyCustom = ({ name, classifierId }) => (
   <div>
     <ThreeDotMenu options={optionsReady} />
 
-    <div className="ClassifierDetail-name">
-      <Link className="ClassifierDetail-link" to={'/' + classifierId}>
-        <div className="ClassifierDetail-name font-title">{name}</div>
-      </Link>
-    </div>
+    <Link
+      className="font-title ClassifierDetail-name ClassifierDetail-link"
+      to={'/' + classifierId}
+    >
+      {name}
+    </Link>
 
     <div className="ClassifierDetail-classifier-id font-body1">
       <div className="ClassifierDetail-classifier-id-text">{classifierId}</div>
@@ -91,11 +92,12 @@ const Training = ({ name, classifierId }) => (
   <div>
     <ThreeDotMenu options={optionsTraining} />
 
-    <div className="ClassifierDetail-name">
-      <Link className="ClassifierDetail-link" to={'/' + classifierId}>
-        <div className="ClassifierDetail-name font-title">{name}</div>
-      </Link>
-    </div>
+    <Link
+      className="font-title ClassifierDetail-name ClassifierDetail-link"
+      to={'/' + classifierId}
+    >
+      {name}
+    </Link>
 
     <div className="ClassifierDetail-classifier-id font-body1">
       <div className="ClassifierDetail-classifier-id-text">{classifierId}</div>

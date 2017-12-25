@@ -3,49 +3,49 @@
 }
 
 .ClassifierDetail-name {
+  padding: 0;
+  margin: 1px 0 0 0;
+  line-height: 100%;
   display: inline-block;
-  height: 22px;
-  line-height: 21px;
   text-decoration: none;
   color: var(--color-text-dark);
 
-  /* max-width: calc(100% - 28px); */
-  max-width: 100%;
+  max-width: calc(100% - 25px);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.ClassifierDetail-link .ClassifierDetail-name {
+.ClassifierDetail-fail.ClassifierDetail-name {
+  max-width: 100%;
+}
+
+.ClassifierDetail-link {
   color: #705dcc;
 }
 
-.ClassifierDetail-link .ClassifierDetail-name:hover {
+.ClassifierDetail-link:hover {
   text-decoration: underline;
 }
 
 .ClassifierDetail-classifier-id {
-  height: 18px;
-  margin-bottom: 16px;
-  margin-top: 8px;
   padding: 0;
+  margin: 3px 0 0 0;
   white-space: nowrap; /* keeps the button on the same line */
   color: rgb(88, 96, 105);
+  display: flex;
+  align-items: center;
 }
 
 .ClassifierDetail-classifier-id-text {
+  padding: 0;
+  margin: 0;
+  line-height: 100%;
   max-width: calc(100% - 48px);
-  line-height: 18px;
   display: inline-block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin: 0;
-}
-
-.ClassifierDetail-spacer {
-  height: 1em;
-  margin-top: 2px;
 }
 
 .ClassifierDetail-failed {
@@ -66,7 +66,7 @@
 }
 
 .ClassifierDetail-failed-message-header {
-  margin-top: 21px;
+  margin-top: 18px;
   color: #f44336;
   color: rgb(88, 96, 105);
 }
@@ -85,7 +85,7 @@
   justify-content: center;
   flex-direction: column;
   border-top: solid thin #ededed;
-  margin-top: 20px;
+  margin-top: 14px;
 }
 
 .ClassifierDetail-training-text {
