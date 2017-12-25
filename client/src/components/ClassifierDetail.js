@@ -29,44 +29,52 @@ const isCustom = classifierId =>
   classifierId && classifierId !== 'food' && classifierId !== 'default'
 
 const Failed = ({ name }) => (
-  <div>
-    <div className="ClassifierDetail-failed font-body2">
-      <img className="ClassifierDetail-failed-icon" src={error} alt="error" />
-      <span>Failed</span>
+  <div className="ClassifierDetail">
+    <div>
+      <div className="ClassifierDetail-failed font-body2">
+        <img className="ClassifierDetail-failed-icon" src={error} alt="error" />
+        <span>Failed</span>
+      </div>
+
+      <div className="ClassifierDetail-name font-title ClassifierDetail-fail">
+        {name}
+      </div>
     </div>
 
-    <div className="ClassifierDetail-name font-title ClassifierDetail-fail">
-      {name}
-    </div>
+    <div>
+      <div className="ClassifierDetail-failed-message-header font-body2">
+        The classifier could not be trained.
+      </div>
 
-    <div className="ClassifierDetail-failed-message-header font-body2">
-      The classifier could not be trained.
-    </div>
-
-    <div className="ClassifierDetail-failed-message font-body1">
-      Verify the usage of at least 10 unique training images per class and at
-      least 2 classes.
+      <div className="ClassifierDetail-failed-message font-body1">
+        Verify the usage of at least 10 unique training images per class and at
+        least 2 classes.
+      </div>
     </div>
   </div>
 )
 
 const ReadyDefault = ({ name, classifierId }) => (
-  <div>
+  <div className="ClassifierDetail">
     <div className="ClassifierDetail-name font-title">{name}</div>
 
-    <div className="ClassifierDetail-classifier-id font-body1">
-      <div className="ClassifierDetail-classifier-id-text">{classifierId}</div>
-    </div>
+    <div>
+      <div className="ClassifierDetail-classifier-id font-body1">
+        <div className="ClassifierDetail-classifier-id-text">
+          {classifierId}
+        </div>
+      </div>
 
-    <CustomDropButton
-      accept="image/jpeg, image/png, .jpg, .jpeg, .png"
-      explanationText="Drag images here to classify them"
-    />
+      <CustomDropButton
+        accept="image/jpeg, image/png, .jpg, .jpeg, .png"
+        explanationText="Drag images here to classify them"
+      />
+    </div>
   </div>
 )
 
 const ReadyCustom = ({ name, classifierId }) => (
-  <div>
+  <div className="ClassifierDetail">
     <ThreeDotMenu options={optionsReady} />
 
     <Link
@@ -76,20 +84,24 @@ const ReadyCustom = ({ name, classifierId }) => (
       {name}
     </Link>
 
-    <div className="ClassifierDetail-classifier-id font-body1">
-      <div className="ClassifierDetail-classifier-id-text">{classifierId}</div>
-      <CopyButton copyValue={classifierId} />
-    </div>
+    <div>
+      <div className="ClassifierDetail-classifier-id font-body1">
+        <div className="ClassifierDetail-classifier-id-text">
+          {classifierId}
+        </div>
+        <CopyButton copyValue={classifierId} />
+      </div>
 
-    <CustomDropButton
-      accept="image/jpeg, image/png, .jpg, .jpeg, .png"
-      explanationText="Drag images here to classify them"
-    />
+      <CustomDropButton
+        accept="image/jpeg, image/png, .jpg, .jpeg, .png"
+        explanationText="Drag images here to classify them"
+      />
+    </div>
   </div>
 )
 
 const Training = ({ name, classifierId }) => (
-  <div>
+  <div className="ClassifierDetail">
     <ThreeDotMenu options={optionsTraining} />
 
     <Link
@@ -99,14 +111,20 @@ const Training = ({ name, classifierId }) => (
       {name}
     </Link>
 
-    <div className="ClassifierDetail-classifier-id font-body1">
-      <div className="ClassifierDetail-classifier-id-text">{classifierId}</div>
-      <CopyButton copyValue={classifierId} />
-    </div>
+    <div>
+      <div className="ClassifierDetail-classifier-id font-body1">
+        <div className="ClassifierDetail-classifier-id-text">
+          {classifierId}
+        </div>
+        <CopyButton copyValue={classifierId} />
+      </div>
 
-    <div className="ClassifierDetail-training">
-      <div className="ClassifierDetail-training-text font-body2">Training</div>
-      <LoadingIndicator />
+      <div className="ClassifierDetail-training">
+        <div className="ClassifierDetail-training-text font-body2">
+          Training
+        </div>
+        <LoadingIndicator />
+      </div>
     </div>
   </div>
 )
@@ -130,15 +148,13 @@ const ClassifierDetailWrapper = ({ name, classifierId, status }) => {
 }
 
 const ClassifierDetail = ({ name, classifierId, status }) => (
-  <div className="ClassifierDetail">
-    <Card>
-      <ClassifierDetailWrapper
-        name={name}
-        classifierId={classifierId}
-        status={status}
-      />
-    </Card>
-  </div>
+  <Card>
+    <ClassifierDetailWrapper
+      name={name}
+      classifierId={classifierId}
+      status={status}
+    />
+  </Card>
 )
 
 export default ClassifierDetail
