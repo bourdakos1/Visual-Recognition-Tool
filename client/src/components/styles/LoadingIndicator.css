@@ -22,6 +22,7 @@
   height: 6px;
   border-radius: 50%;
   position: absolute;
+  will-change: transform;
 }
 
 .LoadingIndicator-dots:nth-child(1):before {

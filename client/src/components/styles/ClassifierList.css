@@ -2,6 +2,9 @@
   display: flex;
   margin: 60px 0 40px 0;
   align-items: center;
+
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .ClassifierList-your {
@@ -17,6 +20,6 @@
 }
 
 .ClassifierList-grid {
-  margin-left: -10px;
-  margin-right: -10px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
