@@ -1,0 +1,75 @@
+.CopyButton-copy-icon {
+  height: 18px;
+}
+
+.CopyButton-copy-button {
+  border: 0;
+  padding: 6px 5px 3px 5px;
+  position: absolute;
+  top: -20px;
+  margin-right: 8px;
+  margin-left: 4px;
+  background: none;
+}
+
+.CopyButton-copy-button:hover {
+  background-color: #f0f0f0;
+  border-radius: 2px;
+}
+
+.CopyButton-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.CopyButton-tooltip .CopyButton-tooltiptext {
+  visibility: hidden;
+  opacity: 0;
+  background-color: #162934;
+  color: #fff;
+  text-align: center;
+  border-radius: 3px;
+  padding: 5px 8px;
+  position: absolute;
+  z-index: 1;
+  margin-left: -10px;
+  transform: translate(-50%, -34px);
+  transition: visibility 0s linear 0s, opacity 150ms linear 500ms;
+}
+
+.CopyButton-tooltip .CopyButton-tooltiptext::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #162934 transparent transparent transparent;
+}
+
+.CopyButton-tooltip:hover
+  .CopyButton-tooltiptext.CopyButton-copy {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s linear 500ms, opacity 150ms linear 500ms;
+}
+
+.CopyButton-tooltip:active
+  .CopyButton-tooltiptext.CopyButton-copy {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 0s, opacity 150ms linear 0s;
+}
+
+.CopyButton-tooltip
+  .CopyButton-tooltiptext.CopyButton-copied {
+  transition: visibility 300ms linear 500ms, opacity 300ms linear 500ms;
+}
+
+.CopyButton-tooltip:active
+  .CopyButton-tooltiptext.CopyButton-copied {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s linear 0s, opacity 10ms linear 0s;
+}

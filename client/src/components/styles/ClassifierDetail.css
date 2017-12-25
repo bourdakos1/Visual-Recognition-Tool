@@ -25,101 +25,27 @@
 }
 
 .ClassifierDetail-classifier-id {
-  line-height: 18px;
+  height: 18px;
   margin-bottom: 16px;
   margin-top: 8px;
+  padding: 0;
   white-space: nowrap; /* keeps the button on the same line */
   color: rgb(88, 96, 105);
 }
 
 .ClassifierDetail-classifier-id-text {
   max-width: calc(100% - 48px);
-  display: inline;
+  line-height: 18px;
+  display: inline-block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin: 0px;
-}
-
-.ClassifierDetail-copy-icon {
-  height: 18px;
-}
-
-.ClassifierDetail-copy-button {
-  border: 0;
-  padding: 6px 5px 3px 5px;
-  position: absolute;
-  top: -20px;
-  margin-right: 8px;
-  margin-left: 4px;
-  background: none;
-}
-
-.ClassifierDetail-copy-button:hover {
-  background-color: #f0f0f0;
-  border-radius: 2px;
+  margin: 0;
 }
 
 .ClassifierDetail-spacer {
   height: 1em;
   margin-top: 2px;
-}
-
-.ClassifierDetail-tooltip {
-  position: relative;
-  display: inline-block;
-}
-
-.ClassifierDetail-tooltip .ClassifierDetail-tooltiptext {
-  visibility: hidden;
-  opacity: 0;
-  background-color: #162934;
-  color: #fff;
-  text-align: center;
-  border-radius: 3px;
-  padding: 5px 8px;
-  position: absolute;
-  z-index: 1;
-  margin-left: -10px;
-  transform: translate(-50%, -34px);
-  transition: visibility 0s linear 0s, opacity 150ms linear 500ms;
-}
-
-.ClassifierDetail-tooltip .ClassifierDetail-tooltiptext::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #162934 transparent transparent transparent;
-}
-
-.ClassifierDetail-tooltip:hover
-  .ClassifierDetail-tooltiptext.ClassifierDetail-copy {
-  visibility: visible;
-  opacity: 1;
-  transition: visibility 0s linear 500ms, opacity 150ms linear 500ms;
-}
-
-.ClassifierDetail-tooltip:active
-  .ClassifierDetail-tooltiptext.ClassifierDetail-copy {
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0s linear 0s, opacity 150ms linear 0s;
-}
-
-.ClassifierDetail-tooltip
-  .ClassifierDetail-tooltiptext.ClassifierDetail-copied {
-  transition: visibility 300ms linear 500ms, opacity 300ms linear 500ms;
-}
-
-.ClassifierDetail-tooltip:active
-  .ClassifierDetail-tooltiptext.ClassifierDetail-copied {
-  visibility: visible;
-  opacity: 1;
-  transition: visibility 0s linear 0s, opacity 10ms linear 0s;
 }
 
 .ClassifierDetail-failed {
