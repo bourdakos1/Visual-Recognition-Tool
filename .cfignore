@@ -1,0 +1,33 @@
+# Node build artifacts
+reports
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# Dev stuff
+.gitignore
+README.md
+yarn.lock
+start-client.js
+/client/src
+/client/public
+
+# dependencies
+node_modules
+
+# testing
+coverage
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+*.dev
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

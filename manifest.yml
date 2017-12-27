@@ -1,0 +1,8 @@
+---
+applications:
+- name: customvision
+  buildpack: sdk-for-nodejs
+  path: .
+  memory: 512M
+  instances: 1
+  command: npm run server

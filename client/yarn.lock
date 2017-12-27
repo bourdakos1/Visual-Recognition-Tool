@@ -5345,7 +5345,7 @@ react-scripts@1.0.14:
   optionalDependencies:
     fsevents "1.1.2"
 
-react-sizeme@^2.2.0:
+react-sizeme@^2.2.0, react-sizeme@^2.3.6:
   version "2.3.6"
   resolved "https://registry.yarnpkg.com/react-sizeme/-/react-sizeme-2.3.6.tgz#d60ea2634acc3fd827a3c7738d41eea0992fa678"
   dependencies:
