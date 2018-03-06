@@ -89,8 +89,13 @@ export default class Classifiers extends React.Component {
                         })
 
                         classifiers.push(
+<<<<<<< Updated upstream
                             {name: Strings.classifier_general, classifier_id: 'default', status: Strings.status_ready},
                             {name: Strings.classifier_food, classifier_id: 'food', status: Strings.status_ready},
+=======
+                            {name: 'default', classifier_id: 'default', status: Strings.status_ready},
+                            {name: 'food', classifier_id: 'food', status: Strings.status_ready},
+>>>>>>> Stashed changes
                             {name: Strings.classifier_face, status: Strings.status_ready}
                         )
                     } catch(err) {
@@ -108,8 +113,13 @@ export default class Classifiers extends React.Component {
                 })
 
                 classifiers.push(
+<<<<<<< Updated upstream
                     {name: Strings.classifier_general, classifier_id: 'default', status: Strings.status_ready},
                     {name: Strings.classifier_food, classifier_id: 'food', status: Strings.status_ready},
+=======
+                    {name: 'default', classifier_id: 'default', status: Strings.status_ready},
+                    {name: 'food', classifier_id: 'food', status: Strings.status_ready},
+>>>>>>> Stashed changes
                     {name: Strings.classifier_face, status: Strings.status_ready}
                 )
             }

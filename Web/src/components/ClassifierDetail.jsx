@@ -130,7 +130,11 @@ export default class ClassifierDetail extends React.Component {
         return c.toDataURL('image/jpeg')
     }
 
+<<<<<<< Updated upstream
     convertDataURLtoFile = (imageDataURL, fileName, preview) => {
+=======
+    convertDataURLtoFile = (imageDataURL, fileName) => {
+>>>>>>> Stashed changes
         var imageType = imageDataURL.substring(imageDataURL.indexOf(':') + 1, imageDataURL.indexOf(';'))
         var imageDataBase64 = imageDataURL.substring(imageDataURL.indexOf(',') + 1, imageDataURL.length)
         var byteCharacters = atob(imageDataBase64)
@@ -141,9 +145,13 @@ export default class ClassifierDetail extends React.Component {
         var byteArray = new Uint8Array(byteNumbers)
         var blob = new Blob([byteArray], {type: imageType})
 
+<<<<<<< Updated upstream
         blob.preview = preview
 
         return blob
+=======
+        return new File([blob], fileName, {type: imageType, lastModified: Date.now()})
+>>>>>>> Stashed changes
     }
 
     onDrop = (files, rejects, onFinished, onProgress) => {
@@ -173,17 +181,28 @@ export default class ClassifierDetail extends React.Component {
         }
 
         var uploadedImage = files[0]
+<<<<<<< Updated upstream
+=======
+        this.setState({filePreview: files[0].preview})
+>>>>>>> Stashed changes
 
         // resize uploaded image if greater than 2MB
         if (files[0].size > 2000000) {
             var name = files[0].name
+<<<<<<< Updated upstream
             var preview = files[0].preview
+=======
+>>>>>>> Stashed changes
             var reader = new FileReader()
             reader.onload = () => {
                 var image = new Image()
                 image.src = reader.result
                 image.onload = () => {
+<<<<<<< Updated upstream
                     uploadedImage = this.convertDataURLtoFile(this.resizeImage(image), name, preview)
+=======
+                    uploadedImage = this.convertDataURLtoFile(this.resizeImage(image), name)
+>>>>>>> Stashed changes
                     this.classify(req, uploadedImage, onProgress, onFinished)
                 }
             }
@@ -208,7 +227,11 @@ export default class ClassifierDetail extends React.Component {
             req.query({threshold: 0.0})
         }
 
+<<<<<<< Updated upstream
         if (this.props.name == Strings.classifier_general || this.props.name == Strings.classifier_food || this.props.name == Strings.classifier_face) {
+=======
+        if (this.props.classifierID == null) {
+>>>>>>> Stashed changes
             amplitude.getInstance().logEvent('Classify-' + this.props.name.toLowerCase())
         } else {
             amplitude.getInstance().logEvent('Classify-custom')
@@ -383,6 +406,7 @@ export default class ClassifierDetail extends React.Component {
                         id={this.props.classifierID || this.props.name}
                         clearClassifier={this.clearClassifier}
                         file={this.state.file}
+                        filePreview={this.state.filePreview}
                         link={this.state.link}
                         results={this.state.results}/> :
                         null
