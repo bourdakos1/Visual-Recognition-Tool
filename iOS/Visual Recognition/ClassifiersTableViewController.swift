@@ -92,7 +92,7 @@ class ClassifiersTableViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    func handleTextDidChange(_ sender:UITextField) {
+    @objc func handleTextDidChange(_ sender:UITextField) {
         // Enforce a minimum length of >= 1 for secure text alerts.
         AddAlertSaveAction!.isEnabled = (sender.text?.utf16.count)! >= 1
     }
@@ -104,7 +104,7 @@ class ClassifiersTableViewController: UITableViewController {
     }
     
     var isLoading = false
-    func loadClassifiers() {
+    @objc func loadClassifiers() {
         print("prepare to load")
         // Load from Watson
         let apiKey = UserDefaults.standard.string(forKey: "api_key")

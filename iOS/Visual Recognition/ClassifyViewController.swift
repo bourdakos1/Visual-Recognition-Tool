@@ -70,7 +70,7 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
             apiKey2.layer.shadowRadius = 5
             apiKey2.layer.masksToBounds = false
             apiKey2.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
-            apiKey2.setAttributedTitle(NSAttributedString(string: apiKeyText!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+            apiKey2.setAttributedTitle(NSAttributedString(string: apiKeyText!, attributes: [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.strokeColor : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSAttributedStringKey.strokeWidth : -0.5]), for: .normal)
             drawer.navigationItem.titleView = apiKey2
             
             let recognizer = UITapGestureRecognizer(target: self, action: #selector(addApiKey))
@@ -210,7 +210,7 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
         pickerView.reloadData()
         
         // Give the API TextField styles and a stroke.
-        apiKeyTextField.attributedPlaceholder = NSAttributedString(string: "API Key", attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 1, blue: 1, alpha: 0.5)])
+        apiKeyTextField.attributedPlaceholder = NSAttributedString(string: "API Key", attributes: [NSAttributedStringKey.foregroundColor: UIColor(red: 1, green: 1, blue: 1, alpha: 0.5)])
         apiKeyTextField.setLeftPaddingPoints(20)
         apiKeyTextField.setRightPaddingPoints(50)
         
@@ -230,8 +230,7 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
         view.bringSubview(toFront: hintTextView)
     }
     
-    // Delegate for QR Codes.
-    override func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
+    override func metadataOutput(_ captureOutput: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         // Check if the metadataObjects array is not nil and it contains at least one object.
         if metadataObjects == nil || metadataObjects.count == 0 {
             print("No QR code is detected")
@@ -390,60 +389,75 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
         }
     }
     
-    func classify(key: String, id: String, image: UIImage) {
-        let url = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify")!
-
-        let urlRequest = URLRequest(url: url)
+    struct Params: Codable {
+        var threshold: Double
+        var classifierIDs: Array<String>
         
-        let parameters: Parameters = [
-            "api_key": key,
-            "version": "2016-05-20",
-            "threshold": "0",
-            "classifier_ids": "\(id)"
-        ]
-        
-        do {
-            let encodedURLRequest = try URLEncoding.queryString.encode(urlRequest, with: parameters)
-            
-            Alamofire.upload(UIImageJPEGRepresentation(image, 0.4)!, to: encodedURLRequest.url!).responseJSON { [weak self] response in
-                guard let `self` = self else { return }
-                
-                // Start parsing json, throw error popup if it messed up.
-                guard let json = response.result.value as? [String: Any],
-                    let images = json["images"] as? [Any],
-                    let image = images.first as? [String: Any],
-                    let classifiers = image["classifiers"] as? [Any],
-                    let classifier = classifiers.first as? [String: Any],
-                    let classes = classifier["classes"] as? [Any] else {
-                        print("Error: No classes returned.")
-                        self.retake()
-                        let alert = UIAlertController(title: nil, message: "No classes found.", preferredStyle: .alert)
-                        
-                        let cancelAction = UIAlertAction(title: "Okay", style: .cancel) { action in
-                            print("cancel")
-                        }
-                        
-                        alert.addAction(cancelAction)
-                        
-                        self.dismiss(animated: true, completion: {
-                            self.present(alert, animated: true, completion: nil)
-                        })
-                        return
-                }
-                
-                var myNewData = [ClassResult]()
-                
-                for case let classResult in classes {
-                    myNewData.append(ClassResult(json: classResult)!)
-                }
-                
-                // Sort data by score and reload table.
-                myNewData = myNewData.sorted(by: { $0.score > $1.score })
-                self.push(data: myNewData)
-            }
-        } catch {
-            print("Error: \(error)")
+        enum CodingKeys: String, CodingKey {
+            case threshold
+            case classifierIDs = "classifier_ids"
         }
+    }
+    
+    func classify(key: String, id: String, image: UIImage) {
+        let url = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=\(key)&version=2016-05-20")!
+        
+        print(id)
+
+        let classId = [id]
+        let params = Params(threshold: 0, classifierIDs: classId)
+        
+        guard let parametersData = try? JSONEncoder().encode(params) else {
+            return
+        }
+        
+        Alamofire.upload(multipartFormData: { multipartFormData in
+            multipartFormData.append(UIImageJPEGRepresentation(image, 0.4)!, withName: "images_file", fileName: "x.jpg",mimeType: "image/jpeg")
+            multipartFormData.append(parametersData, withName: "parameters")
+        }, to: url,
+           encodingCompletion: { encodingResult in
+            switch encodingResult {
+            case .success(let upload, _, _):
+                upload.responseJSON { response in
+                    debugPrint(response)
+                    
+                    // Start parsing json, throw error popup if it messed up.
+                    guard let json = response.result.value as? [String: Any],
+                        let images = json["images"] as? [Any],
+                        let image = images.first as? [String: Any],
+                        let classifiers = image["classifiers"] as? [Any],
+                        let classifier = classifiers.first as? [String: Any],
+                        let classes = classifier["classes"] as? [Any] else {
+                            print("Error: No classes returned.")
+                            self.retake()
+                            let alert = UIAlertController(title: nil, message: "No classes found.", preferredStyle: .alert)
+                            
+                            let cancelAction = UIAlertAction(title: "Okay", style: .cancel) { action in
+                                print("cancel")
+                            }
+                            
+                            alert.addAction(cancelAction)
+                            
+                            self.dismiss(animated: true, completion: {
+                                self.present(alert, animated: true, completion: nil)
+                            })
+                            return
+                    }
+                    
+                    var myNewData = [ClassResult]()
+                    
+                    for case let classResult in classes {
+                        myNewData.append(ClassResult(json: classResult)!)
+                    }
+                    
+                    // Sort data by score and reload table.
+                    myNewData = myNewData.sorted(by: { $0.score > $1.score })
+                    self.push(data: myNewData)
+                }
+            case .failure(let encodingError):
+                print(encodingError)
+            }
+        })
     }
     
     // Convenience method for pushing data to the TableView.
@@ -528,7 +542,7 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
             let key = self.obscureKey(key: key)
             
             if let drawer = self.parent as? PulleyViewController {
-                (drawer.navigationItem.titleView as! UIButton).setAttributedTitle(NSAttributedString(string: key, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+                (drawer.navigationItem.titleView as! UIButton).setAttributedTitle(NSAttributedString(string: key, attributes: [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.strokeColor : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSAttributedStringKey.strokeWidth : -0.5]), for: .normal)
             }
         }
     }
@@ -537,7 +551,7 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
         
     }
     
-    func addApiKey() {
+    @objc func addApiKey() {
         if let drawer = parent as? PulleyViewController {
             drawer.navigationController?.navigationBar.isHidden = true
         }
@@ -580,7 +594,7 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
         apiKeyDone()
         UserDefaults.standard.set(nil, forKey: "api_key")
         if let drawer = parent as? PulleyViewController {
-            (drawer.navigationItem.titleView as! UIButton).setAttributedTitle(NSAttributedString(string: "🔑 API Key", attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+            (drawer.navigationItem.titleView as! UIButton).setAttributedTitle(NSAttributedString(string: "🔑 API Key", attributes: [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.strokeColor : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSAttributedStringKey.strokeWidth : -0.5]), for: .normal)
         }
         loadClassifiers()
     }
