@@ -1,6 +1,0 @@
-framework module Pods_Visual_Recognition {
-  umbrella header "Pods-Visual Recognition-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -8,191 +8,54 @@
 
 import UIKit
 import AVFoundation
-import Alamofire
+import VisualRecognitionV3
 
-class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPickerViewDataSource {
+struct VisualRecognitionConstants {
+    static let version = "2017-11-10"
+}
+
+class ClassifyViewController: UIViewController {
     
-    // Blurred effect for the API key form.
-    let blurredEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+    // MARK: - IBOutlets
     
-    // Demo API key constant.
-    let VISION_API_KEY: String
-    
+    @IBOutlet var cameraView: UIView!
     @IBOutlet var tempImageView: UIImageView!
-    
-    // All the buttons.
-    @IBOutlet var classifiersButton: UIButton!
+    @IBOutlet var selectUI: UIImageView!
+    @IBOutlet var captureButton: UIButton!
     @IBOutlet var retakeButton: UIButton!
-    @IBOutlet var apiKeyDoneButton: UIButton!
-    @IBOutlet var apiKeySubmit: UIButton!
-    @IBOutlet var apiKeyLogOut: UIButton!
-    @IBOutlet var apiKeyTextField: UITextField!
-    @IBOutlet var hintTextView: UITextView!
-    
+    @IBOutlet var switchCameraButton: UIButton!
     @IBOutlet var pickerView: AKPickerView!
     
-    // Init with the demo API key.
-    required init?(coder aDecoder: NSCoder) {
-        var keys: NSDictionary?
-        
-        if let path = Bundle.main.path(forResource: "Keys", ofType: "plist") {
-            keys = NSDictionary(contentsOfFile: path)
-        }
-        
-        VISION_API_KEY = (keys?["VISION_API_KEY"] as? String)!
-        
-        super.init(coder: aDecoder)
-    }
+    // MARK: - Variable Declarations
     
-    override open func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if let drawer = self.parent as? PulleyViewController {
-            // Look in user defaults to see if we have a real key.
-            var apiKeyText = UserDefaults.standard.string(forKey: "api_key")
-            
-            if apiKeyText == nil || apiKeyText == "" {
-                // If we don't have a key set the text of the bar to "API Key".
-                apiKeyText = "🔑 API Key"
-            } else {
-                // If we do have a key, obscure it.
-                apiKeyText = obscureKey(key: apiKeyText!)
-            }
-            
-            let apiKey2 = UIButton()
-            
-            // Set the title to be the size of the navigation bar so we can click anywhere.
-            apiKey2.frame.size.width = (drawer.navigationController?.navigationBar.frame.width)!
-            apiKey2.frame.size.height = (drawer.navigationController?.navigationBar.frame.height)!
-            
-            // Style the API text.
-            apiKey2.layer.shadowOffset = CGSize(width: 0, height: 1)
-            apiKey2.layer.shadowOpacity = 0.2
-            apiKey2.layer.shadowRadius = 5
-            apiKey2.layer.masksToBounds = false
-            apiKey2.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
-            apiKey2.setAttributedTitle(NSAttributedString(string: apiKeyText!, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
-            drawer.navigationItem.titleView = apiKey2
-            
-            let recognizer = UITapGestureRecognizer(target: self, action: #selector(addApiKey))
-            drawer.navigationItem.titleView?.isUserInteractionEnabled = true
-            drawer.navigationItem.titleView?.addGestureRecognizer(recognizer)
-        }
-        loadClassifiers()
-    }
+    let classifiers = ["Default", "Food", "Face Detection"]
     
-    func loadClassifiers() {
-        print("loading classifiers")
-        let readyClassifiers = classifiers.filter({ $0.status == .ready })
-        for (index, item) in readyClassifiers.enumerated() {
-            if item.classifierId == UserDefaults.standard.string(forKey: "classifier_id") {
-                select = index
-            } else if item.classifierId == String() && item.name == UserDefaults.standard.string(forKey: "classifier_id") {
-                select = index
-            }
+    var reducedImageWidth: CGFloat = 224
+    var usingFrontCamera = false
+    var captureSession: AVCaptureSession?
+    var photoOutput: AVCapturePhotoOutput?
+    var previewLayer: AVCaptureVideoPreviewLayer?
+    var visualRecognition: VisualRecognition = {
+        guard let path = Bundle.main.path(forResource: "Keys", ofType: "plist") else {
+            // Please create a Credentials.plist file with your Visual Recognition credentials.
+            fatalError()
         }
-        
-        if select >= classifiers.count {
-            pickerView.selectItem(classifiers.count - 1)
-        } else if select >= 0 {
-            pickerView.selectItem(select)
+        guard let apiKey = NSDictionary(contentsOfFile: path)?["VISION_API_KEY"] as? String else {
+            // No Visual Recognition API key found. Make sure you add your API key to the Credentials.plist file.
+            fatalError()
         }
-        
-        // Load from Watson.
-        let apiKey = UserDefaults.standard.string(forKey: "api_key")
-        
-        // Just reset it if its not the same.
-        if apiKey == nil && !classifiers.first!.isEqual(Classifier.defaults.first!) && classifiers.count != Classifier.defaults.count {
-            classifiers = []
-            classifiers.append(contentsOf: Classifier.defaults)
-            pickerView.selectItem(0)
-            pickerView.reloadData()
-            return
-        } else if apiKey == nil {
-            return
-        }
-        
-        if classifiers.count <= 0 {
-            classifiers.append(Classifier(name: "Loading..."))
-            pickerView.selectItem(0)
-            pickerView.reloadData()
-        }
-        
-        let url = "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classifiers"
-        let params = [
-            "api_key": apiKey ?? "none",
-            "version": "2016-05-20",
-            "verbose": "true"
-        ]
-        Alamofire.request(url, parameters: params).validate().responseJSON { response in
-            switch response.result {
-            case .success:
-                if let json = response.result.value as? [String : Any] {
-                    if let classifiersJSON = json["classifiers"] as? [Any] {
-                        
-                        // Build classifiers from json.
-                        var classifiers = [Classifier]()
-                        for classifierJSON in classifiersJSON {
-                            let classifier = Classifier(json: classifierJSON)!
-                            classifiers.append(classifier)
-                        }
-                        
-                        classifiers = classifiers.sorted(by: { $0.created > $1.created })
-                        classifiers.append(contentsOf: Classifier.defaults)
-                        
-                        // If the count and head are the same nothing was deleted or added.
-                        if !(self.classifiers.first!.isEqual(classifiers.first!)
-                            && self.classifiers.count == classifiers.count) {
-                            self.classifiers = classifiers
-                            
-                            if self.select >= self.classifiers.count {
-                                self.pickerView.selectItem(self.classifiers.count - 1)
-                            }
-                            
-                            self.pickerView.reloadData()
-                            if self.select >= 0 {
-                                self.pickerView.selectItem(self.select)
-                            }
-                        }
-                    }
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
+        return VisualRecognition(apiKey: apiKey, version: VisualRecognitionConstants.version)
+    }()
     
-    var classifiers = [Classifier]()
-    var select = -1
-    
-    func numberOfItemsInPickerView(_ pickerView: AKPickerView) -> Int {
-        return classifiers.filter({ $0.status == .ready }).count
-    }
-    
-    func pickerView(_ pickerView: AKPickerView, titleForItem item: Int) -> String {
-        let readyClassifier = classifiers.filter({ $0.status == .ready })[item]
-        if readyClassifier.classifierId == UserDefaults.standard.string(forKey: "classifier_id") {
-            select = item
-        } else if readyClassifier.classifierId == String() && readyClassifier.name == UserDefaults.standard.string(forKey: "classifier_id") {
-            select = item
-        }
-        return classifiers.filter({ $0.status == .ready })[item].name
-    }
-    
-    func pickerView(_ pickerView: AKPickerView, didSelectItem item: Int) {
-        // This should be safe because the picker only shows ready classifiers.
-        let readyClassifier = classifiers.filter({ $0.status == .ready })[item]
-        if readyClassifier.classifierId == String() {
-            UserDefaults.standard.set(readyClassifier.name, forKey: "classifier_id")
-        } else {
-            UserDefaults.standard.set(readyClassifier.classifierId, forKey: "classifier_id")
-        }
-    }
+    // MARK: - Override Functions
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        initializeCamera()
+        resetUI()
+        
         // Set up PickerView.
-        pickerView.delegate = self
         pickerView.dataSource = self
         pickerView.interitemSpacing = CGFloat(25.0)
         pickerView.pickerViewStyle = .flat
@@ -201,407 +64,212 @@ class ClassifyViewController: CameraViewController, AKPickerViewDelegate, AKPick
         pickerView.highlightedFont = UIFont.boldSystemFont(ofSize: 14)
         pickerView.highlightedTextColor = UIColor.white
         pickerView.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6)
-        if classifiers.count <= 0 {
-            classifiers.append(Classifier(name: "Loading..."))
-        }
         pickerView.reloadData()
-        
-        // Give the API TextField styles and a stroke.
-        apiKeyTextField.attributedPlaceholder = NSAttributedString(string: "API Key", attributes: [NSForegroundColorAttributeName: UIColor(red: 1, green: 1, blue: 1, alpha: 0.5)])
-        apiKeyTextField.setLeftPaddingPoints(20)
-        apiKeyTextField.setRightPaddingPoints(50)
-        
-        // Retake just resets the UI.
-        retake()
-        
-        // Create and hide the blur effect.
-        blurredEffectView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
-        view.addSubview(blurredEffectView)
-        blurredEffectView.isHidden = true
-        
-        // Bring all the API key views to the front of the blur effect
-        view.bringSubview(toFront: apiKeyTextField)
-        view.bringSubview(toFront: apiKeyDoneButton)
-        view.bringSubview(toFront: apiKeySubmit)
-        view.bringSubview(toFront: apiKeyLogOut)
-        view.bringSubview(toFront: hintTextView)
     }
     
-    // Delegate for QR Codes.
-    override func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
-        // Check if the metadataObjects array is not nil and it contains at least one object.
-        if metadataObjects == nil || metadataObjects.count == 0 {
-            print("No QR code is detected")
+    func initializeCamera() {
+        // This needs to be fixed up.
+        guard let backCamera = AVCaptureDevice.default(for: .video) else {
             return
         }
         
-        // Get the metadata object.
-        let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
-        
-        guard let qrCode = metadataObj.stringValue else {
+        guard let frontCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) else {
             return
         }
-        print(qrCode)
-        testKey(key: qrCode)
+        
+        let captureDevice = usingFrontCamera ? frontCamera : backCamera
+        
+        guard let input = try? AVCaptureDeviceInput(device: captureDevice) else {
+            return
+        }
+        
+        if let inputs = captureSession?.inputs {
+            for i in inputs {
+                captureSession?.removeInput(i)
+            }
+        }
+        
+        captureSession = AVCaptureSession()
+        captureSession?.sessionPreset = .high
+        captureSession?.addInput(input)
+        photoOutput = AVCapturePhotoOutput()
+        
+        if (captureSession?.canAddOutput(photoOutput!) != nil) {
+            captureSession?.addOutput(photoOutput!)
+            previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
+            previewLayer?.videoGravity = .resize
+            previewLayer?.connection?.videoOrientation = .portrait
+            cameraView.layer.addSublayer(previewLayer!)
+            captureSession?.startRunning()
+        }
+        
+        previewLayer?.frame = view.bounds
     }
     
-    override func captured(image: UIImage) {
-        var apiKey = UserDefaults.standard.string(forKey: "api_key")
+    func classifyImage(for image: UIImage, localThreshold: Double = 0.0) {
+        showClassifyUI(forImage: image)
         
-        if apiKey == nil || apiKey == "" {
-            apiKey = VISION_API_KEY
-        }
-        
-        let reducedImage = image.resized(toWidth: 300)!
-        
-        let classifierId = UserDefaults.standard.string(forKey: "classifier_id")?.lowercased() ?? "default"
-        
-        if classifierId == "face detection" {
-            detectFaces(key: apiKey!, image: reducedImage)
-        } else {
-            classify(key: apiKey!, id: classifierId, image: reducedImage)
-        }
-        
-        // Set the screen to our captured photo.
-        tempImageView.image = image
-        tempImageView.isHidden = false
-        
-        photoButton.isHidden = true
-        cameraButton.isHidden = true
-        retakeButton.isHidden = false
-        classifiersButton.isHidden = true
-        pickerView.isHidden = true
-        
-        if let drawer = self.parent as? PulleyViewController {
-            drawer.navigationController?.navigationBar.isHidden = true
-        }
+        let reducedImage = image.resized(toWidth: reducedImageWidth)!
         
         // Show an activity indicator while its loading.
         let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
-        
-        alert.view.tintColor = UIColor.black
-        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50)) as UIActivityIndicatorView
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-        loadingIndicator.startAnimating()
-        
-        alert.view.addSubview(loadingIndicator)
-        present(alert, animated: true, completion: nil)
-    }
-    
-    func detectFaces(key: String, image: UIImage) {
-        let url = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/detect_faces")!
-            
-        let urlRequest = URLRequest(url: url)
-        
-        let parameters: Parameters = [
-            "api_key": key,
-            "version": "2016-05-20"
-        ]
-        
-        do {
-            let encodedURLRequest = try URLEncoding.queryString.encode(urlRequest, with: parameters)
-            
-            Alamofire.upload(UIImageJPEGRepresentation(image, 0.4)!, to: encodedURLRequest.url!).responseJSON { response in
-                // Start parsing json, throw error popup if it messed up.
-                guard let json = response.result.value as? [String: Any],
-                    let images = json["images"] as? [Any],
-                    let image = images.first as? [String: Any],
-                    let faces = image["faces"] as? [Any] else {
-                        print("Error: No faces found.")
-                        self.retake()
-                        let alert = UIAlertController(title: nil, message: "No faces found.", preferredStyle: .alert)
-                        
-                        let cancelAction = UIAlertAction(title: "Okay", style: .cancel) { action in
-                            print("cancel")
-                        }
-                        
-                        alert.addAction(cancelAction)
-                        
-                        self.dismiss(animated: true, completion: {
-                            self.present(alert, animated: true, completion: nil)
-                        })
-                        return
-                }
-                
-                var myNewData = [FaceResult]()
-                
-                let scale = self.tempImageView.frame.width / 300
-                print(scale)
-                
-                for case let faceResult in faces {
-                    let face = FaceResult(json: faceResult)!
-                    myNewData.append(face)
-                    
-                    let view = UIView()
-                    view.frame.size.width = face.location.width * scale
-                    view.frame.size.height = face.location.height * scale
-                    view.frame.origin.x = face.location.left * scale
-                    view.frame.origin.y = face.location.top * scale
-                    view.layer.borderWidth = 5
-                    view.layer.borderColor = view.tintColor.cgColor
-                    view.clipsToBounds = false
-                    self.tempImageView.addSubview(view)
-                }
-                
-                print(myNewData)
-                
-                self.dismiss(animated: false, completion: nil)
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-    }
-    
-    func classify(key: String, id: String, image: UIImage) {
-        let url = URL(string: "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify")!
 
-        let urlRequest = URLRequest(url: url)
-        
-        let parameters: Parameters = [
-            "api_key": key,
-            "version": "2016-05-20",
-            "threshold": "0",
-            "classifier_ids": "\(id)"
-        ]
-        
-        do {
-            let encodedURLRequest = try URLEncoding.queryString.encode(urlRequest, with: parameters)
-            
-            Alamofire.upload(UIImageJPEGRepresentation(image, 0.4)!, to: encodedURLRequest.url!).responseJSON { response in
-                // Start parsing json, throw error popup if it messed up.
-                guard let json = response.result.value as? [String: Any],
-                    let images = json["images"] as? [Any],
-                    let image = images.first as? [String: Any],
-                    let classifiers = image["classifiers"] as? [Any],
-                    let classifier = classifiers.first as? [String: Any],
-                    let classes = classifier["classes"] as? [Any] else {
-                        print("Error: No classes returned.")
-                        self.retake()
-                        let alert = UIAlertController(title: nil, message: "No classes found.", preferredStyle: .alert)
-                        
-                        let cancelAction = UIAlertAction(title: "Okay", style: .cancel) { action in
-                            print("cancel")
-                        }
-                        
-                        alert.addAction(cancelAction)
-                        
-                        self.dismiss(animated: true, completion: {
-                            self.present(alert, animated: true, completion: nil)
-                        })
-                        return
-                }
-                
-                var myNewData = [ClassResult]()
-                
-                for case let classResult in classes {
-                    myNewData.append(ClassResult(json: classResult)!)
-                }
-                
-                // Sort data by score and reload table.
-                myNewData = myNewData.sorted(by: { $0.score > $1.score })
-                self.push(data: myNewData)
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-    }
-    
-    // Convenience method for pushing data to the TableView.
-    func push(data: [ClassResult]) {
-        getTableController { tableController, drawer in
-            tableController.classes = data
-            self.dismiss(animated: false, completion: nil)
-            drawer.setDrawerPosition(position: .partiallyRevealed, animated: true)
-        }
-    }
-    
-    // Convenience method for reloading the TableView.
-    func getTableController(run: @escaping (_ tableController: ResultsTableViewController, _ drawer: PulleyViewController) -> Void) {
-        if let drawer = self.parent as? PulleyViewController {
-            if let tableController = drawer.drawerContentViewController as? ResultsTableViewController {
-                DispatchQueue.main.async {
-                    run(tableController, drawer)
-                    tableController.tableView.reloadData()
-                }
-            }
-        }
-    }
-    
-    // Convenience method for obscuring the API key.
-    func obscureKey(key: String) -> String {
-        let a = key[key.index(key.startIndex, offsetBy: 0)]
-        
-        let start = key.index(key.endIndex, offsetBy: -3)
-        let end = key.index(key.endIndex, offsetBy: 0)
-        let b = key[Range(start ..< end)]
-        
-        return "🔑 \(a)•••••••••••••••••••••••••••••••••••••\(b)"
-    }
-    
-    // Verify the API entered or scanned.
-    func testKey(key: String) {
-        // Escape if they are already logged in with this key.
-        if key == UserDefaults.standard.string(forKey: "api_key") {
-            return
-        }
-        
-        apiKeyDone()
-        
-        let alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
-        
         alert.view.tintColor = UIColor.black
         let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50)) as UIActivityIndicatorView
         loadingIndicator.hidesWhenStopped = true
         loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
         loadingIndicator.startAnimating()
-        
+
         alert.view.addSubview(loadingIndicator)
         present(alert, animated: true, completion: nil)
         
-        let url = "https://gateway-a.watsonplatform.net/visual-recognition/api"
-        let params = [
-            "api_key": key,
-            "version": "2016-05-20"
-        ]
-        Alamofire.request(url, parameters: params).responseJSON { response in
-            if let json = response.result.value as? [String : Any] {
-                if json["statusInfo"] as! String == "invalid-api-key" {
-                    print("Ivalid api key!")
-                    let alert = UIAlertController(title: nil, message: "Invalid api key.", preferredStyle: .alert)
+        let failure = { (error: Error) in
+            self.showAlert("Could not classify image", alertMessage: error.localizedDescription)
+        }
+        
+        let classifierId = classifiers[pickerView.selectedItem].lowercased()
+        
+        if classifierId == "face detection" {
+            visualRecognition.detectFaces(image: reducedImage, failure: failure) { classifiedImages in
+                // Update UI on main thread
+                DispatchQueue.main.async {
+                    self.dismiss(animated: false, completion: nil)
                     
-                    let cancelAction = UIAlertAction(title: "Okay", style: .cancel) { action in
-                        print("cancel")
+                    guard let faces = classifiedImages.images.first?.faces else {
+                        return
                     }
                     
-                    alert.addAction(cancelAction)
-                    self.dismiss(animated: true, completion: {
-                        self.present(alert, animated: true, completion: nil)
-                    })
-                    return
+                    let scale = self.tempImageView.frame.width / self.reducedImageWidth
+                    
+                    for case let face in faces {
+                        let view = UIView()
+                        view.frame.size.width = CGFloat(face.faceLocation!.width) * scale
+                        view.frame.size.height = CGFloat(face.faceLocation!.height) * scale
+                        view.frame.origin.x = CGFloat(face.faceLocation!.left) * scale
+                        view.frame.origin.y = CGFloat(face.faceLocation!.top) * scale
+                        view.layer.borderWidth = 5
+                        view.layer.borderColor = view.tintColor.cgColor
+                        view.clipsToBounds = false
+                        self.tempImageView.addSubview(view)
+                    }
                 }
             }
-            print("Key set!")
-            self.dismiss(animated: true, completion: nil)
-            UserDefaults.standard.set(key, forKey: "api_key")
-            self.loadClassifiers()
-            
-            let key = self.obscureKey(key: key)
-            
-            if let drawer = self.parent as? PulleyViewController {
-                (drawer.navigationItem.titleView as! UIButton).setAttributedTitle(NSAttributedString(string: key, attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
+        } else {
+            visualRecognition.classify(image: reducedImage, threshold: localThreshold, classifierIDs: [classifierId], failure: failure) { classifiedImages in
+                if classifiedImages.images.count > 0 && classifiedImages.images[0].classifiers.count > 0 {
+                    // Update UI on main thread
+                    DispatchQueue.main.async {
+                        self.dismiss(animated: false, completion: nil)
+                        self.pushResults(classes: classifiedImages.images[0].classifiers[0].classes)
+                    }
+                }
             }
         }
     }
     
-    @IBAction func unwindToVC(segue: UIStoryboardSegue) {
-        
+    func dismissResults() {
+        pushResults(classes: [], position: .closed)
     }
     
-    func addApiKey() {
-        if let drawer = self.parent as? PulleyViewController {
-            drawer.navigationController?.navigationBar.isHidden = true
+    func pushResults(classes: [VisualRecognitionV3.ClassResult], position: PulleyPosition = .partiallyRevealed) {
+        guard let drawer = pulleyViewController?.drawerContentViewController as? ResultsTableViewController else {
+            return
         }
-        
-        blurredEffectView.isHidden = false
-        apiKeyTextField.isHidden = false
-        apiKeyDoneButton.isHidden = false
-        apiKeySubmit.isHidden = false
-        apiKeyLogOut.isHidden = false
-        hintTextView.isHidden = false
-        
-        // If the key isn't set disable the logout button.
-        apiKeyLogOut.isEnabled = UserDefaults.standard.string(forKey: "api_key") != nil
-        
-        apiKeyTextField.becomeFirstResponder()
+        drawer.classifications = classes
+        pulleyViewController?.setDrawerPosition(position: position, animated: true)
+        drawer.tableView.reloadData()
     }
     
-    @IBAction func apiKeyDone() {
-        if let drawer = self.parent as? PulleyViewController {
-            drawer.navigationController?.navigationBar.isHidden = false
-        }
-        
-        apiKeyTextField.isHidden = true
-        apiKeyDoneButton.isHidden = true
-        apiKeySubmit.isHidden = true
-        apiKeyLogOut.isHidden = true
-        hintTextView.isHidden = true
-        blurredEffectView.isHidden = true
-        
-        view.endEditing(true)
-        apiKeyTextField.text = ""
+    func showClassifyUI(forImage image: UIImage) {
+        tempImageView.image = image
+        tempImageView.isHidden = false
+        captureButton.isHidden = true
+        switchCameraButton.isHidden = true
+        retakeButton.isHidden = false
+        pickerView.isHidden = true
+        selectUI.isHidden = true
     }
     
-    @IBAction func submitApiKey() {
-        let key = apiKeyTextField.text
-        testKey(key: key!)
+    func resetUI() {
+        tempImageView.subviews.forEach({ $0.removeFromSuperview() })
+        switchCameraButton.isHidden = false
+        pickerView.isHidden = false
+        tempImageView.isHidden = true
+        captureButton.isHidden = false
+        retakeButton.isHidden = true
+        selectUI.isHidden = false
+        dismissResults()
     }
     
-    @IBAction func logOut() {
-        apiKeyDone()
-        UserDefaults.standard.set(nil, forKey: "api_key")
-        if let drawer = self.parent as? PulleyViewController {
-            (drawer.navigationItem.titleView as! UIButton).setAttributedTitle(NSAttributedString(string: "🔑 API Key", attributes: [NSForegroundColorAttributeName : UIColor.white, NSStrokeColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0), NSStrokeWidthAttributeName : -0.5]), for: .normal)
-        }
-        loadClassifiers()
+    // MARK: - IBActions
+    
+    @IBAction func takePhoto() {
+        photoOutput?.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
+    }
+    
+    @IBAction func switchCamera() {
+        usingFrontCamera = !usingFrontCamera
+        initializeCamera()
     }
     
     @IBAction func retake() {
-        tempImageView.subviews.forEach({ $0.removeFromSuperview() })
-        tempImageView.isHidden = true
-        photoButton.isHidden = false
-        cameraButton.isHidden = false
-        retakeButton.isHidden = true
-        classifiersButton.isHidden = false
-        pickerView.isHidden = false
+        resetUI()
+    }
+}
+
+// MARK: - Error Handling
+
+extension ClassifyViewController {
+    func showAlert(_ alertTitle: String, alertMessage: String) {
+        let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func modelUpdateFail(error: Error) {
+        let error = error as NSError
+        var errorMessage = ""
         
-        if let drawer = self.parent as? PulleyViewController {
-            drawer.navigationController?.navigationBar.isHidden = false
+        switch error.code {
+        case 403:
+            errorMessage = "Please check your Visual Recognition API key and try again."
+        case 401:
+            errorMessage = "Invalid credentials. Please check your Visual Recognition credentials and try again."
+        case 500:
+            errorMessage = "Internal server error. Please try again."
+        default:
+            errorMessage = "Please try again."
         }
-        
-        getTableController { tableController, drawer in
-            drawer.setDrawerPosition(position: .closed, animated: true)
-            tableController.classes = []
-        }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showClassifiers",
-            let destination = segue.destination as? ClassifiersTableViewController {
-            destination.classifiers = self.classifiers
-        }
+        showAlert("Unable to download model", alertMessage: errorMessage)
     }
 }
 
-extension UIImage {
-    func resized(withPercentage percentage: CGFloat) -> UIImage? {
-        let canvasSize = CGSize(width: size.width * percentage, height: size.height * percentage)
-        UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
-        defer { UIGraphicsEndImageContext() }
-        draw(in: CGRect(origin: .zero, size: canvasSize))
-        return UIGraphicsGetImageFromCurrentImageContext()
+// MARK: - AKPickerViewDataSource
+
+extension ClassifyViewController: AKPickerViewDataSource {
+    func numberOfItemsInPickerView(_ pickerView: AKPickerView) -> Int {
+        return classifiers.count
     }
     
-    func resized(toWidth width: CGFloat) -> UIImage? {
-        let canvasSize = CGSize(width: width, height: CGFloat(ceil(width/size.width * size.height)))
-        UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
-        defer { UIGraphicsEndImageContext() }
-        draw(in: CGRect(origin: .zero, size: canvasSize))
-        return UIGraphicsGetImageFromCurrentImageContext()
+    func pickerView(_ pickerView: AKPickerView, titleForItem item: Int) -> String {
+        return classifiers[item]
     }
 }
 
-extension UITextField {
-    func setLeftPaddingPoints(_ amount:CGFloat){
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
-        self.leftView = paddingView
-        self.leftViewMode = .always
-    }
-    
-    func setRightPaddingPoints(_ amount:CGFloat) {
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
-        self.rightView = paddingView
-        self.rightViewMode = .always
+// MARK: - AVCapturePhotoCaptureDelegate
+
+extension ClassifyViewController: AVCapturePhotoCaptureDelegate {
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        if let error = error {
+            print(error.localizedDescription)
+            return
+        }
+        guard let photoData = photo.fileDataRepresentation() else {
+            return
+        }
+        guard let image = UIImage(data: photoData) else {
+            return
+        }
+        classifyImage(for: image)
     }
 }
-
