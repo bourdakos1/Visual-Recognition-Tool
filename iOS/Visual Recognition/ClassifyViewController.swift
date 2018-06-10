@@ -142,15 +142,54 @@ class ClassifyViewController: UIViewController {
                     let scale = self.tempImageView.frame.width / self.reducedImageWidth
                     
                     for case let face in faces {
+     
+                        let label = UILabel()
+                        // This is pretty lame but fine for now...
+                        var genderString = String()
+                        if let gender = face.gender?.gender {
+                            genderString = "\(gender): "
+                        }
+                        
+                        var ageString = String()
+                        if let ageMin = face.age?.min {
+                            if let ageMax = face.age?.max {
+                                ageString = "\(ageMin) - \(ageMax)"
+                            } else {
+                                ageString = "\(ageMin)"
+                            }
+                        } else {
+                            if let ageMax = face.age?.max {
+                                ageString = "\(ageMax)"
+                            }
+                        }
+                        
+                        label.text = "   \(genderString)age \(ageString)"
+                        label.frame.origin.x = CGFloat(face.faceLocation!.left) * scale
+                        label.frame.origin.y = CGFloat(face.faceLocation!.top) * scale - 35
+                        label.frame.size.width = CGFloat(face.faceLocation!.width) * scale
+                        label.frame.size.height = 40
+                        
+                        let rect = CGRect(x: 0, y: 0, width: label.frame.width, height: label.frame.height)
+                        let maskPath = UIBezierPath(roundedRect: rect, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 5.0, height: 5.0))
+                        
+                        let shape = CAShapeLayer()
+                        shape.path = maskPath.cgPath
+                        label.layer.mask = shape
+                        
+                        label.textColor = UIColor.white
+                        label.backgroundColor = label.tintColor
+                        
                         let view = UIView()
                         view.frame.size.width = CGFloat(face.faceLocation!.width) * scale
                         view.frame.size.height = CGFloat(face.faceLocation!.height) * scale
                         view.frame.origin.x = CGFloat(face.faceLocation!.left) * scale
                         view.frame.origin.y = CGFloat(face.faceLocation!.top) * scale
                         view.layer.borderWidth = 5
+                        view.layer.cornerRadius = 5
                         view.layer.borderColor = view.tintColor.cgColor
-                        view.clipsToBounds = false
+                        view.clipsToBounds = true
                         self.tempImageView.addSubview(view)
+                        self.tempImageView.addSubview(label)
                     }
                 }
             }
