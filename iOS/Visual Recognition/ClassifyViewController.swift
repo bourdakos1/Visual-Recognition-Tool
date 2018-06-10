@@ -93,7 +93,7 @@ class ClassifyViewController: UIViewController {
         captureSession?.sessionPreset = .high
         captureSession?.addInput(input)
         photoOutput = AVCapturePhotoOutput()
-        
+    
         if (captureSession?.canAddOutput(photoOutput!) != nil) {
             captureSession?.addOutput(photoOutput!)
             previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
@@ -155,7 +155,11 @@ class ClassifyViewController: UIViewController {
                 }
             }
         } else {
-            visualRecognition.classify(image: reducedImage, threshold: localThreshold, classifierIDs: [classifierId], failure: failure) { classifiedImages in
+            print(reducedImage.imageOrientation.rawValue)
+            
+            let rotatedImage = UIImage(cgImage: reducedImage.cgImage!, scale: reducedImage.scale, orientation: managePhotoOrientation())
+            
+            visualRecognition.classify(image: rotatedImage, threshold: localThreshold, classifierIDs: [classifierId], failure: failure) { classifiedImages in
                 if classifiedImages.images.count > 0 && classifiedImages.images[0].classifiers.count > 0 {
                     // Update UI on main thread
                     DispatchQueue.main.async {
@@ -259,6 +263,28 @@ extension ClassifyViewController: AKPickerViewDataSource {
 // MARK: - AVCapturePhotoCaptureDelegate
 
 extension ClassifyViewController: AVCapturePhotoCaptureDelegate {
+    func managePhotoOrientation() -> UIImageOrientation {
+        let currentDevice = UIDevice.current
+        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        let deviceOrientation = currentDevice.orientation
+        
+        if deviceOrientation == .portrait {
+            print("Device: Portrait")
+            return .up
+        } else if (deviceOrientation == .landscapeLeft) {
+            print("Device: LandscapeLeft")
+            return .left
+        } else if (deviceOrientation == .landscapeRight) {
+            print("Device LandscapeRight")
+            return .right
+        } else if (deviceOrientation == .portraitUpsideDown) {
+            print("Device PortraitUpsideDown")
+            return .down
+        } else {
+            return .up
+        }
+    }
+    
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         if let error = error {
             print(error.localizedDescription)
