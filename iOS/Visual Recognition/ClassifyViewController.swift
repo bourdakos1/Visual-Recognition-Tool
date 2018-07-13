@@ -24,11 +24,14 @@ class ClassifyViewController: UIViewController {
     @IBOutlet var captureButton: UIButton!
     @IBOutlet var retakeButton: UIButton!
     @IBOutlet var switchCameraButton: UIButton!
+    @IBOutlet var classifiersButton: UIButton!
     @IBOutlet var pickerView: AKPickerView!
     
     // MARK: - Variable Declarations
     
-    let classifiers = ["Default", "Food", "Face Detection"]
+    var classifiers = ["Default", "Food", "Face Detection"]
+    
+    var classifierIds = ["default", "food", "face_detection"]
     
     var reducedImageWidth: CGFloat = 224
     var usingFrontCamera = false
@@ -65,6 +68,36 @@ class ClassifyViewController: UIViewController {
         pickerView.highlightedTextColor = UIColor.white
         pickerView.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6)
         pickerView.reloadData()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        visualRecognition.listClassifiers(success: { (classifiers) in
+            let classifierNames = classifiers.classifiers.map({ (classifier) in
+                return classifier.name
+            })
+            
+            let classifierIds = classifiers.classifiers.map({ (classifier) in
+                return classifier.classifierID
+            })
+            
+            self.classifiers.append(contentsOf: classifierNames)
+            self.classifierIds.append(contentsOf: classifierIds)
+            DispatchQueue.main.async {
+                self.pickerView.reloadData()
+            }
+        })
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     func initializeCamera() {
@@ -124,12 +157,16 @@ class ClassifyViewController: UIViewController {
         present(alert, animated: true, completion: nil)
         
         let failure = { (error: Error) in
-            self.showAlert("Could not classify image", alertMessage: error.localizedDescription)
+            DispatchQueue.main.async {
+                self.dismiss(animated: false, completion: nil)
+                self.resetUI()
+                self.showAlert("Could not classify image", alertMessage: error.localizedDescription)
+            }
         }
         
-        let classifierId = classifiers[pickerView.selectedItem].lowercased()
+        let classifierId = classifierIds[pickerView.selectedItem]
         
-        if classifierId == "face detection" {
+        if classifierId == "face_detection" {
             visualRecognition.detectFaces(image: reducedImage, failure: failure) { classifiedImages in
                 // Update UI on main thread
                 DispatchQueue.main.async {
@@ -231,6 +268,7 @@ class ClassifyViewController: UIViewController {
         retakeButton.isHidden = false
         pickerView.isHidden = true
         selectUI.isHidden = true
+        classifiersButton.isHidden = true
     }
     
     func resetUI() {
@@ -241,6 +279,7 @@ class ClassifyViewController: UIViewController {
         captureButton.isHidden = false
         retakeButton.isHidden = true
         selectUI.isHidden = false
+        classifiersButton.isHidden = false
         dismissResults()
     }
     

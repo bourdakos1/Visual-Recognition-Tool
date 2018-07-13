@@ -1,2 +1,5 @@
+github "Alamofire/Alamofire" "4.7.2"
+github "cloudant/swift-cloudant" "0.8.0"
 github "daltoniam/Starscream" "3.0.5"
-github "watson-developer-cloud/swift-sdk" "v0.27.0"
+github "dropbox/SwiftyDropbox" "4.6.0"
+github "watson-developer-cloud/swift-sdk" "v0.28.1"
