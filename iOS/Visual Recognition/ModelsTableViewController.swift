@@ -46,6 +46,10 @@ class ModelsTableViewController: UITableViewController {
             return
         }
         
+        print("ACCESS_TOKEN:")
+        print(authorizedClient.auth.client.accessToken)
+        print("______________________________________")
+        
         authorizedClient.files.listFolder(path: "")
             .response { response, error in
                 if let response = response {

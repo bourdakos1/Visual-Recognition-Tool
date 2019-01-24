@@ -73,12 +73,17 @@ class ClassifyViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        visualRecognition.listClassifiers(success: { (classifiers) in
-            let classifierNames = classifiers.classifiers.map({ (classifier) in
+        visualRecognition.listClassifiers(verbose: true, success: { (classifiers) in
+
+            let classifiers = classifiers.classifiers.sorted(by: {
+                return $0.updated! > $1.updated!
+            }).filter({ $0.status! == "ready" })
+            
+            let classifierNames = classifiers.map({ (classifier) in
                 return classifier.name
             })
             
-            let classifierIds = classifiers.classifiers.map({ (classifier) in
+            let classifierIds = classifiers.map({ (classifier) in
                 return classifier.classifierID
             })
             

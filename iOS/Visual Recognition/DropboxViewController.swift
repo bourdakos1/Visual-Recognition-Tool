@@ -28,7 +28,7 @@ class DropboxViewController: UIViewController {
         super.viewWillAppear(animated)
         
         let client = DropboxClientsManager.authorizedClient
-        
+                
         if client == nil,
             let viewController = storyboard?.instantiateViewController(withIdentifier: "dropboxLoginViewController"),
             let dropboxLoginViewController = viewController as? DropboxLoginViewController {
